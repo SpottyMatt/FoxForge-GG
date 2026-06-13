@@ -1,0 +1,961 @@
+[
+ {
+  "row": 1,
+  "pokemon": null,
+  "source": "X-Atk",
+  "value": 25.0,
+  "perLevel": null
+ },
+ {
+  "row": 2,
+  "pokemon": null,
+  "source": "Muscle Band",
+  "value": 8.75,
+  "perLevel": null
+ },
+ {
+  "row": 3,
+  "pokemon": null,
+  "source": "Rapid Fire Scarf",
+  "value": 10.5,
+  "perLevel": null
+ },
+ {
+  "row": 4,
+  "pokemon": null,
+  "source": "RFS Proc",
+  "value": 25.0,
+  "perLevel": null
+ },
+ {
+  "row": 5,
+  "pokemon": null,
+  "source": "Choice Scarf",
+  "value": 8.75,
+  "perLevel": null
+ },
+ {
+  "row": 6,
+  "pokemon": null,
+  "source": "Red 3",
+  "value": 2.0,
+  "perLevel": null
+ },
+ {
+  "row": 7,
+  "pokemon": null,
+  "source": "Red 5",
+  "value": 4.0,
+  "perLevel": null
+ },
+ {
+  "row": 8,
+  "pokemon": null,
+  "source": "Red 7",
+  "value": 8.0,
+  "perLevel": null
+ },
+ {
+  "row": 9,
+  "pokemon": null,
+  "source": "Blissey Helping Hand",
+  "value": 30.0,
+  "perLevel": null
+ },
+ {
+  "row": 10,
+  "pokemon": null,
+  "source": "Mew Coaching",
+  "value": 40.0,
+  "perLevel": null
+ },
+ {
+  "row": 11,
+  "pokemon": "Absol",
+  "source": "Feint",
+  "value": 60.0,
+  "perLevel": null
+ },
+ {
+  "row": 12,
+  "pokemon": "Absol",
+  "source": "Night Slash",
+  "value": 60.0,
+  "perLevel": null
+ },
+ {
+  "row": 13,
+  "pokemon": "Absol",
+  "source": "Sucker Punch+",
+  "value": 40.0,
+  "perLevel": null
+ },
+ {
+  "row": 14,
+  "pokemon": "Aegislash",
+  "source": "Sword Stance",
+  "value": 15.0,
+  "perLevel": null
+ },
+ {
+  "row": 15,
+  "pokemon": "Aegislash",
+  "source": "Shield Stance",
+  "value": -20.0,
+  "perLevel": null
+ },
+ {
+  "row": 16,
+  "pokemon": "Aegislash",
+  "source": "Stance Change",
+  "value": 15.0,
+  "perLevel": null
+ },
+ {
+  "row": 17,
+  "pokemon": "Alcremie",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 18,
+  "pokemon": "Armarouge",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 19,
+  "pokemon": "Articuno",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 20,
+  "pokemon": "Azumarill",
+  "source": "Aqua Tail",
+  "value": 20.0,
+  "perLevel": null
+ },
+ {
+  "row": 21,
+  "pokemon": "Blastoise",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 22,
+  "pokemon": "Blaziken",
+  "source": "Punch Style",
+  "value": 40.0,
+  "perLevel": null
+ },
+ {
+  "row": 23,
+  "pokemon": "Blissey",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 24,
+  "pokemon": "Buzzwole",
+  "source": "Beast Boost Assist",
+  "value": 25.0,
+  "perLevel": null
+ },
+ {
+  "row": 25,
+  "pokemon": "Buzzwole",
+  "source": "Beast Boost KO",
+  "value": 50.0,
+  "perLevel": null
+ },
+ {
+  "row": 26,
+  "pokemon": "Buzzwole",
+  "source": "Lunge",
+  "value": 30.0,
+  "perLevel": null
+ },
+ {
+  "row": 27,
+  "pokemon": "Ceruledge",
+  "source": "Take Down",
+  "value": 20.0,
+  "perLevel": null
+ },
+ {
+  "row": 28,
+  "pokemon": "Ceruledge",
+  "source": "Flame Charge",
+  "value": 30.0,
+  "perLevel": null
+ },
+ {
+  "row": 29,
+  "pokemon": "Chandelure",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 30,
+  "pokemon": "Charizard",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 31,
+  "pokemon": "Charizard [Mega X]",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 32,
+  "pokemon": "Charizard [Mega Y]",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 33,
+  "pokemon": "Cinderace",
+  "source": "Blaze",
+  "value": 20.0,
+  "perLevel": null
+ },
+ {
+  "row": 34,
+  "pokemon": "Cinderace",
+  "source": "Blaze Kick+",
+  "value": 45.0,
+  "perLevel": null
+ },
+ {
+  "row": 35,
+  "pokemon": "Cinderace",
+  "source": "Unite Buff",
+  "value": 35.0,
+  "perLevel": null
+ },
+ {
+  "row": 36,
+  "pokemon": "Clefable",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 37,
+  "pokemon": "Comfey",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 38,
+  "pokemon": "Cramorant",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 39,
+  "pokemon": "Crustle",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 40,
+  "pokemon": "Darkrai",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 41,
+  "pokemon": "Decidueye",
+  "source": "Auto Attack",
+  "value": 3.0,
+  "perLevel": "up to x4"
+ },
+ {
+  "row": 42,
+  "pokemon": "Decidueye",
+  "source": "Leafage",
+  "value": 25.0,
+  "perLevel": null
+ },
+ {
+  "row": 43,
+  "pokemon": "Decidueye",
+  "source": "Razor Leaf",
+  "value": 40.0,
+  "perLevel": 1.0
+ },
+ {
+  "row": 44,
+  "pokemon": "Delphox",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 45,
+  "pokemon": "Dhelmise",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 46,
+  "pokemon": "Dodrio",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 47,
+  "pokemon": "Dragapult",
+  "source": "Quick Attack",
+  "value": 40.0,
+  "perLevel": null
+ },
+ {
+  "row": 48,
+  "pokemon": "Dragapult",
+  "source": "Dragon Dance",
+  "value": 200.0,
+  "perLevel": null
+ },
+ {
+  "row": 49,
+  "pokemon": "Dragapult",
+  "source": "Phantom Force",
+  "value": 85.0,
+  "perLevel": null
+ },
+ {
+  "row": 50,
+  "pokemon": "Dragonite",
+  "source": "Dragon Dance",
+  "value": 80.0,
+  "perLevel": null
+ },
+ {
+  "row": 51,
+  "pokemon": "Dragonite",
+  "source": "Outrage",
+  "value": 35.0,
+  "perLevel": null
+ },
+ {
+  "row": 52,
+  "pokemon": "Dragonite",
+  "source": "Unite Buff",
+  "value": 35.0,
+  "perLevel": null
+ },
+ {
+  "row": 53,
+  "pokemon": "Duraludon",
+  "source": "Flash Cannon",
+  "value": 100.0,
+  "perLevel": "decays 20 per second"
+ },
+ {
+  "row": 54,
+  "pokemon": "Duraludon",
+  "source": "Unite Buff",
+  "value": 35.0,
+  "perLevel": null
+ },
+ {
+  "row": 55,
+  "pokemon": "Eldegoss",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 56,
+  "pokemon": "Empoleon",
+  "source": "Aqua Jet",
+  "value": 40.0,
+  "perLevel": null
+ },
+ {
+  "row": 57,
+  "pokemon": "Espeon",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 58,
+  "pokemon": "Falinks",
+  "source": "Bulk Up",
+  "value": 25.0,
+  "perLevel": null
+ },
+ {
+  "row": 59,
+  "pokemon": "Feraligatr",
+  "source": "Crunch",
+  "value": 140.0,
+  "perLevel": null
+ },
+ {
+  "row": 60,
+  "pokemon": "Feraligatr",
+  "source": "Unite Buff",
+  "value": 35.0,
+  "perLevel": null
+ },
+ {
+  "row": 61,
+  "pokemon": "Garchomp",
+  "source": "Boosted Attack",
+  "value": 28.0,
+  "perLevel": 3.0
+ },
+ {
+  "row": 62,
+  "pokemon": "Garchomp",
+  "source": "Sand Attack",
+  "value": 30.0,
+  "perLevel": null
+ },
+ {
+  "row": 63,
+  "pokemon": "Gardevoir",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 64,
+  "pokemon": "Gengar",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 65,
+  "pokemon": "Glaceon",
+  "source": "Eevee Bond",
+  "value": 1.0,
+  "perLevel": null
+ },
+ {
+  "row": 66,
+  "pokemon": "Glaceon",
+  "source": "Ice Shard",
+  "value": 60.0,
+  "perLevel": null
+ },
+ {
+  "row": 67,
+  "pokemon": "Glaceon",
+  "source": "Ice Shard+",
+  "value": 100.0,
+  "perLevel": null
+ },
+ {
+  "row": 68,
+  "pokemon": "Glaceon",
+  "source": "Unite Buff",
+  "value": 35.0,
+  "perLevel": null
+ },
+ {
+  "row": 69,
+  "pokemon": "Goodra",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 70,
+  "pokemon": "Greedent",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 71,
+  "pokemon": "Greninja",
+  "source": "Unite Buff",
+  "value": 35.0,
+  "perLevel": null
+ },
+ {
+  "row": 72,
+  "pokemon": "Gyarados",
+  "source": "Evolution",
+  "value": 40.0,
+  "perLevel": null
+ },
+ {
+  "row": 73,
+  "pokemon": "Gyarados",
+  "source": "Dragon Breath",
+  "value": 30.0,
+  "perLevel": 10.0
+ },
+ {
+  "row": 74,
+  "pokemon": "Gyarados [Mega]",
+  "source": "Evolution",
+  "value": 40.0,
+  "perLevel": null
+ },
+ {
+  "row": 75,
+  "pokemon": "Gyarados [Mega]",
+  "source": "Dragon Breath",
+  "value": 30.0,
+  "perLevel": 10.0
+ },
+ {
+  "row": 76,
+  "pokemon": "Ho-Oh",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 77,
+  "pokemon": "Hoopa",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 78,
+  "pokemon": "Inteleon",
+  "source": "Unite Buff",
+  "value": 35.0,
+  "perLevel": null
+ },
+ {
+  "row": 79,
+  "pokemon": "Lapras",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 80,
+  "pokemon": "Latias",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 81,
+  "pokemon": "Latios",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 82,
+  "pokemon": "Leafeon",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 83,
+  "pokemon": "Lucario",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 84,
+  "pokemon": "Lucario [Mega]",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 85,
+  "pokemon": "Machamp",
+  "source": "Bulk Up",
+  "value": 15.0,
+  "perLevel": null
+ },
+ {
+  "row": 86,
+  "pokemon": "Machamp",
+  "source": "Submission",
+  "value": 40.0,
+  "perLevel": null
+ },
+ {
+  "row": 87,
+  "pokemon": "Machamp",
+  "source": "Submission+",
+  "value": 50.0,
+  "perLevel": null
+ },
+ {
+  "row": 88,
+  "pokemon": "Machamp",
+  "source": "Unite Buff",
+  "value": 35.0,
+  "perLevel": null
+ },
+ {
+  "row": 89,
+  "pokemon": "Mamoswine",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 90,
+  "pokemon": "Meganium",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 91,
+  "pokemon": "Meowscarada",
+  "source": "Hone Claws",
+  "value": 80.0,
+  "perLevel": null
+ },
+ {
+  "row": 92,
+  "pokemon": "Meowscarada",
+  "source": "Trail Blaze",
+  "value": 100.0,
+  "perLevel": null
+ },
+ {
+  "row": 93,
+  "pokemon": "Meowth",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 94,
+  "pokemon": "Metagross",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 95,
+  "pokemon": "Mew",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 96,
+  "pokemon": "Mewtwo X",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 97,
+  "pokemon": "Mewtwo Y",
+  "source": "Pressure",
+  "value": 3.0,
+  "perLevel": "up to x10"
+ },
+ {
+  "row": 98,
+  "pokemon": "Mewtwo Y",
+  "source": "Mega Evolution",
+  "value": 35.0,
+  "perLevel": null
+ },
+ {
+  "row": 99,
+  "pokemon": "Mimikyu",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 100,
+  "pokemon": "Miraidon",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 101,
+  "pokemon": "Moltres",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 102,
+  "pokemon": "Mr. Mime",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 103,
+  "pokemon": "Ninetales",
+  "source": "Aurora Veil",
+  "value": 15.0,
+  "perLevel": null
+ },
+ {
+  "row": 104,
+  "pokemon": "Pawmot",
+  "source": "Fighter Mode",
+  "value": 30.0,
+  "perLevel": "up to x2"
+ },
+ {
+  "row": 105,
+  "pokemon": "Pawmot",
+  "source": "Unite Buff",
+  "value": 35.0,
+  "perLevel": null
+ },
+ {
+  "row": 106,
+  "pokemon": "Pikachu",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 107,
+  "pokemon": "Psyduck",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 108,
+  "pokemon": "Raichu",
+  "source": "Stored Power",
+  "value": 35.0,
+  "perLevel": null
+ },
+ {
+  "row": 109,
+  "pokemon": "Raichu",
+  "source": "Unite Buff",
+  "value": 35.0,
+  "perLevel": null
+ },
+ {
+  "row": 110,
+  "pokemon": "Rapidash",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 111,
+  "pokemon": "Sableye",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 112,
+  "pokemon": "Scizor",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 113,
+  "pokemon": "Scyther",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 114,
+  "pokemon": "Sirfetch'd",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 115,
+  "pokemon": "Skeledirge",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 116,
+  "pokemon": "Slowbro",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 117,
+  "pokemon": "Snorlax",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 118,
+  "pokemon": "Suicune",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 119,
+  "pokemon": "Sylveon",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 120,
+  "pokemon": "Talonflame",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 121,
+  "pokemon": "Tinkaton",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 122,
+  "pokemon": "Trevenant",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 123,
+  "pokemon": "Tsareena",
+  "source": "Triple Axel",
+  "value": 4.0,
+  "perLevel": 1.5
+ },
+ {
+  "row": 124,
+  "pokemon": "Typhlosion",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 125,
+  "pokemon": "Tyranitar",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 126,
+  "pokemon": "Umbreon",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 127,
+  "pokemon": "Urshifu",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 128,
+  "pokemon": "Vaporeon",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 129,
+  "pokemon": "Venusaur",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 130,
+  "pokemon": "Wigglytuff",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 131,
+  "pokemon": "Zacian",
+  "source": "Metal Claw",
+  "value": 80.0,
+  "perLevel": null
+ },
+ {
+  "row": 132,
+  "pokemon": "Zapdos",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ },
+ {
+  "row": 133,
+  "pokemon": "Zeraora",
+  "source": "Agility",
+  "value": 45.0,
+  "perLevel": null
+ },
+ {
+  "row": 134,
+  "pokemon": "Zeraora",
+  "source": "Volt Switch",
+  "value": 45.0,
+  "perLevel": null
+ },
+ {
+  "row": 135,
+  "pokemon": "Zeraora",
+  "source": "Volt Switch+",
+  "value": 60.0,
+  "perLevel": null
+ },
+ {
+  "row": 136,
+  "pokemon": "Zeraora",
+  "source": "Unite Buff",
+  "value": 20.0,
+  "perLevel": null
+ },
+ {
+  "row": 137,
+  "pokemon": "Zoroark",
+  "source": "-",
+  "value": null,
+  "perLevel": null
+ }
+]

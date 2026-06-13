@@ -1,0 +1,233 @@
+// Pokémon UNITE Build Optimizer — Core Data Model
+// All game data should live in versioned JSON bundles conforming to these types.
+
+// ----- Core Stat Block -------------------------------------------------------
+
+export interface StatBlock {
+  hp: number;
+  attack: number;
+  defense: number;
+  spAttack: number;
+  spDefense: number;
+  critRate: number; // percentage as decimal, e.g. 0.20 for 20%
+  cdr: number; // cooldown reduction %, e.g. 0.10
+  lifesteal: number; // %, e.g. 0.05
+  spLifesteal: number; // %
+  attackSpeed: number; // %, e.g. 0.40 for 40%
+  moveSpeed: number; // flat, engine units (~3700 base)
+}
+
+// ----- Pokémon ---------------------------------------------------------------
+
+export type Role =
+  | "Attacker"
+  | "Speedster"
+  | "AllRounder"
+  | "Defender"
+  | "Supporter";
+
+export type AttackType = "physical" | "special" | "hybrid";
+
+export interface EvolutionStage {
+  level: number;
+  formName: string;
+}
+
+export interface Pokemon {
+  id: string; // "lucario"
+  displayName: string; // "Lucario"
+  role: Role;
+  attackType: AttackType;
+  difficulty: 1 | 2 | 3;
+  imageAsset: string; // path/URL to portrait
+  iconAsset: string;
+  evolutions: EvolutionStage[]; // level thresholds for evolutions
+  baseStatsByLevel: StatBlock[]; // index 0 = level 1 ... index 14 = level 15
+  moves: Move[];
+  passiveAbility: Ability;
+  builds?: PokemonBuild[]; // curated community builds (UNITE-DB)
+  excludeStats?: string[]; // stats this Pokémon doesn't use (UNITE-DB), e.g. ["attack"]
+  hasMegaEvolution?: boolean;
+  megaStats?: StatBlock[]; // if applicable (e.g. Mega Lucario)
+}
+
+// A curated build (from UNITE-DB's per-Pokémon "Builds" tab): held items, a
+// battle item, and an exact 10-emblem set with grades.
+export interface EmblemBuildPick {
+  emblemId: string;
+  grade: EmblemGrade;
+}
+
+export interface PokemonBuild {
+  name: string; // e.g. "Power-Up Rush"
+  lane?: string;
+  emblemName?: string; // e.g. "Bulk Leaning Standard Physical"
+  heldItemIds: string[]; // up to 3
+  heldItemOptional?: string;
+  battleItemId?: string;
+  battleItemOptional?: string;
+  emblems: EmblemBuildPick[]; // the exact 10-emblem set
+}
+
+// ----- Moves & Abilities (RSB damage model) ----------------------------------
+
+export type MoveSlot = "move1" | "move2" | "uniteMove" | "basicAttack";
+
+export type DamageType = "physical" | "special" | "true";
+
+// RSB system: FLOOR(Ratio * Stat + Slider * (Level - 1) + Base)
+export interface DamageInstance {
+  ratio: number; // R — multiplier on the scaling stat
+  scalingStat: "attack" | "spAttack" | "maxHp" | "none";
+  slider: number; // S — damage gained per level
+  base: number; // B — flat base damage
+  damageType: DamageType;
+  isPercentMaxHp?: boolean; // % max-HP damage (bypasses eHP scaling)
+}
+
+export type MoveEffectType =
+  | "shield"
+  | "heal"
+  | "lifesteal"
+  | "damageReduction"
+  | "statBuff"
+  | "statDebuff"
+  | "cc"
+  | "movementBuff";
+
+export interface MoveEffect {
+  type: MoveEffectType;
+  value?: number;
+  durationSeconds?: number;
+  scalesWith?: "attack" | "spAttack" | "maxHp" | "level";
+}
+
+export interface Move {
+  id: string;
+  name: string;
+  slot: MoveSlot;
+  upgradeLevel?: number; // level the move becomes available / upgrades
+  description: string;
+  cooldownSeconds: number;
+  damageInstances: DamageInstance[]; // a move may deal damage multiple times
+  effects: MoveEffect[]; // CC, shields, heals, buffs
+  tags: string[]; // "dash", "aoe", "lifesteal-source", etc.
+}
+
+export interface Ability {
+  id: string;
+  name: string;
+  description: string;
+  effects: MoveEffect[];
+}
+
+// ----- Held Items ------------------------------------------------------------
+
+export type ItemEffectType =
+  | "onBasicAttack"
+  | "onMove"
+  | "onScore"
+  | "passive"
+  | "outOfCombat"
+  | "onHpThreshold";
+
+export interface ItemEffect {
+  type: ItemEffectType;
+  description: string;
+  value?: number; // e.g. Muscle Band % current HP
+  isPercentHp?: boolean;
+  scalesWith?: "attack" | "spAttack" | "maxHp";
+  stacking?: boolean; // e.g. Attack Weight stacks per goal
+  stackValue?: number;
+  maxStacks?: number;
+  appliesInCombat?: boolean; // false for OOC effects (e.g. Float Stone)
+}
+
+export interface HeldItem {
+  id: string; // "muscle-band"
+  displayName: string;
+  iconAsset: string;
+  description: string;
+  // Flat stats by grade (e.g. 10/20/30/40)
+  statsByGrade: Record<number, Partial<StatBlock>>;
+  conditionalEffects: ItemEffect[];
+}
+
+// ----- Emblems ---------------------------------------------------------------
+
+export type EmblemColor =
+  | "brown" // Attack
+  | "green" // Sp. Attack
+  | "blue" // Defense
+  | "purple" // Sp. Defense
+  | "white" // HP
+  | "red" // Atk Speed
+  | "yellow" // Move Speed (OOC)
+  | "black" // CDR
+  | "pink" // Hindrance reduction
+  | "navy" // no set bonus
+  | "gray"; // no set bonus
+
+export type EmblemGrade = "bronze" | "silver" | "gold" | "platinum";
+
+export interface Emblem {
+  id: string; // "diglett"
+  pokemonName: string;
+  colors: EmblemColor[]; // 1 or 2 colors
+  iconAsset: string;
+  // Platinum uses the same values as gold.
+  statsByGrade: {
+    bronze: Partial<StatBlock>;
+    silver: Partial<StatBlock>;
+    gold: Partial<StatBlock>;
+  };
+}
+
+export interface EmblemSetBonus {
+  color: EmblemColor;
+  stat: keyof StatBlock;
+  // e.g. brown = {2: 0.01, 4: 0.02, 6: 0.04}
+  //      red   = {3: 0.02, 5: 0.04, 7: 0.08}
+  thresholds: Record<number, number>;
+}
+
+export interface EmblemSlot {
+  emblem: Emblem;
+  grade: EmblemGrade;
+}
+
+export interface EmblemLoadout {
+  slots: EmblemSlot[]; // max 10
+  // Computed at runtime (see engine/emblems.ts):
+  activeSetBonuses: { color: EmblemColor; bonusPercent: number }[];
+  flatTotals: Partial<StatBlock>;
+}
+
+// ----- Battle Items (future / out of scope for v1) ---------------------------
+
+export interface BattleItem {
+  id: string;
+  displayName: string;
+  iconAsset: string;
+  description: string;
+  effects: ItemEffect[];
+}
+
+// ----- Versioned Data Bundle -------------------------------------------------
+
+export interface GameDataBundle {
+  patchVersion: string; // "1.2.3.4"
+  lastUpdated: string; // ISO date
+  pokemon: Pokemon[];
+  heldItems: HeldItem[];
+  emblems: Emblem[];
+  setBonuses: EmblemSetBonus[];
+  battleItems?: BattleItem[];
+}
+
+// ----- Calculation Context ---------------------------------------------------
+
+export interface CalcContext {
+  inCombat: boolean;
+  goalsScored: number;
+}

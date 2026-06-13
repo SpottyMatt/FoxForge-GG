@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ themes --
+   One source of truth: components use semantic token utilities (bg-surface,
+   text-ink, border-line, …). Each theme just overrides the CSS variables, so
+   adding a theme = one block below. Tailwind v4 generates the utilities from
+   these --color-* names and references them via var(), so runtime overrides
+   re-theme instantly. */
+@theme {
+  --color-bg: #eef1f5;
+  --color-surface: #ffffff;
+  --color-raise: #f1f3f7;
+  --color-line: #e5e7eb;
+  --color-line-soft: #eef1f5;
+  --color-ink: #171717;
+  --color-muted: #5b6472;
+  --color-faint: #9aa2b1;
+
+  --color-accent: #4f46e5;
+  --color-accent-strong: #4338ca;
+  --color-accent-weak: #eef2ff;
+  --color-accent-ink: #4338ca;
+
+  --color-pos: #059669;
+  --color-neg: #e11d48;
+
+  /* tone cards: recommend (indigo), attack-speed (amber), analytics (sky) */
+  --color-rec-bg: #eef2ff;
+  --color-rec-border: #c7d2fe;
+  --color-rec-ink: #4338ca;
+  --color-as-bg: #fffbeb;
+  --color-as-border: #fde68a;
+  --color-as-ink: #b45309;
+  --color-an-bg: #f0f9ff;
+  --color-an-border: #bae6fd;
+  --color-an-ink: #0369a1;
+
+  --color-header-a: #4f46e5;
+  --color-header-b: #7c3aed;
+  --color-tip-bg: #171717;
+  --color-tip-ink: #ffffff;
+}
+
+/* manual class-based dark variant (for any dark: utilities) */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+[data-theme="dark"] {
+  --color-bg: #0c0e14;
+  --color-surface: #161922;
+  --color-raise: #1f2330;
+  --color-line: #2b303d;
+  --color-line-soft: #232732;
+  --color-ink: #e8eaf0;
+  --color-muted: #a3acbd;
+  --color-faint: #6b7385;
+
+  --color-accent: #818cf8;
+  --color-accent-strong: #6366f1;
+  --color-accent-weak: #20253a;
+  --color-accent-ink: #c7cdff;
+
+  --color-pos: #34d399;
+  --color-neg: #fb7185;
+
+  --color-rec-bg: #181d2e;
+  --color-rec-border: #2e3550;
+  --color-rec-ink: #c7cdff;
+  --color-as-bg: #2a2410;
+  --color-as-border: #4d421a;
+  --color-as-ink: #fcd34d;
+  --color-an-bg: #102230;
+  --color-an-border: #1e4258;
+  --color-an-ink: #7dd3fc;
+
+  --color-header-a: #3730a3;
+  --color-header-b: #5b21b6;
+  --color-tip-bg: #2b303d;
+  --color-tip-ink: #e8eaf0;
+}
+
+/* Neo Street Holowear — neon graffiti: magenta→cyan, deep purple-black. */
+[data-theme="neo"] {
+  --color-bg: #110d1f;
+  --color-surface: #1b1630;
+  --color-raise: #251f40;
+  --color-line: #382f57;
+  --color-line-soft: #2a2444;
+  --color-ink: #f4f0ff;
+  --color-muted: #bcaee6;
+  --color-faint: #7d72a8;
+
+  --color-accent: #22d3ee;
+  --color-accent-strong: #06b6d4;
+  --color-accent-weak: #16314a;
+  --color-accent-ink: #67e8f9;
+
+  --color-pos: #4ade80;
+  --color-neg: #fb7185;
+
+  --color-rec-bg: #1d1838;
+  --color-rec-border: #c026d3;
+  --color-rec-ink: #67e8f9;
+  --color-as-bg: #2a1830;
+  --color-as-border: #be185d;
+  --color-as-ink: #fbbf24;
+  --color-an-bg: #15303a;
+  --color-an-border: #0e7490;
+  --color-an-ink: #67e8f9;
+
+  --color-header-a: #d6006e;
+  --color-header-b: #0891b2;
+  --color-tip-bg: #251f40;
+  --color-tip-ink: #f4f0ff;
+}
+
+html { background: var(--color-bg); }

@@ -1,0 +1,7 @@
+{
+  "_note": "Curated 'core' held-item pools per archetype. The recommender adds a meta bonus to items in the relevant pool so suggestions match conventional builds instead of raw stat magnitude. Edit these lists as the meta shifts; ids must match patch-*.json heldItems.",
+  "physicalCore": ["muscle-band", "scope-lens", "razor-claw", "attack-weight", "weakness-policy", "rapid-fire-scarf", "charging-charm", "drain-crown"],
+  "specialCore": ["wise-glasses", "sp--atk-specs", "choice-specs", "slick-spoon", "shell-bell", "energy-amplifier", "curse-incense"],
+  "bulkCore": ["focus-band", "buddy-barrier", "score-shield", "rocky-helmet", "assault-vest", "rescue-hood", "resonant-guard", "tenacity-belt"],
+  "supportCore": ["buddy-barrier", "exp-share", "score-shield", "vanguard-bell", "rescue-hood"]
+}

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+*.local
+.DS_Store
+
+# extraction pipeline workspace (large unpacked APK content)
+tools/extract/_work/
+tools/vendor/
+tools/extract/.venv/
+__pycache__/

@@ -1,0 +1,154 @@
+import { useMemo } from "react";
+import { useStore } from "../state/store";
+import { deriveBuild } from "../engine/derive";
+import { effectiveHp } from "../engine/formulas";
+import { boostAvailableAtLevel, boostPointsAtLevel } from "../engine/effects";
+import { STAT_ROWS, formatStat } from "../ui/format";
+import { CollapsibleCard } from "./CollapsibleCard";
+
+export function StatPanel() {
+  const { loadout, dispatch, expert } = useStore();
+  const derived = useMemo(() => deriveBuild(loadout), [loadout]);
+  const { pokemon, effective, base, attackSpeed, oocMoveSpeed, availableBoosts, emblemLoadout, buffedStats } = derived;
+
+  if (!pokemon || !effective || !base || !attackSpeed) {
+    return (
+      <div className="rounded-xl border border-neutral-200 bg-white p-6 text-neutral-500">
+        Select a Pokémon to see live stats.
+      </div>
+    );
+  }
+
+  const activeIds = new Set(loadout.activeBoostIds);
+  const offenseStat =
+    pokemon.attackType === "special" ? effective.spAttack
+    : pokemon.attackType === "hybrid" ? Math.max(effective.attack, effective.spAttack)
+    : effective.attack;
+
+  return (
+    <div className="flex flex-col gap-4">
+      {/* Level slider */}
+      <div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+        <div className="mb-2 flex items-center justify-between">
+          <label className="text-sm font-medium text-neutral-700">Level</label>
+          <span className="rounded-md bg-indigo-600 px-2 py-0.5 text-sm font-bold text-white">{loadout.level}</span>
+        </div>
+        <input
+          type="range" min={1} max={15} value={loadout.level}
+          onChange={(e) => dispatch({ type: "setLevel", level: Number(e.target.value) })}
+          className="w-full accent-indigo-600"
+        />
+      </div>
+
+      {/* Effective stats */}
+      <CollapsibleCard title="Effective Stats" persistKey="stats">
+        <dl className="grid grid-cols-2 gap-x-6 gap-y-2">
+          {STAT_ROWS.map((row) => {
+            const eff = effective[row.key];
+            const delta = eff - base[row.key];
+            const buffed = buffedStats.has(row.key);
+            return (
+              <div key={row.key} className={`flex items-baseline justify-between border-b py-1 ${buffed ? "border-amber-200" : "border-neutral-100"}`}>
+                <dt className="text-sm text-neutral-600">
+                  {row.label}
+                  {buffed && <span className="ml-1 align-middle text-[9px] font-bold uppercase text-amber-500">buff</span>}
+                </dt>
+                <dd className={`text-right font-mono text-sm font-semibold ${buffed ? "text-amber-600" : "text-neutral-900"}`}>
+                  {formatStat(eff, row.kind)}
+                  {Math.abs(delta) > 1e-9 && (
+                    <span className="ml-1 text-xs font-normal text-emerald-600">
+                      ({formatStat(delta, row.kind).replace(/^/, delta > 0 ? "+" : "")})
+                    </span>
+                  )}
+                </dd>
+              </div>
+            );
+          })}
+        </dl>
+        <p className="mt-2 text-xs text-neutral-400">
+          Out-of-combat move speed: <span className="font-mono">{oocMoveSpeed?.toLocaleString()}</span>
+          {emblemLoadout.activeSetBonuses.length > 0 && (
+            <> · Set bonuses: {emblemLoadout.activeSetBonuses.map((b) => `${b.color} +${(b.bonusPercent * 100).toFixed(0)}%`).join(", ")}</>
+          )}
+        </p>
+      </CollapsibleCard>
+
+      {/* Attack speed (Expert) */}
+      {expert && (
+      <CollapsibleCard title="Attack Speed" persistKey="attackspeed" tone="amber">
+        <div className="grid grid-cols-3 gap-2 text-center">
+          <Metric label="AS Stat" value={`${attackSpeed.asPoints.toFixed(1)}%`} />
+          <Metric label="Frames / atk" value={String(attackSpeed.frames)} />
+          <Metric label="Attacks / sec" value={attackSpeed.attacksPerSecond.toFixed(2)} />
+        </div>
+      </CollapsibleCard>
+      )}
+
+      {/* Combat analytics (Expert) */}
+      {expert && (
+      <CollapsibleCard title="Combat Analytics" persistKey="analytics" tone="sky">
+        <div className="grid grid-cols-3 gap-2 text-center">
+          <Metric tone="sky" label="Physical eHP" value={Math.round(effectiveHp(effective.hp, effective.defense)).toLocaleString()} />
+          <Metric tone="sky" label="Special eHP" value={Math.round(effectiveHp(effective.hp, effective.spDefense)).toLocaleString()} />
+          <Metric tone="sky" label="Basic ATK/s*" value={Math.round(offenseStat * attackSpeed.attacksPerSecond).toLocaleString()} />
+        </div>
+        <p className="mt-2 text-[10px] text-neutral-400">
+          eHP = HP × (1 + Def/600). *Basic ATK/s is a relative index (offense × attacks/sec), for comparing builds — not in-game damage.
+        </p>
+      </CollapsibleCard>
+      )}
+
+      {/* Active effect toggles (Expert) */}
+      {expert && (
+      <CollapsibleCard title="Active Effects" persistKey="effects">
+        <p className="mb-3 text-xs text-neutral-400">Off by default. Toggle to preview in-combat attack-speed states.</p>
+        {availableBoosts.length === 0 ? (
+          <p className="text-sm text-neutral-400">No toggleable effects for this loadout.</p>
+        ) : (
+          <ul className="flex flex-col gap-1.5">
+            {availableBoosts.map((b) => {
+              const avail = boostAvailableAtLevel(b, loadout.level);
+              const pts = boostPointsAtLevel(b, loadout.level);
+              const on = activeIds.has(b.id);
+              return (
+                <li key={b.id}>
+                  <button
+                    disabled={!avail}
+                    onClick={() => dispatch({ type: "toggleBoost", id: b.id })}
+                    title={b.note ?? ""}
+                    className={`flex w-full items-center justify-between rounded-lg border px-3 py-2 text-left text-sm transition
+                      ${on ? "border-indigo-500 bg-indigo-50" : "border-neutral-200 bg-white hover:border-neutral-300"}
+                      ${!avail ? "cursor-not-allowed opacity-40" : ""}`}
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className={`inline-block h-3 w-3 rounded-full ${on ? "bg-indigo-600" : "bg-neutral-300"}`} />
+                      <span className="font-medium text-neutral-800">{b.label}</span>
+                      <span className="text-xs uppercase text-neutral-400">{b.source}</span>
+                    </span>
+                    <span className="font-mono text-xs text-neutral-500">
+                      +{avail ? pts.toFixed(1) : "—"}% AS{b.minLevel && !avail ? ` (Lv ${b.minLevel}+)` : ""}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </CollapsibleCard>
+      )}
+    </div>
+  );
+}
+
+function Metric({ label, value, tone = "amber" }: { label: string; value: string; tone?: "amber" | "sky" }) {
+  const tones = {
+    amber: { val: "text-amber-900", lbl: "text-amber-600", bg: "bg-white/70" },
+    sky: { val: "text-sky-900", lbl: "text-sky-600", bg: "bg-sky-50" },
+  }[tone];
+  return (
+    <div className={`rounded-lg p-2 ${tones.bg}`}>
+      <div className={`font-mono text-lg font-bold ${tones.val}`}>{value}</div>
+      <div className={`text-xs ${tones.lbl}`}>{label}</div>
+    </div>
+  );
+}

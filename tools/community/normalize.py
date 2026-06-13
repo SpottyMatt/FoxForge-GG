@@ -1,0 +1,402 @@
+"""Normalize UNITE-DB raw JSON into a GameDataBundle (src/data/patch-1.23.1.1.json).
+
+Maps UNITE-DB's shapes onto schema/types.ts. Conventions applied here:
+  - Percentages become decimals (crit 20 -> 0.20, attack_speed 40 -> 0.40).
+  - Held-item flats are taken at MAX item level (30) — the build-relevant value —
+    via the formula recovered from UNITE-DB's params and verified against every
+    item's displayed max:  value = round(increment * 35 / (skip + 1) + initial_diff, float).
+  - Emblem grades A/B/C map to gold/silver/bronze (A = best = gold).
+  - Art is referenced from UNITE-DB's CloudFront CDN (case-sensitive names).
+
+Provenance: the whole bundle is community-sourced from UNITE-DB; this is recorded
+in the bundle's `dataSource` block (the APK bundles are encrypted — see
+tools/extract/ENCRYPTION-FINDINGS.md).
+
+Usage:  python3 normalize.py
+"""
+
+from __future__ import annotations
+
+import json
+from datetime import date
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+RAW = HERE / "_raw"
+OUT = HERE.parent.parent / "src" / "data" / "patch-1.23.1.1.json"
+CDN = "https://d275t8dp8rxb42.cloudfront.net"
+ASSETS = "/assets"  # local mirror under public/assets (see fetch_art.py)
+PATCH_VERSION = "1.23.1.1"
+
+# ---- helpers ---------------------------------------------------------------
+
+ROLE_MAP = {
+    "All-Rounder": "AllRounder",
+    "Attacker": "Attacker",
+    "Speedster": "Speedster",
+    "Defender": "Defender",
+    "Supporter": "Supporter",
+}
+DIFFICULTY_MAP = {"Novice": 1, "Intermediate": 2, "Expert": 3}
+COLOR_MAP = {
+    "Brown": "brown", "Green": "green", "Blue": "blue", "Purple": "purple",
+    "White": "white", "Red": "red", "Yellow": "yellow", "Black": "black",
+    "Pink": "pink", "Navy": "navy", "Gray": "gray",
+}
+GRADE_MAP = {"A": "gold", "B": "silver", "C": "bronze"}
+
+# Flat (non-percent) StatBlock fields.
+FLAT_FIELDS = {"hp", "attack", "defense", "spAttack", "spDefense", "moveSpeed"}
+
+
+def load(name: str):
+    return json.loads((RAW / f"{name}.json").read_text())
+
+
+def num(x, default=0.0) -> float:
+    if x is None or x == "":
+        return default
+    try:
+        return float(x)
+    except (TypeError, ValueError):
+        return default
+
+
+# UNITE-DB stat label -> (StatBlock field, is_percent). Labels appear across
+# stats.json, held items, emblems and emblem sets (with abbreviations).
+STAT_FIELD = {
+    "hp": ("hp", False), "HP": ("hp", False),
+    "attack": ("attack", False), "Attack": ("attack", False), "Atk": ("attack", False),
+    "defense": ("defense", False), "Defense": ("defense", False),
+    "sp_attack": ("spAttack", False), "Sp. Attack": ("spAttack", False),
+    "sp_defense": ("spDefense", False), "Sp. Defense": ("spDefense", False),
+    "crit": ("critRate", True), "Crit": ("critRate", True),
+    "Critical-Hit Rate": ("critRate", True),
+    "cdr": ("cdr", True), "CDR": ("cdr", True), "CD Reduction": ("cdr", True),
+    "lifesteal": ("lifesteal", True),
+    "attack_speed": ("attackSpeed", True), "Attack Speed": ("attackSpeed", True),
+    "AS": ("attackSpeed", True),
+    "speed": ("moveSpeed", False), "Speed": ("moveSpeed", False),
+    "move_speed": ("moveSpeed", False), "Movement Speed": ("moveSpeed", False),
+}
+
+
+def map_stat(label: str, value: float):
+    """Return (field, decimal_value) or None if the label has no StatBlock field."""
+    entry = STAT_FIELD.get(label)
+    if entry is None:
+        return None
+    field, is_percent = entry
+    return field, (value / 100.0 if is_percent else value)
+
+
+# ---- pokemon ---------------------------------------------------------------
+
+DMG_TYPE = {"Atk": "physical", "SpAtk": "special", "Sp. Atk": "special", "True": "true"}
+SCALING = {"Atk": "attack", "SpAtk": "spAttack", "Sp. Atk": "spAttack",
+           "True": "none", "Max HP": "maxHp"}
+SLOT_MAP = {"Basic": "basicAttack", "Move 1": "move1", "Move 2": "move2",
+            "Unite": "uniteMove", "Unite Move": "uniteMove"}
+
+
+def stat_block(level_row: dict) -> dict:
+    """UNITE-DB stats.json level row -> full StatBlock (decimals for %)."""
+    return {
+        "hp": num(level_row.get("hp")),
+        "attack": num(level_row.get("attack")),
+        "defense": num(level_row.get("defense")),
+        "spAttack": num(level_row.get("sp_attack")),
+        "spDefense": num(level_row.get("sp_defense")),
+        "critRate": num(level_row.get("crit")) / 100.0,
+        "cdr": num(level_row.get("cdr")) / 100.0,
+        "lifesteal": num(level_row.get("lifesteal")) / 100.0,
+        "spLifesteal": 0.0,
+        "attackSpeed": num(level_row.get("attack_speed")) / 100.0,
+        "moveSpeed": num(level_row.get("move_speed")),
+    }
+
+
+def damage_instances(rsb: dict) -> list:
+    """Extract the primary + add1..add5 damage instances from a skill rsb block."""
+    out = []
+    groups = [("ratio", "dmg_type", "slider", "base")]
+    groups += [(f"add{i}_ratio", f"add{i}_dmg_type", f"add{i}_slider", f"add{i}_base")
+               for i in range(1, 6)]
+    for rk, dk, sk, bk in groups:
+        if not rsb.get(rk):
+            continue
+        dt = rsb.get(dk, "")
+        out.append({
+            "ratio": num(rsb.get(rk)) / 100.0,
+            "scalingStat": SCALING.get(dt, "none"),
+            "slider": num(rsb.get(sk)),
+            "base": num(rsb.get(bk)),
+            "damageType": DMG_TYPE.get(dt, "true"),
+        })
+    return out
+
+
+def build_move(skill: dict, slot: str) -> dict:
+    rsb = skill.get("rsb") or {}
+    tags = []
+    if skill.get("type"):
+        tags.append(str(skill["type"]).lower())
+    return {
+        "id": slugify(skill.get("name", slot)),
+        "name": skill.get("name", ""),
+        "slot": slot,
+        "description": skill.get("description", "") or "",
+        "cooldownSeconds": num(skill.get("cd")),
+        "damageInstances": damage_instances(rsb),
+        "effects": [],
+        "tags": tags,
+    }
+
+
+def slugify(s: str) -> str:
+    return "".join(c if c.isalnum() else "-" for c in s.lower()).strip("-")
+
+
+def decode_emblem_link(link: str, pokedex_to_id: dict) -> list:
+    """Decode a UNITE-DB boost-emblems link's `build=` param into emblem picks.
+
+    Param looks like `250A,022A,...,142C` — each token is a 3-digit pokedex
+    number + grade letter (A=gold, B=silver, C=bronze). Returns up to 10
+    {emblemId, grade} picks, skipping any pokedex we don't have an emblem for.
+    """
+    if not link or "build=" not in link:
+        return []
+    raw = link.split("build=", 1)[1].split("&")[0]
+    picks = []
+    for tok in raw.split(","):
+        tok = tok.strip()
+        if len(tok) < 2:
+            continue
+        pokedex, letter = tok[:-1], tok[-1].upper()
+        emblem_id = pokedex_to_id.get(pokedex)
+        if emblem_id and letter in GRADE_MAP:
+            picks.append({"emblemId": emblem_id, "grade": GRADE_MAP[letter]})
+    return picks
+
+
+def build_one_build(b: dict, pokedex_to_id: dict) -> dict | None:
+    """Normalize one UNITE-DB build entry. Skips placeholders (`soon`)."""
+    if str(b.get("soon", "False")).lower() == "true":
+        return None
+    held = [slugify(h) for h in (b.get("held_items") or []) if h]
+    emblem_links = b.get("emblem_link") or []
+    emblems = decode_emblem_link(emblem_links[0], pokedex_to_id) if emblem_links else []
+    emblem_names = b.get("emblem_name") or []
+    out = {
+        "name": b.get("name", "Build"),
+        "heldItemIds": held,
+        "emblems": emblems,
+    }
+    if b.get("lane"):
+        out["lane"] = b["lane"]
+    if emblem_names:
+        out["emblemName"] = emblem_names[0]
+    if b.get("held_items_optional"):
+        out["heldItemOptional"] = slugify(b["held_items_optional"])
+    if b.get("battle_item"):
+        out["battleItemId"] = slugify(b["battle_item"])
+    if b.get("battle_item_optional"):
+        out["battleItemOptional"] = slugify(b["battle_item_optional"])
+    return out
+
+
+def build_pokemon(pokemon_rows, stats_rows, pokedex_to_id: dict) -> list:
+    stats_by_name = {p["name"]: p for p in stats_rows}
+    out = []
+    for p in pokemon_rows:
+        name = p["name"]
+        srow = stats_by_name.get(name)
+        if not srow or len(srow.get("level", [])) < 15:
+            print(f"  ! skipping {name}: missing 15-level stats")
+            continue
+        tags = p.get("tags") or {}
+        skills = p.get("skills") or []
+        passive = next((s for s in skills if s.get("ability") == "Passive"), None)
+        moves = []
+        for s in skills:
+            slot = SLOT_MAP.get(s.get("ability", ""))
+            if slot:
+                moves.append(build_move(s, slot))
+        mega = stats_by_name.get(f"Mega-{name}")
+        builds = [nb for b in (p.get("builds") or []) if (nb := build_one_build(b, pokedex_to_id))]
+        exclude = p.get("exclude_stats")
+        out.append({
+            "id": slugify(name),
+            "displayName": p.get("display_name", name),
+            "role": ROLE_MAP.get(tags.get("role"), "AllRounder"),
+            "attackType": "special" if p.get("damage_type") == "Special" else "physical",
+            "difficulty": DIFFICULTY_MAP.get(tags.get("difficulty"), 2),
+            "imageAsset": f"{ASSETS}/pokemon/portrait/{name}.png",
+            "iconAsset": f"{ASSETS}/pokemon/thumbnail/{name}.png",
+            "evolutions": [{"level": 1, "formName": p.get("display_name", name)}],
+            "baseStatsByLevel": [stat_block(r) for r in srow["level"][:15]],
+            "moves": moves,
+            "passiveAbility": {
+                "id": slugify(passive["name"]) if passive else f"{slugify(name)}-passive",
+                "name": passive.get("name", "Passive") if passive else "Passive",
+                "description": (passive or {}).get("description", "") or "",
+                "effects": [],
+            },
+            **({"builds": builds} if builds else {}),
+            **({"excludeStats": exclude} if isinstance(exclude, list) and exclude else {}),
+            **({"hasMegaEvolution": True,
+                "megaStats": [stat_block(r) for r in mega["level"][:15]]} if mega else {}),
+        })
+    return out
+
+
+# ---- held items ------------------------------------------------------------
+
+def held_item_value(stat: dict) -> float:
+    """Max-level (30) value:  increment * 35/(skip+1) + initial_diff.
+
+    NB: the `float` field is a display-precision hint, NOT a rounding rule for
+    the canonical value — Muscle Band's true max is 17.5 Attack / 8.75% even
+    though float=0/1. We keep full precision and only clean FP noise later.
+    """
+    incr = num(stat.get("increment"))
+    skip = num(stat.get("skip"))
+    diff = num(stat.get("initial_diff"))
+    return incr * 35.0 / (skip + 1.0) + diff
+
+
+def icon_name(item: dict) -> str:
+    """UNITE-DB item icons live at <name with spaces -> '+'>.png, using the
+    punctuation-free `name` field (e.g. 'Exp Share', not 'Exp. Share')."""
+    return item["name"].replace(" ", "+")
+
+
+def build_held_items(rows) -> list:
+    out = []
+    for h in rows:
+        name = h["display_name"]
+        flats = {}
+        for s in h.get("stats", []):
+            value = held_item_value(s)
+            mapped = map_stat(s.get("label", ""), value)
+            if mapped is None:
+                continue  # non-StatBlock stat (Energy Rate, HP/5s, Crit Dmg) -> skip flats
+            field, decimal_value = mapped
+            flats[field] = round(flats.get(field, 0) + decimal_value, 6)
+        out.append({
+            "id": slugify(h["name"]),
+            "displayName": name,
+            "iconAsset": f"{ASSETS}/items/held/{icon_name(h)}.png",
+            "description": h.get("description1", "") or "",
+            "statsByGrade": {"30": flats},
+            "conditionalEffects": [],
+        })
+    return out
+
+
+def build_battle_items(rows) -> list:
+    return [{
+        "id": slugify(b["name"]),
+        "displayName": b["display_name"],
+        "iconAsset": f"{ASSETS}/items/battle/{icon_name(b)}.png",
+        "description": b.get("description", "") or "",
+        "effects": [],
+    } for b in rows]
+
+
+# ---- emblems ---------------------------------------------------------------
+
+def emblem_stat_block(stats_list) -> dict:
+    out = {}
+    for s in stats_list or []:
+        for k, v in s.items():
+            mapped = map_stat(k, num(v))
+            if mapped is None:
+                continue
+            field, decimal_value = mapped
+            out[field] = out.get(field, 0) + decimal_value
+    return out
+
+
+def build_emblems(rows) -> list:
+    grouped: dict[str, dict] = {}
+    for e in rows:
+        key = e.get("pokedex", e["display_name"])
+        pokedex = e.get("pokedex", "")
+        g = grouped.setdefault(key, {
+            "id": f"{pokedex}-{slugify(e['display_name'])}".strip("-"),
+            "pokemonName": e["display_name"],
+            "colors": [c for c in [COLOR_MAP.get(e.get("color1")), COLOR_MAP.get(e.get("color2"))] if c],
+            # Emblem faces live at /emblems/pokedex/<pokedex><grade>.png; the A-grade
+            # image is shared across grades, so use it as the representative icon.
+            "iconAsset": f"{ASSETS}/emblems/pokedex/{pokedex}A.png",
+            "statsByGrade": {},
+        })
+        grade = GRADE_MAP.get(e.get("grade"))
+        if grade:
+            g["statsByGrade"][grade] = emblem_stat_block(e.get("stats"))
+    # ensure all three grades present (fill missing with the best available)
+    out = []
+    for g in grouped.values():
+        sbg = g["statsByGrade"]
+        for grade in ("bronze", "silver", "gold"):
+            sbg.setdefault(grade, sbg.get("gold") or sbg.get("silver") or sbg.get("bronze") or {})
+        out.append(g)
+    return out
+
+
+def build_set_bonuses(rows) -> list:
+    out = []
+    for s in rows:
+        color = COLOR_MAP.get(s.get("color"))
+        mapped = map_stat(s.get("stat", ""), 0)
+        stat_field = mapped[0] if mapped else "hp"  # placeholder for color w/o StatBlock stat
+        sign = -1.0 if s.get("math") == "sub" else 1.0
+        out.append({
+            "color": color,
+            "stat": stat_field,
+            "thresholds": {
+                str(int(s["count1"])): sign * num(s.get("bonus1")) / 100.0,
+                str(int(s["count2"])): sign * num(s.get("bonus2")) / 100.0,
+                str(int(s["count3"])): sign * num(s.get("bonus3")) / 100.0,
+            },
+        })
+    return out
+
+
+# ---- main ------------------------------------------------------------------
+
+def main() -> None:
+    emblems = build_emblems(load("emblems"))
+    # pokedex number (e.g. "250") -> emblem id (e.g. "250-ho-oh"), for decoding builds.
+    pokedex_to_id = {e["id"].split("-", 1)[0]: e["id"] for e in emblems}
+    pokemon = build_pokemon(load("pokemon"), load("stats"), pokedex_to_id)
+    held = build_held_items(load("held_items"))
+    battle = build_battle_items(load("battle_items"))
+    set_bonuses = build_set_bonuses(load("emblem_sets"))
+
+    bundle = {
+        "patchVersion": PATCH_VERSION,
+        "lastUpdated": date.today().isoformat(),
+        "dataSource": {
+            "provider": "UNITE-DB",
+            "url": "https://unite-db.com",
+            "note": "Community-sourced (APK bundles encrypted; see tools/extract/ENCRYPTION-FINDINGS.md). "
+                    "Held-item values at max level 30. Percentages stored as decimals.",
+            "fetched": date.today().isoformat(),
+        },
+        "pokemon": pokemon,
+        "heldItems": held,
+        "battleItems": battle,
+        "emblems": emblems,
+        "setBonuses": set_bonuses,
+    }
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(json.dumps(bundle, indent=2, ensure_ascii=False))
+    print(f"\nWrote {OUT}")
+    print(f"  pokemon={len(pokemon)} heldItems={len(held)} battleItems={len(battle)} "
+          f"emblems={len(emblems)} setBonuses={len(set_bonuses)}")
+
+
+if __name__ == "__main__":
+    main()

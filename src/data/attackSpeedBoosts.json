@@ -1,0 +1,426 @@
+{
+  "_source": "docs/Attack Speed Calculator.xlsx",
+  "_note": "Attack-speed boosts in percentage points. 'passive' globals are already in the bundle (item stats / red set bonus) — do not toggle them.",
+  "globalItems": [
+    {
+      "id": "x-attack",
+      "label": "X-Atk",
+      "asPoints": 25.0,
+      "kind": "active"
+    },
+    {
+      "id": "muscle-band",
+      "label": "Muscle Band",
+      "asPoints": 8.75,
+      "kind": "passive"
+    },
+    {
+      "id": "rapid-fire-scarf",
+      "label": "Rapid Fire Scarf",
+      "asPoints": 10.5,
+      "kind": "passive"
+    },
+    {
+      "id": "rapid-fire-scarf-proc",
+      "label": "RFS Proc",
+      "asPoints": 25.0,
+      "kind": "active"
+    },
+    {
+      "id": "choice-scarf",
+      "label": "Choice Scarf",
+      "asPoints": 8.75,
+      "kind": "passive"
+    },
+    {
+      "id": "red-3",
+      "label": "Red 3",
+      "asPoints": 2.0,
+      "kind": "passive"
+    },
+    {
+      "id": "red-5",
+      "label": "Red 5",
+      "asPoints": 4.0,
+      "kind": "passive"
+    },
+    {
+      "id": "red-7",
+      "label": "Red 7",
+      "asPoints": 8.0,
+      "kind": "passive"
+    },
+    {
+      "id": "blissey-helping-hand",
+      "label": "Blissey Helping Hand",
+      "asPoints": 30.0,
+      "kind": "ally"
+    },
+    {
+      "id": "mew-coaching",
+      "label": "Mew Coaching",
+      "asPoints": 40.0,
+      "kind": "ally"
+    }
+  ],
+  "moves": {
+    "Absol": [
+      {
+        "source": "Feint",
+        "asPoints": 60.0,
+        "maxLevel": 4
+      },
+      {
+        "source": "Night Slash",
+        "asPoints": 60.0,
+        "minLevel": 5
+      },
+      {
+        "source": "Sucker Punch+",
+        "asPoints": 40.0,
+        "minLevel": 13
+      }
+    ],
+    "Aegislash": [
+      {
+        "source": "Sword Stance",
+        "asPoints": 15.0,
+        "minLevel": 7
+      },
+      {
+        "source": "Shield Stance",
+        "asPoints": -20.0,
+        "minLevel": 7
+      },
+      {
+        "source": "Stance Change",
+        "asPoints": 15.0,
+        "minLevel": 7
+      }
+    ],
+    "Azumarill": [
+      {
+        "source": "Aqua Tail",
+        "asPoints": 20.0,
+        "minLevel": 4
+      }
+    ],
+    "Blaziken": [
+      {
+        "source": "Punch Style",
+        "asPoints": 40.0,
+        "maxLevel": 4,
+        "minLevel": 8
+      }
+    ],
+    "Buzzwole": [
+      {
+        "source": "Beast Boost Assist",
+        "asPoints": 25.0
+      },
+      {
+        "source": "Beast Boost KO",
+        "asPoints": 50.0
+      },
+      {
+        "source": "Lunge",
+        "asPoints": 30.0,
+        "minLevel": 7
+      }
+    ],
+    "Ceruledge": [
+      {
+        "source": "Take Down",
+        "asPoints": 20.0,
+        "maxLevel": 6
+      },
+      {
+        "source": "Flame Charge",
+        "asPoints": 30.0,
+        "minLevel": 7
+      }
+    ],
+    "Cinderace": [
+      {
+        "source": "Blaze",
+        "asPoints": 20.0
+      },
+      {
+        "source": "Blaze Kick+",
+        "asPoints": 45.0,
+        "minLevel": 11
+      },
+      {
+        "source": "Unite Buff",
+        "asPoints": 35.0,
+        "minLevel": 9
+      }
+    ],
+    "Decidueye": [
+      {
+        "source": "Auto Attack",
+        "asPoints": 3.0
+      },
+      {
+        "source": "Leafage",
+        "asPoints": 25.0,
+        "maxLevel": 6
+      },
+      {
+        "source": "Razor Leaf",
+        "asPoints": 40.0,
+        "perLevel": 1.0,
+        "minLevel": 7
+      }
+    ],
+    "Dragapult": [
+      {
+        "source": "Quick Attack",
+        "asPoints": 40.0,
+        "maxLevel": 4
+      },
+      {
+        "source": "Dragon Dance",
+        "asPoints": 200.0,
+        "minLevel": 5
+      },
+      {
+        "source": "Phantom Force",
+        "asPoints": 85.0,
+        "minLevel": 5
+      }
+    ],
+    "Dragonite": [
+      {
+        "source": "Dragon Dance",
+        "asPoints": 80.0,
+        "minLevel": 5
+      },
+      {
+        "source": "Outrage",
+        "asPoints": 35.0,
+        "minLevel": 8
+      },
+      {
+        "source": "Unite Buff",
+        "asPoints": 35.0,
+        "minLevel": 9
+      }
+    ],
+    "Duraludon": [
+      {
+        "source": "Flash Cannon",
+        "asPoints": 100.0,
+        "minLevel": 5
+      },
+      {
+        "source": "Unite Buff",
+        "asPoints": 35.0,
+        "minLevel": 9
+      }
+    ],
+    "Empoleon": [
+      {
+        "source": "Aqua Jet",
+        "asPoints": 40.0,
+        "minLevel": 5
+      }
+    ],
+    "Falinks": [
+      {
+        "source": "Bulk Up",
+        "asPoints": 25.0,
+        "maxLevel": 5
+      }
+    ],
+    "Feraligatr": [
+      {
+        "source": "Crunch",
+        "asPoints": 140.0,
+        "maxLevel": 3
+      },
+      {
+        "source": "Unite Buff",
+        "asPoints": 35.0,
+        "maxLevel": 7
+      }
+    ],
+    "Garchomp": [
+      {
+        "source": "Boosted Attack",
+        "asPoints": 28.0,
+        "perLevel": 3.0
+      },
+      {
+        "source": "Sand Attack",
+        "asPoints": 30.0,
+        "maxLevel": 4
+      }
+    ],
+    "Glaceon": [
+      {
+        "source": "Eevee Bond",
+        "asPoints": 1.0
+      },
+      {
+        "source": "Ice Shard",
+        "asPoints": 60.0,
+        "minLevel": 6,
+        "maxLevel": 11
+      },
+      {
+        "source": "Ice Shard+",
+        "asPoints": 100.0,
+        "minLevel": 12
+      },
+      {
+        "source": "Unite Buff",
+        "asPoints": 35.0,
+        "minLevel": 8
+      }
+    ],
+    "Greninja": [
+      {
+        "source": "Unite Buff",
+        "asPoints": 35.0,
+        "minLevel": 9
+      }
+    ],
+    "Gyarados": [
+      {
+        "source": "Evolution",
+        "asPoints": 40.0
+      },
+      {
+        "source": "Dragon Breath",
+        "asPoints": 30.0,
+        "perLevel": 10.0
+      }
+    ],
+    "Gyarados [Mega]": [
+      {
+        "source": "Evolution",
+        "asPoints": 40.0
+      },
+      {
+        "source": "Dragon Breath",
+        "asPoints": 30.0,
+        "perLevel": 10.0
+      }
+    ],
+    "Inteleon": [
+      {
+        "source": "Unite Buff",
+        "asPoints": 35.0,
+        "minLevel": 9
+      }
+    ],
+    "Machamp": [
+      {
+        "source": "Bulk Up",
+        "asPoints": 15.0,
+        "maxLevel": 4
+      },
+      {
+        "source": "Submission",
+        "asPoints": 40.0,
+        "minLevel": 5,
+        "maxLevel": 10
+      },
+      {
+        "source": "Submission+",
+        "asPoints": 50.0,
+        "minLevel": 11
+      },
+      {
+        "source": "Unite Buff",
+        "asPoints": 35.0,
+        "minLevel": 9
+      }
+    ],
+    "Meowscarada": [
+      {
+        "source": "Hone Claws",
+        "asPoints": 80.0,
+        "maxLevel": 6
+      },
+      {
+        "source": "Trail Blaze",
+        "asPoints": 100.0,
+        "minLevel": 7
+      }
+    ],
+    "Mewtwo Y": [
+      {
+        "source": "Pressure",
+        "asPoints": 3.0
+      },
+      {
+        "source": "Mega Evolution",
+        "asPoints": 35.0,
+        "minLevel": 5
+      }
+    ],
+    "Ninetales": [
+      {
+        "source": "Aurora Veil",
+        "asPoints": 15.0,
+        "minLevel": 6
+      }
+    ],
+    "Pawmot": [
+      {
+        "source": "Fighter Mode",
+        "asPoints": 30.0,
+        "minLevel": 9
+      },
+      {
+        "source": "Unite Buff",
+        "asPoints": 30.0,
+        "minLevel": 9
+      }
+    ],
+    "Raichu": [
+      {
+        "source": "Stored Power",
+        "asPoints": 35.0,
+        "minLevel": 5
+      },
+      {
+        "source": "Unite Buff",
+        "asPoints": 35.0,
+        "minLevel": 9
+      }
+    ],
+    "Zacian": [
+      {
+        "source": "Metal Claw",
+        "asPoints": 80.0,
+        "minLevel": 5
+      }
+    ],
+    "Zeraora": [
+      {
+        "source": "Agility",
+        "asPoints": 45.0,
+        "maxLevel": 4
+      },
+      {
+        "source": "Volt Switch",
+        "asPoints": 45.0,
+        "minLevel": 5,
+        "maxLevel": 10
+      },
+      {
+        "source": "Volt Switch+",
+        "asPoints": 60.0,
+        "minLevel": 11
+      },
+      {
+        "source": "Unite Buff",
+        "asPoints": 20.0,
+        "minLevel": 9
+      }
+    ]
+  }
+}

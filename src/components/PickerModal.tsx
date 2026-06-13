@@ -1,0 +1,131 @@
+import { useMemo, useState, type ReactNode } from "react";
+import { asset } from "../ui/asset";
+import type { EmblemGrade } from "../types";
+
+export interface PickItem {
+  id: string;
+  name: string;
+  icon: string;
+  subtitle?: string;
+  title?: string; // hover tooltip (e.g. item description)
+}
+
+const GRADES: EmblemGrade[] = ["bronze", "silver", "gold"];
+
+interface Props {
+  title: string;
+  items: PickItem[];
+  onPick: (id: string, grade?: EmblemGrade) => void;
+  onClose: () => void;
+  filters?: { label: string; predicate: (id: string) => boolean }[];
+  grades?: boolean; // show a Bronze/Silver/Gold toggle (emblems)
+  owned?: Set<string>; // keys are `${id}:${grade}`; enables ownership stars + "Owned only"
+  onToggleOwn?: (id: string, grade: EmblemGrade) => void;
+  iconForGrade?: (id: string, grade: EmblemGrade) => string; // grade-correct image (emblems)
+  footer?: ReactNode;
+}
+
+export function PickerModal({ title, items, onPick, onClose, filters, grades, owned, onToggleOwn, iconForGrade }: Props) {
+  const [query, setQuery] = useState("");
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const [ownedOnly, setOwnedOnly] = useState(false);
+  const [grade, setGrade] = useState<EmblemGrade>("gold");
+
+  const isOwned = (id: string) => owned?.has(grades ? `${id}:${grade}` : id);
+
+  const shown = useMemo(() => {
+    const f = filters?.find((x) => x.label === activeFilter);
+    return items.filter(
+      (it) =>
+        it.name.toLowerCase().includes(query.toLowerCase()) &&
+        (!f || f.predicate(it.id)) &&
+        (!ownedOnly || isOwned(it.id)),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items, query, activeFilter, filters, ownedOnly, owned, grade]);
+
+  const ownedCount = owned ? (grades ? [...owned].filter((k) => k.endsWith(`:${grade}`)).length : owned.size) : 0;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
+      <div className="flex max-h-[80vh] w-full max-w-2xl flex-col rounded-2xl bg-white p-5 shadow-xl" onClick={(e) => e.stopPropagation()}>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-lg font-bold text-neutral-800">{title}</h2>
+          <button onClick={onClose} className="rounded-lg px-2 py-1 text-neutral-400 hover:bg-neutral-100">✕</button>
+        </div>
+        <input
+          autoFocus value={query} onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search…"
+          className="mb-3 rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-indigo-500"
+        />
+        {grades && (
+          <div className="mb-3 flex items-center gap-2">
+            <span className="text-xs font-medium text-neutral-500">Grade</span>
+            <div className="flex gap-1 rounded-lg bg-neutral-100 p-0.5">
+              {GRADES.map((g) => (
+                <button
+                  key={g}
+                  onClick={() => setGrade(g)}
+                  className={`rounded-md px-3 py-1 text-xs font-semibold capitalize transition ${
+                    grade === g ? "bg-white text-indigo-700 shadow-sm" : "text-neutral-500 hover:text-neutral-700"
+                  }`}
+                >
+                  {g}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        {(filters || owned) && (
+          <div className="mb-3 flex flex-wrap gap-1">
+            <FilterChip label="All" active={activeFilter === null && !ownedOnly} onClick={() => { setActiveFilter(null); setOwnedOnly(false); }} />
+            {owned && <FilterChip label={`★ Owned (${ownedCount})`} active={ownedOnly} onClick={() => setOwnedOnly((v) => !v)} />}
+            {filters?.map((f) => (
+              <FilterChip key={f.label} label={f.label} active={activeFilter === f.label} onClick={() => setActiveFilter(f.label)} />
+            ))}
+          </div>
+        )}
+        <div className="grid grid-cols-3 gap-2 overflow-y-auto sm:grid-cols-4">
+          {shown.map((it) => {
+            const ownedHere = isOwned(it.id);
+            return (
+              <button
+                key={it.id}
+                onClick={() => { onPick(it.id, grades ? grade : undefined); onClose(); }}
+                title={it.title ?? it.name}
+                className={`relative flex flex-col items-center gap-1 rounded-xl border p-2 text-center hover:border-indigo-400 hover:bg-indigo-50 ${
+                  ownedHere ? "border-amber-300 bg-amber-50/50" : "border-neutral-200"
+                }`}
+              >
+                {onToggleOwn && (
+                  <span
+                    role="button"
+                    title={ownedHere ? `Owned (${grade}) — click to unmark` : `Mark ${grade} as owned`}
+                    onClick={(e) => { e.stopPropagation(); onToggleOwn(it.id, grade); }}
+                    className={`absolute right-1 top-1 text-sm leading-none ${ownedHere ? "text-amber-500" : "text-neutral-300 hover:text-amber-400"}`}
+                  >
+                    ★
+                  </span>
+                )}
+                <img src={asset(grades && iconForGrade ? iconForGrade(it.id, grade) : it.icon)} alt={it.name} loading="lazy" className="h-12 w-12 object-contain" />
+                <span className="text-xs font-medium leading-tight text-neutral-700">{it.name}</span>
+                {it.subtitle && <span className="text-[10px] text-neutral-400">{it.subtitle}</span>}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FilterChip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`rounded-full px-3 py-1 text-xs font-medium ${active ? "bg-indigo-600 text-white" : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"}`}
+    >
+      {label}
+    </button>
+  );
+}

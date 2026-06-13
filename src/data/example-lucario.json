@@ -1,0 +1,142 @@
+{  
+  "patchVersion": "EXAMPLE-0.0.0",  
+  "lastUpdated": "2026-06-11",  
+  "note": "Illustrative example for engine validation. Verify all values against current in-game data before use. Move RSB values below are PLACEHOLDERS and must be filled from real data.",  
+  "pokemon": [  
+    {  
+      "id": "lucario",  
+      "displayName": "Lucario",  
+      "role": "AllRounder",  
+      "attackType": "physical",  
+      "difficulty": 2,  
+      "imageAsset": "assets/pokemon/lucario.png",  
+      "iconAsset": "assets/icons/lucario.png",  
+      "evolutions": [{ "level": 1, "formName": "Lucario" }],  
+      "hasMegaEvolution": true,  
+      "baseStatsByLevel": [  
+        { "hp": 3250, "attack": 160, "defense": 78,  "spAttack": 20,  "spDefense": 60,  "critRate": 0.00, "cdr": 0, "lifesteal": 0, "spLifesteal": 0, "attackSpeed": 0.1000, "moveSpeed": 3700 },  
+        { "hp": 3392, "attack": 170, "defense": 89,  "spAttack": 23,  "spDefense": 69,  "critRate": 0.00, "cdr": 0, "lifesteal": 0, "spLifesteal": 0, "attackSpeed": 0.1107, "moveSpeed": 3700 },  
+        { "hp": 3549, "attack": 180, "defense": 101, "spAttack": 27,  "spDefense": 78,  "critRate": 0.00, "cdr": 0, "lifesteal": 0, "spLifesteal": 0, "attackSpeed": 0.1224, "moveSpeed": 3700 },  
+        { "hp": 3721, "attack": 192, "defense": 114, "spAttack": 31,  "spDefense": 88,  "critRate": 0.00, "cdr": 0, "lifesteal": 0, "spLifesteal": 0, "attackSpeed": 0.1353, "moveSpeed": 3700 },  
+        { "hp": 3910, "attack": 205, "defense": 129, "spAttack": 35,  "spDefense": 99,  "critRate": 0.10, "cdr": 0, "lifesteal": 0.05, "spLifesteal": 0, "attackSpeed": 0.1495, "moveSpeed": 3850 },  
+        { "hp": 4118, "attack": 219, "defense": 145, "spAttack": 40,  "spDefense": 112, "critRate": 0.10, "cdr": 0, "lifesteal": 0.05, "spLifesteal": 0, "attackSpeed": 0.1651, "moveSpeed": 3850 },  
+        { "hp": 4347, "attack": 234, "defense": 163, "spAttack": 45,  "spDefense": 126, "critRate": 0.10, "cdr": 0, "lifesteal": 0.05, "spLifesteal": 0, "attackSpeed": 0.1823, "moveSpeed": 4000 },  
+        { "hp": 4599, "attack": 251, "defense": 183, "spAttack": 51,  "spDefense": 141, "critRate": 0.10, "cdr": 0, "lifesteal": 0.05, "spLifesteal": 0, "attackSpeed": 0.2012, "moveSpeed": 4000 },  
+        { "hp": 4877, "attack": 270, "defense": 205, "spAttack": 58,  "spDefense": 158, "critRate": 0.20, "cdr": 0, "lifesteal": 0.10, "spLifesteal": 0, "attackSpeed": 0.2221, "moveSpeed": 4150 },  
+        { "hp": 5184, "attack": 291, "defense": 229, "spAttack": 65,  "spDefense": 176, "critRate": 0.20, "cdr": 0, "lifesteal": 0.10, "spLifesteal": 0, "attackSpeed": 0.2451, "moveSpeed": 4150 },  
+        { "hp": 5522, "attack": 314, "defense": 255, "spAttack": 73,  "spDefense": 196, "critRate": 0.20, "cdr": 0, "lifesteal": 0.10, "spLifesteal": 0, "attackSpeed": 0.2704, "moveSpeed": 4300 },  
+        { "hp": 5894, "attack": 339, "defense": 284, "spAttack": 82,  "spDefense": 218, "critRate": 0.20, "cdr": 0, "lifesteal": 0.10, "spLifesteal": 0, "attackSpeed": 0.2983, "moveSpeed": 4300 },  
+        { "hp": 6303, "attack": 366, "defense": 316, "spAttack": 92,  "spDefense": 243, "critRate": 0.20, "cdr": 0, "lifesteal": 0.15, "spLifesteal": 0, "attackSpeed": 0.3290, "moveSpeed": 4300 },  
+        { "hp": 6753, "attack": 396, "defense": 351, "spAttack": 103, "spDefense": 270, "critRate": 0.20, "cdr": 0, "lifesteal": 0.15, "spLifesteal": 0, "attackSpeed": 0.3628, "moveSpeed": 4300 },  
+        { "hp": 7249, "attack": 429, "defense": 390, "spAttack": 115, "spDefense": 300, "critRate": 0.20, "cdr": 0, "lifesteal": 0.15, "spLifesteal": 0, "attackSpeed": 0.4000, "moveSpeed": 4300 }  
+      ],  
+      "passiveAbility": {  
+        "id": "steadfast",  
+        "name": "Steadfast (placeholder)",  
+        "description": "PLACEHOLDER — fill from real data.",  
+        "effects": []  
+      },  
+      "moves": [  
+        {  
+          "id": "placeholder-basic",  
+          "name": "Basic Attack",  
+          "slot": "basicAttack",  
+          "description": "PLACEHOLDER — 100% Atk + 0 * (Level-1) + 0",  
+          "cooldownSeconds": 0,  
+          "damageInstances": [  
+            { "ratio": 1.0, "scalingStat": "attack", "slider": 0, "base": 0, "damageType": "physical" }  
+          ],  
+          "effects": [],  
+          "tags": ["basic-attack"]  
+        }  
+      ]  
+    }  
+  ],  
+  "heldItems": [  
+    {  
+      "id": "float-stone",  
+      "displayName": "Float Stone",  
+      "iconAsset": "assets/items/float-stone.png",  
+      "description": "Increases movement speed by 20% when the Pokémon is not in combat.",  
+      "statsByGrade": {  
+        "40": { "attack": 28, "moveSpeed": 175 }  
+      },  
+      "conditionalEffects": [  
+        {  
+          "type": "outOfCombat",  
+          "description": "+20% movement speed when out of combat.",  
+          "value": 0.20,  
+          "appliesInCombat": false  
+        }  
+      ]  
+    },  
+    {  
+      "id": "amulet-coin",  
+      "displayName": "Amulet Coin",  
+      "iconAsset": "assets/items/amulet-coin.png",  
+      "description": "For defeating wild Pokémon, Aeos energy acquired increases by 100% and goal-scoring speed increases by 10%.",  
+      "statsByGrade": {  
+        "40": { "hp": 280, "moveSpeed": 175 }  
+      },  
+      "conditionalEffects": [  
+        {  
+          "type": "onScore",  
+          "description": "+100% Aeos energy from wild Pokémon; +10% goal-scoring speed.",  
+          "appliesInCombat": true  
+        }  
+      ]  
+    },  
+    {  
+      "id": "attack-weight",  
+      "displayName": "Attack Weight",  
+      "iconAsset": "assets/items/attack-weight.png",  
+      "description": "When the Pokémon scores a goal, its Attack increases by 12 (stacking).",  
+      "statsByGrade": {  
+        "40": { "attack": 21 }  
+      },  
+      "conditionalEffects": [  
+        {  
+          "type": "onScore",  
+          "description": "+12 Attack per goal scored (stacking).",  
+          "stacking": true,  
+          "stackValue": 12,  
+          "appliesInCombat": true  
+        }  
+      ]  
+    }  
+  ],  
+  "emblems": [  
+    {  
+      "id": "diglett",  
+      "pokemonName": "Diglett",  
+      "colors": ["brown"],  
+      "iconAsset": "assets/emblems/diglett.png",  
+      "statsByGrade": {  
+        "bronze": { "hp": -30, "moveSpeed": 21 },  
+        "silver": { "hp": -40, "moveSpeed": 28 },  
+        "gold":   { "hp": -50, "moveSpeed": 35 }  
+      }  
+    },  
+    {  
+      "id": "aerodactyl",  
+      "pokemonName": "Aerodactyl",  
+      "colors": ["brown", "white"],  
+      "iconAsset": "assets/emblems/aerodactyl.png",  
+      "statsByGrade": {  
+        "bronze": { "defense": -3, "moveSpeed": 21 },  
+        "silver": { "defense": -4, "moveSpeed": 28 },  
+        "gold":   { "defense": -5, "moveSpeed": 35 }  
+      }  
+    }  
+  ],  
+  "setBonuses": [  
+    { "color": "brown",  "stat": "attack",      "thresholds": { "2": 0.01, "4": 0.02, "6": 0.04 } },  
+    { "color": "green",  "stat": "spAttack",    "thresholds": { "2": 0.01, "4": 0.02, "6": 0.04 } },  
+    { "color": "blue",   "stat": "defense",     "thresholds": { "2": 0.02, "4": 0.04, "6": 0.08 } },  
+    { "color": "purple", "stat": "spDefense",   "thresholds": { "2": 0.02, "4": 0.04, "6": 0.08 } },  
+    { "color": "white",  "stat": "hp",          "thresholds": { "2": 0.01, "4": 0.02, "6": 0.04 } },  
+    { "color": "red",    "stat": "attackSpeed", "thresholds": { "3": 0.02, "5": 0.04, "7": 0.08 } },  
+    { "color": "yellow", "stat": "moveSpeed",   "thresholds": { "3": 0.04, "5": 0.06, "7": 0.12 } },  
+    { "color": "black",  "stat": "cdr",         "thresholds": { "3": 0.02, "5": 0.04, "7": 0.08 } }  
+  ]  
+}  
