@@ -4,6 +4,7 @@ import { cachedPatchVersion, checkDataNow } from "../data/dataSource";
 import { isTauri, autoUpdateEnabled, setAutoUpdate, checkAppUpdate } from "../ui/runtime";
 import { useStore, type Theme } from "../state/store";
 import { APP_NAME, APP_OWNER } from "../ui/brand";
+import { APP_VERSION } from "../ui/version";
 
 const THEMES: Theme[] = ["light", "dark"];
 
@@ -92,7 +93,11 @@ export function SettingsMenu({ open, onClose }: { open: boolean; onClose: () => 
           {/* Desktop app updates — Tauri only */}
           {isTauri ? (
             <div className="mt-3 border-t border-line-soft pt-3">
-              <label className="flex items-center justify-between gap-2">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-sm font-medium">App version</span>
+                <span className="font-mono text-xs text-faint">v{APP_VERSION}</span>
+              </div>
+              <label className="mt-2 flex items-center justify-between gap-2">
                 <span className="text-sm font-medium">Auto-update the app</span>
                 <input type="checkbox" checked={auto} onChange={toggleAuto} className="h-4 w-4 accent-[var(--color-accent)]" />
               </label>
@@ -102,9 +107,15 @@ export function SettingsMenu({ open, onClose }: { open: boolean; onClose: () => 
               {appMsg && <p className="mt-1 text-xs text-muted">{appMsg}</p>}
             </div>
           ) : (
-            <p className="mt-3 border-t border-line-soft pt-3 text-xs text-faint">
-              Running in the browser — the app auto-updates on reload. Install the desktop app for offline use + auto-updates.
-            </p>
+            <div className="mt-3 border-t border-line-soft pt-3">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-sm font-medium">Website version</span>
+                <span className="font-mono text-xs text-faint">v{APP_VERSION}</span>
+              </div>
+              <p className="mt-2 text-xs text-faint">
+                Running in the browser — the app auto-updates on reload. Install the desktop app for offline use + auto-updates.
+              </p>
+            </div>
           )}
         </Section>
 

@@ -1,9 +1,14 @@
 /// <reference types="vitest/config" />
+import { createRequire } from "node:module";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
 import { APP_NAME, APP_SHORT_NAME, APP_DESCRIPTION } from "./src/ui/brand";
+
+// Single source for the displayed version: package.json (kept in sync with
+// src-tauri/tauri.conf.json on each release). Injected via `define` below.
+const { version } = createRequire(import.meta.url)("./package.json") as { version: string };
 
 // Inject the app name into index.html's <title> from the single brand source,
 // so renaming only needs src/ui/brand.ts (no stray name in the HTML).
@@ -16,6 +21,7 @@ const htmlBranding = () => ({
 // build overrides with VITE_BASE=/FoxForge-GG/.
 export default defineConfig({
   base: process.env.VITE_BASE ?? "./",
+  define: { __APP_VERSION__: JSON.stringify(version) },
   plugins: [
     htmlBranding(),
     react(),
