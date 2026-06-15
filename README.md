@@ -29,9 +29,22 @@ Grab the latest installer from the
 | Linux | the `.AppImage`, `.deb`, or `.rpm` |
 
 The desktop app **auto-updates** itself when a new version is released. The binaries
-are not OS-code-signed, so expect a one-time warning on first launch:
-- **macOS:** right-click the app → **Open** → confirm.
-- **Windows:** on the SmartScreen prompt, **More info → Run anyway**.
+are ad-hoc signed but **not** signed with a paid Apple/Microsoft certificate, so the
+OS shows a one-time warning on first launch — a normal double-click will be blocked:
+
+- **macOS:** open the `.dmg`, drag the app to Applications, then **right-click the app
+  → Open → Open** (a plain double-click won't work). If you ever see *"app is damaged
+  and can't be opened,"* the download was quarantined — clear it once in Terminal:
+
+  ```bash
+  xattr -dr com.apple.quarantine "/Applications/FoxForge GG.app"
+  ```
+
+- **Windows:** on the SmartScreen prompt, click **More info → Run anyway**.
+
+> For a true one-click install (no warnings), the app would need an Apple Developer ID
+> (notarization) and a Windows Authenticode certificate — see
+> [docs/07-distribution.md](docs/07-distribution.md).
 
 ### 3. Run from source
 
