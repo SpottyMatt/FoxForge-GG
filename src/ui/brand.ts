@@ -26,10 +26,12 @@ export const APP_OWNER = "DreamJackal";
 
 // -------------------------------------------------------------------- legal --
 // Fan-project disclaimer shown in the footer (web + desktop). Built from
-// APP_NAME so it follows any rename. Not affiliated with / endorsed by Nintendo.
+// APP_NAME so it follows any rename. Pokémon UNITE is published by The Pokémon
+// Company (developed by TiMi Studio Group); the Pokémon marks are Nintendo's.
 export const LEGAL_DISCLAIMER =
-  `${APP_NAME} isn't endorsed by Nintendo and doesn't reflect the views or ` +
-  `opinions of Nintendo or anyone officially involved in producing or managing ` +
+  `${APP_NAME} is an unofficial fan-made tool. It isn't endorsed by, affiliated ` +
+  `with, or sponsored by The Pokémon Company or Nintendo, and doesn't reflect ` +
+  `the views or opinions of anyone officially involved in producing or managing ` +
   `Pokémon UNITE. Pokémon UNITE and Pokémon are trademarks or registered ` +
   `trademarks of Nintendo.`;
 
