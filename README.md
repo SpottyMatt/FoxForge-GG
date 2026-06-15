@@ -6,66 +6,70 @@ with real-time stat calculation and level-scaling visualization.
 
 ## Install & Run
 
-There are two ways to use the tool. **No prebuilt installer is published yet**
-(see [Get a one-click installer](#get-a-one-click-installer) below to create one).
+Three ways to use the tool — pick whichever suits you.
 
-### A. Run the web app from source (works on macOS / Windows / Linux)
+### 1. Use it in your browser (no install)
 
-1. Install **[Node.js](https://nodejs.org) 20 or newer** (includes `npm`).
-2. Clone and enter the project:
+Open the hosted web app: **<https://aerokita.github.io/Pokemon-UNITE-Build-Tool/>**
+
+It's a PWA, so you can "Install" it from the browser for an app-like, offline-capable
+window. It updates automatically on reload.
+
+### 2. Download the desktop app
+
+Grab the latest installer from the
+**[Releases page](https://github.com/AeroKita/Pokemon-UNITE-Build-Tool/releases/latest)**:
+
+| OS | Download |
+| --- | --- |
+| Windows | `UNITE.Build.Optimizer_*_x64-setup.exe` (or `..._x64_en-US.msi`) |
+| macOS (Apple Silicon) | `UNITE.Build.Optimizer_*_aarch64.dmg` |
+| macOS (Intel) | `UNITE.Build.Optimizer_*_x64.dmg` |
+| Linux | `.AppImage`, `.deb`, or `.rpm` |
+
+The desktop app **auto-updates** itself when a new version is released. The binaries
+are not OS-code-signed, so expect a one-time warning on first launch:
+- **macOS:** right-click the app → **Open** → confirm.
+- **Windows:** on the SmartScreen prompt, **More info → Run anyway**.
+
+### 3. Run from source
+
+Requires **[Node.js](https://nodejs.org) 20+**. Clone, install, and start the dev server:
 
 ```bash
 git clone https://github.com/AeroKita/Pokemon-UNITE-Build-Tool.git
 cd Pokemon-UNITE-Build-Tool
-```
-
-3. Install dependencies and start the app:
-
-```bash
 npm install
-npm run dev
+npm run dev        # open the printed URL (default http://localhost:5173)
 ```
 
-4. Open the URL it prints (default <http://localhost:5173>) in your browser.
+For the **desktop app from source** you also need the [Rust toolchain](https://rustup.rs);
+then `npm run tauri dev` runs it and `npm run tauri build` produces an installer for your
+current OS in `src-tauri/target/release/bundle/`.
 
-To make an optimized static build instead, run `npm run build` and serve the
-generated `dist/` folder with any static host (or `npm run preview`).
+### Cutting a new release
 
-### B. Run the desktop app from source (optional — needs Rust)
+Pushing a version tag triggers [`release.yml`](.github/workflows/release.yml), which builds
+installers for all platforms and publishes them — with a signed `latest.json` auto-update
+manifest — to the Releases page:
 
 ```bash
-curl https://sh.rustup.rs -sSf | sh   # one-time: install the Rust toolchain
-npm install
-npm run tauri dev                      # launches the native desktop window
+# bump "version" in package.json + src-tauri/tauri.conf.json first, then:
+git tag v0.1.2 && git push origin v0.1.2
 ```
 
-To produce a native installer for **your current OS**, run `npm run tauri build`
-— the `.dmg` / `.msi` / `.AppImage` lands in `src-tauri/target/release/bundle/`.
-
-### Get a one-click installer
-
-Cross-platform installers (Windows `.msi`/`.exe`, macOS `.dmg`, Linux
-`.deb`/`.AppImage`) are built automatically by
-[`release.yml`](.github/workflows/release.yml) when a version tag is pushed:
-
-```bash
-git tag v0.1.0 && git push origin v0.1.0
-```
-
-CI then publishes them to this repo's **Releases** page. Two caveats:
-- The release job needs the `TAURI_SIGNING_PRIVATE_KEY` repo secret set (for
-  signed auto-updates) — see [docs/07-distribution.md](docs/07-distribution.md).
-- This repo is **private**, so only people with repo access can download Release
-  assets. To share with the public, make the repo public or host the web build
-  on a static host.
+The signing secret (`TAURI_SIGNING_PRIVATE_KEY`) is already configured in the repo. See
+[docs/07-distribution.md](docs/07-distribution.md) for the full distribution model.
 
 ## Documentation
 
 - [Project Brief](docs/01-project-brief.md) — what we're building and why
 - [Architecture](docs/02-architecture.md) — tech stack and structure
-- [Calculation Engine](docs/03-calculation-engine.md) — the stat/damage math
+- [Calculation Engine](docs/03-Calculation-Engine.md) — the stat/damage math
 - [Data Sourcing](docs/04-data-sourcing.md) — where game data comes from and how to update it
 - [Implementation Plan](docs/05-implementation-plan.md) — milestones and datamining pipeline
+- [Theme Plan](docs/06-theme-plan.md) — semantic tokens and the light/dark theming approach
+- [Distribution & Updates](docs/07-distribution.md) — Pages web app, desktop installers, auto-update
 
 ## Layout
 
@@ -100,9 +104,12 @@ CI then publishes them to this repo's **Releases** page. Two caveats:
 ```bash
 npm run dev                     # vite dev server — the app
 npm run build                   # production static site → dist/ (portable: base "./")
+npm run build:pages             # static build with the GitHub Pages base path
 npm run preview                 # serve the built dist/ locally
+npm run tauri dev               # run the native desktop app (needs the Rust toolchain)
+npm run tauri build             # build a desktop installer for the current OS
 npm test                        # engine + bundle + attack-speed + share tests (vitest, 58)
-npm run validate                # known-values gate from docs/03-calculation-engine.md
+npm run validate                # known-values gate from docs/03-Calculation-Engine.md
 npx tsx src/data/verifyPatch.ts # validate the live UNITE-DB bundle end-to-end
 npm run typecheck               # tsc --noEmit
 ```
@@ -160,6 +167,14 @@ and recompute pick it up automatically.
   **emblem-set summary** ([`EmblemSetSummary.tsx`](src/components/EmblemSetSummary.tsx): net flat
   stats color-coded + per-color counts & active set bonus), **styled hover tooltips**
   ([`Tooltip.tsx`](src/components/Tooltip.tsx)) on emblems/held/trainer items, Clear button, portable static build
+- [x] **Themes** — light + dark (neon "Neo"-derived palette), toggleable in the header and
+  persisted; all surfaces read from semantic Tailwind tokens ([`src/index.css`](src/index.css)).
+- [x] **Distribution** ([docs/07-distribution.md](docs/07-distribution.md)) — hosted web app +
+  installable PWA on [GitHub Pages](https://aerokita.github.io/Pokemon-UNITE-Build-Tool/)
+  ([`pages.yml`](.github/workflows/pages.yml)), plus native desktop installers for
+  Windows/macOS/Linux built in CI on a version tag ([`release.yml`](.github/workflows/release.yml))
+  with **signed Tauri auto-updates** ([`UpdatePanel.tsx`](src/components/UpdatePanel.tsx)). Game-data
+  updates are fetched at runtime from Pages, so a patch needs no app rebuild.
 
 ### Deliberately not built
 - **Nintendo / Pokémon UNITE account login** to read owned emblems — there is no official public
@@ -167,5 +182,5 @@ and recompute pick it up automatically.
   security/ToS line not worth crossing. The local owned-emblem inventory delivers the same UX safely.
 
 ### Open refinements
-- Dark mode (skipped to keep the light theme cohesive rather than ship a half-converted one)
 - Per-move AS level-availability is best-effort; emblem-set quick presets; code-splitting the 1 MB bundle
+- Optional OS code-signing certs (Apple Developer ID / Windows Authenticode) for warning-free installs
