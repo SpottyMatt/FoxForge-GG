@@ -4,6 +4,7 @@ import { emblems as allEmblems } from "../data/gameData";
 import { asset } from "../ui/asset";
 import { EMBLEM_COLOR_HEX, ALL_EMBLEM_COLORS } from "../ui/colors";
 import { statLines } from "../ui/format";
+import { emblemsForGrade } from "../ui/emblems";
 import { ownedKey } from "../state/loadout";
 import { emblemIconForGrade } from "../ui/emblemIcon";
 import type { EmblemColor, EmblemGrade } from "../types";
@@ -21,19 +22,21 @@ export function InventoryManager() {
   const [query, setQuery] = useState("");
   const [color, setColor] = useState<EmblemColor | "all">("all");
 
+  const gradeEmblems = useMemo(() => emblemsForGrade(allEmblems, grade), [grade]);
+
   const shown = useMemo(
     () =>
-      allEmblems.filter(
+      gradeEmblems.filter(
         (e) =>
           e.pokemonName.toLowerCase().includes(query.toLowerCase()) &&
           (color === "all" || e.colors.includes(color)),
       ),
-    [query, color],
+    [gradeEmblems, query, color],
   );
 
   const ownedCount = useMemo(
-    () => allEmblems.reduce((n, e) => n + (owned.has(ownedKey(e.id, grade)) ? 1 : 0), 0),
-    [owned, grade],
+    () => gradeEmblems.reduce((n, e) => n + (owned.has(ownedKey(e.id, grade)) ? 1 : 0), 0),
+    [owned, grade, gradeEmblems],
   );
   const shownIds = shown.map((e) => e.id);
 
@@ -48,7 +51,7 @@ export function InventoryManager() {
         </div>
         <div className="text-right text-sm">
           <span className="font-semibold" style={{ color: GRADE_TINT[grade] }}>{ownedCount}</span>
-          <span className="text-faint"> / {allEmblems.length} {grade} owned</span>
+          <span className="text-faint"> / {gradeEmblems.length} {grade} owned</span>
         </div>
       </div>
 

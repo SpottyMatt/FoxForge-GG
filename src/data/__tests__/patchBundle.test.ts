@@ -53,4 +53,11 @@ describe("patch-1.23.1.1 community bundle", () => {
     // attack must be strictly greater than base 429 after the +4% brown bonus
     expect(eff.attack).toBeGreaterThan(429);
   });
+
+  it("marks UNITE-DB gold-only emblems (no silver/bronze on CDN)", () => {
+    const goldOnly = bundle.emblems.filter((e) => e.goldOnly);
+    expect(goldOnly.map((e) => e.pokemonName).sort()).toEqual(
+      ["Floragato", "Latias", "Latios", "Meowscarada", "Miraidon", "Sprigatito"],
+    );
+  });
 });

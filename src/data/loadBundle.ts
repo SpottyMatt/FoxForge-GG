@@ -145,6 +145,7 @@ const emblem = z.object({
   pokemonName: z.string(),
   colors: z.array(emblemColor).min(1).max(2),
   iconAsset: z.string(),
+  goldOnly: z.boolean().optional(),
   statsByGrade: z.object({
     bronze: partialStatBlock,
     silver: partialStatBlock,

@@ -1,7 +1,7 @@
 {
   "name": "unite-build-optimizer",
   "private": true,
-  "version": "0.1.5",
+  "version": "0.1.6",
   "license": "GPL-3.0-only",
   "type": "module",
   "scripts": {
@@ -12,6 +12,8 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "validate": "tsx src/engine/validate.ts",
+    "validate:art": "python3 tools/community/validate_art.py",
+    "fetch:art": "python3 tools/community/fetch_art.py",
     "tauri": "tauri",
     "build:pages": "VITE_BASE=/FoxForge-GG/ npm run build"
   },

@@ -327,20 +327,21 @@ def build_emblems(rows) -> list:
             "id": f"{pokedex}-{slugify(e['display_name'])}".strip("-"),
             "pokemonName": e["display_name"],
             "colors": [c for c in [COLOR_MAP.get(e.get("color1")), COLOR_MAP.get(e.get("color2"))] if c],
-            # Emblem faces live at /emblems/pokedex/<pokedex><grade>.png; the A-grade
-            # image is shared across grades, so use it as the representative icon.
             "iconAsset": f"{ASSETS}/emblems/pokedex/{pokedex}A.png",
             "statsByGrade": {},
+            "_sourceGrades": set(),
         })
         grade = GRADE_MAP.get(e.get("grade"))
         if grade:
+            g["_sourceGrades"].add(grade)
             g["statsByGrade"][grade] = emblem_stat_block(e.get("stats"))
-    # ensure all three grades present (fill missing with the best available)
     out = []
     for g in grouped.values():
         sbg = g["statsByGrade"]
         for grade in ("bronze", "silver", "gold"):
             sbg.setdefault(grade, sbg.get("gold") or sbg.get("silver") or sbg.get("bronze") or {})
+        # UNITE-DB only publishes A-grade rows for some newer Pokémon (no silver/bronze).
+        g["goldOnly"] = g.pop("_sourceGrades") == {"gold"}
         out.append(g)
     return out
 

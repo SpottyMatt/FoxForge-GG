@@ -175,6 +175,8 @@ export interface Emblem {
   pokemonName: string;
   colors: EmblemColor[]; // 1 or 2 colors
   iconAsset: string;
+  /** UNITE-DB only lists gold (A-grade) for some newer Pokémon — hide from silver/bronze UI. */
+  goldOnly?: boolean;
   // Platinum uses the same values as gold.
   statsByGrade: {
     bronze: Partial<StatBlock>;

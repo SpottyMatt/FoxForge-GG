@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useStore } from "../state/store";
 import { heldItems, battleItems, emblems, heldItemById, battleItemById, emblemById } from "../data/gameData";
 import { MAX_EMBLEMS } from "../state/loadout";
 import { asset } from "../ui/asset";
 import { emblemIconForGrade } from "../ui/emblemIcon";
+import { gradesForEmblem } from "../ui/emblems";
 import { EMBLEM_COLOR_HEX, ALL_EMBLEM_COLORS } from "../ui/colors";
 import type { EmblemGrade } from "../types";
 import { PickerModal, type PickItem } from "./PickerModal";
@@ -12,13 +13,16 @@ import { CollapsibleCard } from "./CollapsibleCard";
 import { Tooltip } from "./Tooltip";
 import { itemTip, emblemTip } from "./tips";
 
-const GRADES: EmblemGrade[] = ["bronze", "silver", "gold"];
-
 type Picker = { kind: "held"; slot: number } | { kind: "battle" } | { kind: "emblem" } | null;
 
 export function LoadoutEditor() {
   const { loadout, dispatch, owned, toggleOwned, expert } = useStore();
   const [picker, setPicker] = useState<Picker>(null);
+
+  const emblemGoldOnlyIds = useMemo(
+    () => new Set(emblems.filter((e) => e.goldOnly).map((e) => e.id)),
+    [],
+  );
 
   const heldPickItems: PickItem[] = heldItems.map((i) => ({ id: i.id, name: i.displayName, icon: i.iconAsset, title: i.description }));
   const battlePickItems: PickItem[] = battleItems.map((i) => ({ id: i.id, name: i.displayName, icon: i.iconAsset, title: i.description }));
@@ -96,7 +100,7 @@ export function LoadoutEditor() {
                   onChange={(e) => dispatch({ type: "setEmblemGrade", index: i, grade: e.target.value as EmblemGrade })}
                   className="mt-0.5 rounded border border-line text-[9px]"
                 >
-                  {GRADES.map((g) => <option key={g} value={g}>{g}</option>)}
+                  {gradesForEmblem(emblem).map((g) => <option key={g} value={g}>{g}</option>)}
                 </select>
                 <button onClick={() => dispatch({ type: "removeEmblem", index: i })} className="text-[9px] text-neg hover:text-neg">remove</button>
               </div>
@@ -131,6 +135,7 @@ export function LoadoutEditor() {
           grades
           owned={owned}
           onToggleOwn={toggleOwned}
+          goldOnlyIds={emblemGoldOnlyIds}
           iconForGrade={(id, g) => emblemIconForGrade({ id }, g)}
           filters={ALL_EMBLEM_COLORS.map((c) => ({ label: c, predicate: (id) => emblemById.get(id)?.colors.includes(c) ?? false }))} />
       )}

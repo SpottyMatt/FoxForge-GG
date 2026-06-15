@@ -1,11 +1,11 @@
 {
   "patchVersion": "1.23.1.1",
-  "lastUpdated": "2026-06-13",
+  "lastUpdated": "2026-06-15",
   "dataSource": {
     "provider": "UNITE-DB",
     "url": "https://unite-db.com",
     "note": "Community-sourced (APK bundles encrypted; see tools/extract/ENCRYPTION-FINDINGS.md). Held-item values at max level 30. Percentages stored as decimals.",
-    "fetched": "2026-06-13"
+    "fetched": "2026-06-15"
   },
   "pokemon": [
     {
@@ -44731,7 +44731,8 @@
           "hp": -30.0,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "002-ivysaur",
@@ -44753,7 +44754,8 @@
           "spAttack": 1.8,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "003-venusaur",
@@ -44775,7 +44777,8 @@
           "attack": -1.2,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "004-charmander",
@@ -44797,7 +44800,8 @@
           "hp": 30.0,
           "attack": -1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "005-charmeleon",
@@ -44819,7 +44823,8 @@
           "hp": 30.0,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "006-charizard",
@@ -44841,7 +44846,8 @@
           "hp": 30.0,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "007-squirtle",
@@ -44863,7 +44869,8 @@
           "hp": -30.0,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "008-wartortle",
@@ -44885,7 +44892,8 @@
           "spAttack": 1.8,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "009-blastoise",
@@ -44907,7 +44915,8 @@
           "spAttack": 1.8,
           "critRate": -0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "010-caterpie",
@@ -44929,7 +44938,8 @@
           "hp": -30.0,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "011-metapod",
@@ -44951,7 +44961,8 @@
           "defense": 3.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "012-butterfree",
@@ -44974,7 +44985,8 @@
           "attack": -1.2,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "013-weedle",
@@ -44996,7 +45008,8 @@
           "defense": -3.0,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "014-kakuna",
@@ -45018,7 +45031,8 @@
           "spDefense": 3.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "015-beedrill",
@@ -45041,7 +45055,8 @@
           "hp": -30.0,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "016-pidgey",
@@ -45063,7 +45078,8 @@
           "hp": 30.0,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "017-pidgeotto",
@@ -45085,7 +45101,8 @@
           "hp": 30.0,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "018-pidgeot",
@@ -45107,7 +45124,8 @@
           "hp": 30.0,
           "spAttack": -1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "019-rattata",
@@ -45129,7 +45147,8 @@
           "hp": -30.0,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "020-raticate",
@@ -45151,7 +45170,8 @@
           "spAttack": -1.8,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "021-spearow",
@@ -45173,7 +45193,8 @@
           "attack": 1.2,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "022-fearow",
@@ -45195,7 +45216,8 @@
           "attack": 1.2,
           "spAttack": -1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "023-ekans",
@@ -45217,7 +45239,8 @@
           "attack": 1.2,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "024-arbok",
@@ -45239,7 +45262,8 @@
           "attack": 1.2,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "025-pikachu",
@@ -45261,7 +45285,8 @@
           "spDefense": 3.0,
           "critRate": -0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "026-raichu",
@@ -45283,7 +45308,8 @@
           "hp": -30.0,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "027-sandshrew",
@@ -45305,7 +45331,8 @@
           "spDefense": -3.0,
           "critRate": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "028-sandslash",
@@ -45327,7 +45354,8 @@
           "spAttack": -1.8,
           "critRate": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "029-nidoran",
@@ -45349,7 +45377,8 @@
           "hp": 30.0,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "030-nidorina",
@@ -45371,7 +45400,8 @@
           "hp": 30.0,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "031-nidoqueen",
@@ -45394,7 +45424,8 @@
           "hp": 30.0,
           "spAttack": -1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "032-nidoran",
@@ -45416,7 +45447,8 @@
           "hp": -30.0,
           "attack": 1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "033-nidorino",
@@ -45438,7 +45470,8 @@
           "attack": 1.2,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "034-nidoking",
@@ -45461,7 +45494,8 @@
           "attack": 1.2,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "035-clefairy",
@@ -45483,7 +45517,8 @@
           "hp": 30.0,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "036-clefable",
@@ -45505,7 +45540,8 @@
           "hp": 30.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "037-vulpix",
@@ -45527,7 +45563,8 @@
           "hp": -30.0,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "038-ninetales",
@@ -45549,7 +45586,8 @@
           "attack": -1.2,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "039-jigglypuff",
@@ -45571,7 +45609,8 @@
           "hp": 30.0,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "040-wigglytuff",
@@ -45593,7 +45632,8 @@
           "hp": 30.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "041-zubat",
@@ -45615,7 +45655,8 @@
           "attack": -1.2,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "042-golbat",
@@ -45637,7 +45678,8 @@
           "spDefense": -3.0,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "043-oddish",
@@ -45659,7 +45701,8 @@
           "hp": 30.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "044-gloom",
@@ -45681,7 +45724,8 @@
           "hp": 30.0,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "045-vileplume",
@@ -45704,7 +45748,8 @@
           "hp": 30.0,
           "attack": -1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "046-paras",
@@ -45726,7 +45771,8 @@
           "defense": 3.0,
           "critRate": -0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "047-parasect",
@@ -45748,7 +45794,8 @@
           "spAttack": -1.8,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "048-venonat",
@@ -45770,7 +45817,8 @@
           "hp": 30.0,
           "attack": -1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "049-venomoth",
@@ -45793,7 +45841,8 @@
           "hp": 30.0,
           "critRate": -0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "050-diglett",
@@ -45815,7 +45864,8 @@
           "hp": -30.0,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "051-dugtrio",
@@ -45837,7 +45887,8 @@
           "defense": -3.0,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "052-meowth",
@@ -45859,7 +45910,8 @@
           "defense": -3.0,
           "critRate": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "053-persian",
@@ -45881,7 +45933,8 @@
           "defense": -3.0,
           "critRate": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "054-psyduck",
@@ -45903,7 +45956,8 @@
           "hp": -30.0,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "055-golduck",
@@ -45925,7 +45979,8 @@
           "attack": -1.2,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "056-mankey",
@@ -45947,7 +46002,8 @@
           "hp": 30.0,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "057-primeape",
@@ -45969,7 +46025,8 @@
           "hp": 30.0,
           "spAttack": -1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "058-growlithe",
@@ -45991,7 +46048,8 @@
           "spAttack": 1.8,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "059-arcanine",
@@ -46013,7 +46071,8 @@
           "attack": -1.2,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "060-poliwag",
@@ -46035,7 +46094,8 @@
           "defense": -3.0,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "061-poliwhirl",
@@ -46057,7 +46117,8 @@
           "hp": -30.0,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "062-poliwrath",
@@ -46080,7 +46141,8 @@
           "spAttack": -1.8,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "063-abra",
@@ -46102,7 +46164,8 @@
           "hp": -30.0,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "064-kadabra",
@@ -46124,7 +46187,8 @@
           "spAttack": 1.8,
           "critRate": -0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "065-alakazam",
@@ -46146,7 +46210,8 @@
           "attack": -1.2,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "066-machop",
@@ -46168,7 +46233,8 @@
           "attack": 1.2,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "067-machoke",
@@ -46190,7 +46256,8 @@
           "attack": 1.2,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "068-machamp",
@@ -46212,7 +46279,8 @@
           "attack": 1.2,
           "spAttack": -1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "069-bellsprout",
@@ -46234,7 +46302,8 @@
           "attack": 1.2,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "070-weepinbell",
@@ -46256,7 +46325,8 @@
           "hp": -30.0,
           "attack": 1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "071-victreebel",
@@ -46279,7 +46349,8 @@
           "attack": 1.2,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "072-tentacool",
@@ -46301,7 +46372,8 @@
           "hp": -30.0,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "073-tentacruel",
@@ -46324,7 +46396,8 @@
           "spDefense": 3.0,
           "critRate": -0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "074-geodude",
@@ -46346,7 +46419,8 @@
           "defense": 3.0,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "075-graveler",
@@ -46368,7 +46442,8 @@
           "defense": 3.0,
           "critRate": -0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "076-golem",
@@ -46390,7 +46465,8 @@
           "spAttack": -1.8,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "077-ponyta",
@@ -46412,7 +46488,8 @@
           "hp": -30.0,
           "attack": 1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "078-rapidash",
@@ -46434,7 +46511,8 @@
           "attack": 1.2,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "079-slowpoke",
@@ -46456,7 +46534,8 @@
           "defense": 3.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "080-slowbro",
@@ -46479,7 +46558,8 @@
           "defense": 3.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "081-magnemite",
@@ -46501,7 +46581,8 @@
           "hp": -30.0,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "082-magneton",
@@ -46523,7 +46604,8 @@
           "attack": -1.2,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "083-farfetch-d",
@@ -46545,7 +46627,8 @@
           "hp": -30.0,
           "critRate": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "084-doduo",
@@ -46567,7 +46650,8 @@
           "hp": -30.0,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "085-dodrio",
@@ -46589,7 +46673,8 @@
           "hp": -30.0,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "086-seel",
@@ -46611,7 +46696,8 @@
           "hp": 30.0,
           "attack": -1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "087-dewgong",
@@ -46633,7 +46719,8 @@
           "hp": 30.0,
           "spAttack": -1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "088-grimer",
@@ -46655,7 +46742,8 @@
           "hp": 30.0,
           "attack": -1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "089-muk",
@@ -46677,7 +46765,8 @@
           "hp": 30.0,
           "spAttack": -1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "090-shellder",
@@ -46699,7 +46788,8 @@
           "hp": -30.0,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "091-cloyster",
@@ -46721,7 +46811,8 @@
           "defense": 3.0,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "092-gastly",
@@ -46743,7 +46834,8 @@
           "hp": -30.0,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "093-haunter",
@@ -46765,7 +46857,8 @@
           "defense": -3.0,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "094-gengar",
@@ -46788,7 +46881,8 @@
           "attack": -1.2,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "095-onix",
@@ -46810,7 +46904,8 @@
           "hp": -30.0,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "096-drowzee",
@@ -46832,7 +46927,8 @@
           "spDefense": 3.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "097-hypno",
@@ -46854,7 +46950,8 @@
           "spDefense": 3.0,
           "critRate": -0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "098-krabby",
@@ -46876,7 +46973,8 @@
           "hp": -30.0,
           "attack": 1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "099-kingler",
@@ -46898,7 +46996,8 @@
           "attack": 1.2,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "100-voltorb",
@@ -46920,7 +47019,8 @@
           "hp": -30.0,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "101-electrode",
@@ -46942,7 +47042,8 @@
           "attack": -1.2,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "102-exeggcute",
@@ -46964,7 +47065,8 @@
           "spAttack": 1.8,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "103-exeggutor",
@@ -46987,7 +47089,8 @@
           "spAttack": 1.8,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "104-cubone",
@@ -47009,7 +47112,8 @@
           "hp": -30.0,
           "attack": 1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "105-marowak",
@@ -47031,7 +47135,8 @@
           "attack": 1.2,
           "spAttack": -1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "106-hitmonlee",
@@ -47053,7 +47158,8 @@
           "spAttack": -1.8,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "107-hitmonchan",
@@ -47075,7 +47181,8 @@
           "spAttack": -1.8,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "108-lickitung",
@@ -47097,7 +47204,8 @@
           "defense": 3.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "109-koffing",
@@ -47119,7 +47227,8 @@
           "hp": -30.0,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "110-weezing",
@@ -47141,7 +47250,8 @@
           "defense": 3.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "111-rhyhorn",
@@ -47163,7 +47273,8 @@
           "hp": 30.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "112-rhydon",
@@ -47185,7 +47296,8 @@
           "hp": 30.0,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "113-chansey",
@@ -47207,7 +47319,8 @@
           "hp": 30.0,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "114-tangela",
@@ -47229,7 +47342,8 @@
           "defense": 3.0,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "115-kangaskhan",
@@ -47251,7 +47365,8 @@
           "hp": 30.0,
           "spAttack": -1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "116-horsea",
@@ -47273,7 +47388,8 @@
           "hp": -30.0,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "117-seadra",
@@ -47295,7 +47411,8 @@
           "spAttack": 1.8,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "118-goldeen",
@@ -47317,7 +47434,8 @@
           "hp": 30.0,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "119-seaking",
@@ -47339,7 +47457,8 @@
           "hp": 30.0,
           "spAttack": -1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "120-staryu",
@@ -47361,7 +47480,8 @@
           "hp": -30.0,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "121-starmie",
@@ -47384,7 +47504,8 @@
           "attack": -1.2,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "122-mr--mime",
@@ -47407,7 +47528,8 @@
           "hp": -30.0,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "123-scyther",
@@ -47430,7 +47552,8 @@
           "defense": -3.0,
           "critRate": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "124-jynx",
@@ -47453,7 +47576,8 @@
           "spAttack": 1.8,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "125-electabuzz",
@@ -47475,7 +47599,8 @@
           "attack": 1.2,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "126-magmar",
@@ -47497,7 +47622,8 @@
           "hp": -30.0,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "127-pinsir",
@@ -47519,7 +47645,8 @@
           "spDefense": -3.0,
           "critRate": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "128-tauros",
@@ -47541,7 +47668,8 @@
           "attack": 1.2,
           "spAttack": -1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "129-magikarp",
@@ -47563,7 +47691,8 @@
           "hp": -30.0,
           "attack": 1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "130-gyarados",
@@ -47586,7 +47715,8 @@
           "attack": 1.2,
           "spAttack": -1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "131-lapras",
@@ -47608,7 +47738,8 @@
           "hp": 30.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "132-ditto",
@@ -47627,7 +47758,8 @@
         "bronze": {
           "hp": 0.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "133-eevee",
@@ -47649,7 +47781,8 @@
           "spAttack": -1.8,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "134-vaporeon",
@@ -47671,7 +47804,8 @@
           "hp": 30.0,
           "attack": -1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "135-jolteon",
@@ -47693,7 +47827,8 @@
           "hp": -30.0,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "136-flareon",
@@ -47715,7 +47850,8 @@
           "attack": 1.2,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "137-porygon",
@@ -47737,7 +47873,8 @@
           "attack": -1.2,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "138-omanyte",
@@ -47759,7 +47896,8 @@
           "hp": -30.0,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "139-omastar",
@@ -47782,7 +47920,8 @@
           "spAttack": 1.8,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "140-kabuto",
@@ -47804,7 +47943,8 @@
           "hp": -30.0,
           "critRate": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "141-kabutops",
@@ -47827,7 +47967,8 @@
           "spAttack": -1.8,
           "critRate": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "142-aerodactyl",
@@ -47850,7 +47991,8 @@
           "defense": -3.0,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "143-snorlax",
@@ -47872,7 +48014,8 @@
           "spDefense": 3.0,
           "critRate": -0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "144-articuno",
@@ -47895,7 +48038,8 @@
           "attack": -1.2,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "145-zapdos",
@@ -47918,7 +48062,8 @@
           "hp": 30.0,
           "attack": -1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "146-moltres",
@@ -47941,7 +48086,8 @@
           "spAttack": 1.8,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "147-dratini",
@@ -47963,7 +48109,8 @@
           "hp": 30.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "148-dragonair",
@@ -47985,7 +48132,8 @@
           "hp": 30.0,
           "attack": -1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "149-dragonite",
@@ -48008,7 +48156,8 @@
           "hp": 30.0,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "150-mewtwo",
@@ -48030,7 +48179,8 @@
           "hp": -30.0,
           "cdr": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "151-mew",
@@ -48052,7 +48202,8 @@
           "hp": -30.0,
           "cdr": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "152-chicorita",
@@ -48074,7 +48225,8 @@
           "hp": -30.0,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "153-bayleef",
@@ -48096,7 +48248,8 @@
           "defense": 3.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "154-meganium",
@@ -48118,7 +48271,8 @@
           "attack": -1.2,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "155-cyndaquil",
@@ -48140,7 +48294,8 @@
           "hp": -30.0,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "156-quilava",
@@ -48162,7 +48317,8 @@
           "spAttack": 1.8,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "157-typhlosion",
@@ -48184,7 +48340,8 @@
           "spAttack": 1.8,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "158-totodile",
@@ -48206,7 +48363,8 @@
           "hp": -30.0,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "159-croconaw",
@@ -48228,7 +48386,8 @@
           "defense": 3.0,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "160-feraligatr",
@@ -48250,7 +48409,8 @@
           "spAttack": -1.8,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "161-sentret",
@@ -48272,7 +48432,8 @@
           "spDefense": -3.0,
           "critRate": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "162-furret",
@@ -48294,7 +48455,8 @@
           "spAttack": -1.8,
           "critRate": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "163-hoothoot",
@@ -48316,7 +48478,8 @@
           "attack": -1.2,
           "critRate": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "164-noctowl",
@@ -48338,7 +48501,8 @@
           "defense": -3.0,
           "critRate": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "165-ledyba",
@@ -48360,7 +48524,8 @@
           "spDefense": 3.0,
           "critRate": -0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "166-ledian",
@@ -48382,7 +48547,8 @@
           "attack": -1.2,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "167-spinarak",
@@ -48404,7 +48570,8 @@
           "attack": 1.2,
           "critRate": -0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "168-ariados",
@@ -48426,7 +48593,8 @@
           "attack": 1.2,
           "spAttack": -1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "169-crobat",
@@ -48448,7 +48616,8 @@
           "spAttack": -1.8,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "170-chinchou",
@@ -48470,7 +48639,8 @@
           "hp": 30.0,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "171-lanturn",
@@ -48492,7 +48662,8 @@
           "hp": 30.0,
           "attack": -1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "172-pichu",
@@ -48514,7 +48685,8 @@
           "attack": -1.2,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "173-cleffa",
@@ -48536,7 +48708,8 @@
           "hp": 30.0,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "174-igglybuff",
@@ -48558,7 +48731,8 @@
           "hp": 30.0,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "175-togepi",
@@ -48580,7 +48754,8 @@
           "spDefense": 3.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "176-togetic",
@@ -48603,7 +48778,8 @@
           "hp": -30.0,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "177-natu",
@@ -48625,7 +48801,8 @@
           "moveSpeed": 21.0,
           "critRate": -0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "178-xatu",
@@ -48648,7 +48825,8 @@
           "defense": -3.0,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "179-mareep",
@@ -48670,7 +48848,8 @@
           "spAttack": 1.8,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "180-flaaffy",
@@ -48692,7 +48871,8 @@
           "spAttack": 1.8,
           "critRate": -0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "181-ampharos",
@@ -48714,7 +48894,8 @@
           "attack": -1.2,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "182-bellossom",
@@ -48736,7 +48917,8 @@
           "hp": -30.0,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "183-marill",
@@ -48758,7 +48940,8 @@
           "hp": 30.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "184-azumarill",
@@ -48781,7 +48964,8 @@
           "hp": 30.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "185-sudowoodo",
@@ -48803,7 +48987,8 @@
           "defense": 3.0,
           "critRate": -0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "186-politoed",
@@ -48825,7 +49010,8 @@
           "attack": -1.2,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "187-hoppip",
@@ -48847,7 +49033,8 @@
           "hp": -30.0,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "188-skiploom",
@@ -48869,7 +49056,8 @@
           "spAttack": -1.8,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "189-jumpluff",
@@ -48892,7 +49080,8 @@
           "attack": -1.2,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "190-aipom",
@@ -48914,7 +49103,8 @@
           "defense": -3.0,
           "critRate": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "191-sunkern",
@@ -48936,7 +49126,8 @@
           "hp": 30.0,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "192-sunflora",
@@ -48958,7 +49149,8 @@
           "hp": 30.0,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "193-yanma",
@@ -48980,7 +49172,8 @@
           "defense": -3.0,
           "moveSpeed": 21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "194-wooper",
@@ -49002,7 +49195,8 @@
           "hp": 30.0,
           "spAttack": -1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "195-quagsire",
@@ -49025,7 +49219,8 @@
           "hp": 30.0,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "196-espeon",
@@ -49047,7 +49242,8 @@
           "spAttack": 1.8,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "197-umbreon",
@@ -49069,7 +49265,8 @@
           "spAttack": -1.8,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "198-murkrow",
@@ -49091,7 +49288,8 @@
           "spAttack": 1.8,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "199-slowking",
@@ -49114,7 +49312,8 @@
           "spDefense": 3.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "200-misdreavus",
@@ -49136,7 +49335,8 @@
           "hp": -30.0,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "201-unown",
@@ -49158,7 +49358,8 @@
           "hp": -30.0,
           "attack": 1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "202-wobbuffet",
@@ -49180,7 +49381,8 @@
           "hp": 30.0,
           "critRate": -0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "203-girafarig",
@@ -49202,7 +49404,8 @@
           "hp": 30.0,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "204-pineco",
@@ -49224,7 +49427,8 @@
           "hp": -30.0,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "205-forretress",
@@ -49246,7 +49450,8 @@
           "spAttack": -1.8,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "206-dunsparce",
@@ -49268,7 +49473,8 @@
           "hp": 30.0,
           "spAttack": -1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "207-gligar",
@@ -49290,7 +49496,8 @@
           "spAttack": -1.8,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "208-steelix",
@@ -49313,7 +49520,8 @@
           "defense": 3.0,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "209-snubbull",
@@ -49335,7 +49543,8 @@
           "hp": -30.0,
           "attack": 1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "210-granbull",
@@ -49357,7 +49566,8 @@
           "attack": 1.2,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "211-qwilfish",
@@ -49379,7 +49589,8 @@
           "hp": 30.0,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "212-scizor",
@@ -49401,7 +49612,8 @@
           "spDefense": -3.0,
           "critRate": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "213-shuckle",
@@ -49423,7 +49635,8 @@
           "hp": -30.0,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "214-heracross",
@@ -49445,7 +49658,8 @@
           "hp": -30.0,
           "attack": 1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "215-sneasel",
@@ -49467,7 +49681,8 @@
           "hp": -30.0,
           "critRate": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "216-teddiursa",
@@ -49489,7 +49704,8 @@
           "hp": -30.0,
           "attack": 1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "217-ursaring",
@@ -49511,7 +49727,8 @@
           "attack": 1.2,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "218-slugma",
@@ -49533,7 +49750,8 @@
           "attack": -1.2,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "219-magcargo",
@@ -49555,7 +49773,8 @@
           "hp": -30.0,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "220-swinub",
@@ -49577,7 +49796,8 @@
           "hp": 30.0,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "221-piloswine",
@@ -49600,7 +49820,8 @@
           "hp": 30.0,
           "critRate": -0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "222-corsola",
@@ -49622,7 +49843,8 @@
           "attack": -1.2,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "223-remoraid",
@@ -49644,7 +49866,8 @@
           "hp": -30.0,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "224-octillery",
@@ -49666,7 +49889,8 @@
           "spAttack": 1.8,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "225-delibird",
@@ -49689,7 +49913,8 @@
           "hp": -30.0,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "226-mantine",
@@ -49712,7 +49937,8 @@
           "attack": -1.2,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "227-skarmory",
@@ -49734,7 +49960,8 @@
           "hp": -30.0,
           "attack": 1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "228-houndour",
@@ -49756,7 +49983,8 @@
           "hp": -30.0,
           "attack": 1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "229-houndoom",
@@ -49779,7 +50007,8 @@
           "attack": 1.2,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "230-kingdra",
@@ -49802,7 +50031,8 @@
           "spAttack": 1.8,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "231-phanpy",
@@ -49824,7 +50054,8 @@
           "hp": -30.0,
           "attack": 1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "232-donphan",
@@ -49846,7 +50077,8 @@
           "attack": 1.2,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "233-porygon2",
@@ -49868,7 +50100,8 @@
           "attack": -1.2,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "234-stantler",
@@ -49890,7 +50123,8 @@
           "spAttack": 1.8,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "235-smeargle",
@@ -49912,7 +50146,8 @@
           "hp": 30.0,
           "spAttack": -1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "236-tyrogue",
@@ -49934,7 +50169,8 @@
           "hp": -30.0,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "237-hitmontop",
@@ -49956,7 +50192,8 @@
           "spAttack": -1.8,
           "spDefense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "238-smoochum",
@@ -49978,7 +50215,8 @@
           "hp": -30.0,
           "spAttack": 1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "239-elekid",
@@ -50000,7 +50238,8 @@
           "hp": -30.0,
           "attack": 1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "240-magby",
@@ -50022,7 +50261,8 @@
           "attack": 1.2,
           "defense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "241-miltank",
@@ -50044,7 +50284,8 @@
           "spAttack": -1.8,
           "defense": 3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "242-blissey",
@@ -50066,7 +50307,8 @@
           "hp": 30.0,
           "attack": -1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "243-raikou",
@@ -50088,7 +50330,8 @@
           "hp": 30.0,
           "attack": -1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "244-entei",
@@ -50110,7 +50353,8 @@
           "hp": 30.0,
           "spAttack": -1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "245-suicune",
@@ -50132,7 +50376,8 @@
           "hp": 30.0,
           "attack": -1.2
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "246-larvitar",
@@ -50154,7 +50399,8 @@
           "hp": 30.0,
           "spDefense": -3.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "247-pupitar",
@@ -50176,7 +50422,8 @@
           "hp": 30.0,
           "moveSpeed": -21.0
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "248-tyranitar",
@@ -50199,7 +50446,8 @@
           "hp": 30.0,
           "critRate": -0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "249-lugia",
@@ -50222,7 +50470,8 @@
           "attack": -1.8,
           "spAttack": 2.7
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "250-ho-oh",
@@ -50245,7 +50494,8 @@
           "attack": 1.8,
           "spAttack": -2.7
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "251-celebi",
@@ -50268,7 +50518,8 @@
           "hp": -30.0,
           "cdr": 0.003
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "380-latias",
@@ -50291,7 +50542,8 @@
           "hp": -50.0,
           "spDefense": 5.0
         }
-      }
+      },
+      "goldOnly": true
     },
     {
       "id": "381-latios",
@@ -50314,7 +50566,8 @@
           "spAttack": 3.0,
           "defense": -5.0
         }
-      }
+      },
+      "goldOnly": true
     },
     {
       "id": "888-zacian",
@@ -50337,7 +50590,8 @@
           "attack": 1.2,
           "spAttack": -1.8
         }
-      }
+      },
+      "goldOnly": false
     },
     {
       "id": "906-sprigatito",
@@ -50359,7 +50613,8 @@
           "spDefense": -5.0,
           "moveSpeed": 35.0
         }
-      }
+      },
+      "goldOnly": true
     },
     {
       "id": "907-floragato",
@@ -50381,7 +50636,8 @@
           "defense": -5.0,
           "moveSpeed": 35.0
         }
-      }
+      },
+      "goldOnly": true
     },
     {
       "id": "908-meowscarada",
@@ -50404,7 +50660,8 @@
           "hp": -50.0,
           "moveSpeed": 35.0
         }
-      }
+      },
+      "goldOnly": true
     },
     {
       "id": "1008-miraidon",
@@ -50427,7 +50684,8 @@
           "hp": -50.0,
           "moveSpeed": 35.0
         }
-      }
+      },
+      "goldOnly": true
     }
   ],
   "setBonuses": [

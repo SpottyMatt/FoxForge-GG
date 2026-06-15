@@ -22,10 +22,11 @@ interface Props {
   owned?: Set<string>; // keys are `${id}:${grade}`; enables ownership stars + "Owned only"
   onToggleOwn?: (id: string, grade: EmblemGrade) => void;
   iconForGrade?: (id: string, grade: EmblemGrade) => string; // grade-correct image (emblems)
+  goldOnlyIds?: Set<string>; // hide from silver/bronze pickers (UNITE-DB gold-only emblems)
   footer?: ReactNode;
 }
 
-export function PickerModal({ title, items, onPick, onClose, filters, grades, owned, onToggleOwn, iconForGrade }: Props) {
+export function PickerModal({ title, items, onPick, onClose, filters, grades, owned, onToggleOwn, iconForGrade, goldOnlyIds }: Props) {
   const [query, setQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [ownedOnly, setOwnedOnly] = useState(false);
@@ -39,10 +40,11 @@ export function PickerModal({ title, items, onPick, onClose, filters, grades, ow
       (it) =>
         it.name.toLowerCase().includes(query.toLowerCase()) &&
         (!f || f.predicate(it.id)) &&
-        (!ownedOnly || isOwned(it.id)),
+        (!ownedOnly || isOwned(it.id)) &&
+        (!grades || grade === "gold" || !goldOnlyIds?.has(it.id)),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, query, activeFilter, filters, ownedOnly, owned, grade]);
+  }, [items, query, activeFilter, filters, ownedOnly, owned, grade, goldOnlyIds]);
 
   const ownedCount = owned ? (grades ? [...owned].filter((k) => k.endsWith(`:${grade}`)).length : owned.size) : 0;
 
