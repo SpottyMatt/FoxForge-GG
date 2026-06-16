@@ -7,6 +7,7 @@ import { statLines } from "../ui/format";
 import { emblemsForGrade } from "../ui/emblems";
 import { ownedKey } from "../state/loadout";
 import { emblemIconForGrade } from "../ui/emblemIcon";
+import { EmblemSetGuide } from "./EmblemSetGuide";
 import type { EmblemColor, EmblemGrade } from "../types";
 
 const GRADES: EmblemGrade[] = ["bronze", "silver", "gold"];
@@ -21,6 +22,7 @@ export function InventoryManager() {
   const [grade, setGrade] = useState<EmblemGrade>("gold");
   const [query, setQuery] = useState("");
   const [color, setColor] = useState<EmblemColor | "all">("all");
+  const [guideOpen, setGuideOpen] = useState(false);
 
   const gradeEmblems = useMemo(() => emblemsForGrade(allEmblems, grade), [grade]);
 
@@ -44,7 +46,17 @@ export function InventoryManager() {
     <div className="rounded-2xl border border-line bg-surface p-4 shadow-sm sm:p-5">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-bold text-ink">Emblem Inventory</h2>
+          <h2 className="flex items-center gap-2 text-lg font-bold text-ink">
+            Emblem Inventory
+            <button
+              onClick={() => setGuideOpen(true)}
+              aria-label="Emblem color sets guide"
+              title="What do the colors do?"
+              className="flex h-5 w-5 items-center justify-center rounded-full border border-line text-xs font-bold text-muted hover:bg-raise hover:text-ink"
+            >
+              ?
+            </button>
+          </h2>
           <p className="text-xs text-muted">
             Mark what you own per grade — owned emblems are highlighted in pickers and preferred by recommendations.
           </p>
@@ -127,6 +139,7 @@ export function InventoryManager() {
         })}
       </div>
       <p className="mt-2 text-xs text-faint">{shown.length} shown</p>
+      <EmblemSetGuide open={guideOpen} onClose={() => setGuideOpen(false)} />
     </div>
   );
 }
