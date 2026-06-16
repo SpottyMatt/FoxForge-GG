@@ -3,7 +3,7 @@ import { useStore } from "../state/store";
 import { deriveBuild } from "../engine/derive";
 import { effectiveHp } from "../engine/formulas";
 import { boostAvailableAtLevel, boostPointsAtLevel } from "../engine/effects";
-import { STAT_ROWS, formatStat } from "../ui/format";
+import { STAT_ROWS, formatStat, formatExactDelta } from "../ui/format";
 import { CollapsibleCard } from "./CollapsibleCard";
 
 export function StatPanel() {
@@ -57,7 +57,7 @@ export function StatPanel() {
                   {formatStat(eff, row.kind)}
                   {Math.abs(delta) > 1e-9 && (
                     <span className="ml-1 text-xs font-normal text-pos">
-                      ({formatStat(delta, row.kind).replace(/^/, delta > 0 ? "+" : "")})
+                      ({formatExactDelta(delta, row.kind)})
                     </span>
                   )}
                 </dd>

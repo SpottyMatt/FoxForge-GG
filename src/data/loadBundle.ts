@@ -98,6 +98,7 @@ const pokemon = z.object({
   moves: z.array(move),
   passiveAbility: ability,
   builds: z.array(pokemonBuild).optional(),
+  creativeBuilds: z.array(pokemonBuild).optional(),
   excludeStats: z.array(z.string()).optional(),
   hasMegaEvolution: z.boolean().optional(),
   megaStats: z.array(statBlock).optional(),

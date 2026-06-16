@@ -58,6 +58,6 @@ export default defineConfig({
   ],
   // Tauri-friendly dev server.
   clearScreen: false,
-  server: { strictPort: true },
+  server: { host: "127.0.0.1", strictPort: true },
   test: { environment: "node", include: ["src/**/*.test.ts"] },
 });

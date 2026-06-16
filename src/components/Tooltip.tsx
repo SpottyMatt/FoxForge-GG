@@ -6,14 +6,16 @@ export function Tooltip({
   content,
   children,
   side = "bottom",
+  className = "",
 }: {
   content: ReactNode;
   children: ReactNode;
   side?: "top" | "bottom";
+  className?: string;
 }) {
   const pos = side === "top" ? "bottom-full mb-1.5" : "top-full mt-1.5";
   return (
-    <span className="group/tt relative inline-flex">
+    <span className={`group/tt relative inline-flex ${className}`}>
       {children}
       <span
         role="tooltip"

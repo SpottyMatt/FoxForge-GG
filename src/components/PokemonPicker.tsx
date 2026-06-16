@@ -50,10 +50,16 @@ export function PokemonPicker() {
               key={p.id}
               onClick={() => dispatch({ type: "setPokemon", pokemonId: p.id })}
               title={p.displayName}
+              aria-pressed={selected}
               className={`group relative aspect-square rounded-lg border-2 p-0.5 transition
-                ${selected ? "border-accent bg-accent-weak" : "border-transparent hover:border-line hover:bg-raise"}`}
+                ${selected
+                  ? "border-transparent bg-mon-sel-bg ring-2 ring-mon-sel-ring"
+                  : "border-transparent bg-mon-bg hover:border-mon-hover"}`}
             >
               <img src={asset(p.iconAsset)} alt={p.displayName} loading="lazy" className="h-full w-full object-contain" />
+              {selected && (
+                <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-mon-sel-ring text-[9px] font-bold text-white ring-2 ring-surface">✓</span>
+              )}
             </button>
           );
         })}

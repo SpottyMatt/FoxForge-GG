@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useStore } from "../state/store";
 import { pokemonById, heldItemById, battleItemById, emblemById, emblems as allEmblems, setBonuses } from "../data/gameData";
-import { recommendBuild, solveEmblemSet, solveOwnedEmblemSet } from "../engine/recommend";
+import { recommendBuild, solveOwnedEmblemSet } from "../engine/recommend";
+import { moveIdsFromNames, resolveFinalMove } from "../engine/moves";
 import { asset } from "../ui/asset";
 import { EMBLEM_COLOR_HEX, GRADE_LETTER } from "../ui/colors";
 import { emblemIconForGrade } from "../ui/emblemIcon";
@@ -10,7 +11,7 @@ import { CollapsibleCard } from "./CollapsibleCard";
 import { Tooltip } from "./Tooltip";
 import { MoveIcon } from "./MoveIcon";
 import { itemTip, emblemTip, moveTip } from "./tips";
-import type { EmblemBuildPick } from "../types";
+import type { EmblemBuildPick, PokemonBuild } from "../types";
 
 type Tab = "recommended" | "creative" | "yours";
 
@@ -20,97 +21,70 @@ const TAB_LABEL: Record<Tab, string> = {
   yours: "Your Emblems",
 };
 
-// Deterministic seeds → stable variations the player can browse with the arrows.
-const SEEDS = [1, 2, 3, 4, 5, 6];
-
-// A unified shape for curated, generated, and inventory builds.
+// A unified shape for curated, creative, and inventory builds.
 interface DisplayBuild {
   name: string;
   emblemName?: string;
   lane?: string;
-  source: "curated" | "generated" | "owned";
+  source: "curated" | "owned";
   heldItemIds: string[];
   battleItemId?: string;
   emblems: EmblemBuildPick[];
   moves?: string[];
 }
 
-const sig = (emblems: EmblemBuildPick[]) =>
-  emblems.map((e) => `${e.emblemId}:${e.grade}`).sort().join("|");
-
-function dedupe(builds: DisplayBuild[]): DisplayBuild[] {
-  const seen = new Set<string>();
-  return builds.filter((b) => {
-    const s = sig(b.emblems);
-    if (s === "" || seen.has(s)) return false;
-    seen.add(s);
-    return true;
-  });
+/** Curated/creative builds from the data → display shape (only complete 10-emblem sets). */
+function toDisplayBuilds(builds: PokemonBuild[] | undefined): DisplayBuild[] {
+  return (builds ?? [])
+    .filter((b) => b.emblems.length === 10)
+    .map((b) => ({
+      name: b.name,
+      emblemName: b.emblemName,
+      lane: b.lane,
+      source: "curated" as const,
+      heldItemIds: b.heldItemIds,
+      battleItemId: b.battleItemId,
+      emblems: b.emblems,
+      moves: b.moves,
+    }));
 }
 
 export function RecommendPanel() {
   const { loadout, dispatch, owned, expert } = useStore();
   const pokemon = loadout.pokemonId ? pokemonById.get(loadout.pokemonId) : null;
 
-  const curated: DisplayBuild[] = useMemo(
-    () =>
-      (pokemon?.builds ?? [])
-        .filter((b) => b.emblems.length === 10)
-        .map((b) => ({
-          name: b.name,
-          emblemName: b.emblemName,
-          lane: b.lane,
-          source: "curated" as const,
-          heldItemIds: b.heldItemIds,
-          battleItemId: b.battleItemId,
-          emblems: b.emblems,
-          moves: b.moves,
-        })),
-    [pokemon],
-  );
+  // Recommended = curated UNITE-DB builds; Creative = data-provided creative builds
+  // (empty until supplied by UNITE-DB or the user).
+  const curated = useMemo(() => toDisplayBuilds(pokemon?.builds), [pokemon]);
+  const creative = useMemo(() => toDisplayBuilds(pokemon?.creativeBuilds), [pokemon]);
 
-  const creative: DisplayBuild[] = useMemo(() => {
-    if (!pokemon) return [];
-    const rec = recommendBuild(pokemon, [...heldItemById.values()], setBonuses);
-    return dedupe(
-      SEEDS.map((seed, i) => ({
-        name: `Creative set ${i + 1}`,
-        emblemName: "Optimized emblems",
-        source: "generated" as const,
-        heldItemIds: rec.heldItemIds,
-        battleItemId: rec.battleItemId ?? undefined,
-        emblems: solveEmblemSet(pokemon, allEmblems, { seed }),
-      })),
-    );
-  }, [pokemon]);
+  // Resolve a build's final-move names → Move objects (for icons + tooltips).
+  const moveByName = useMemo(() => new Map((pokemon?.moves ?? []).map((m) => [m.name, m])), [pokemon]);
 
+  // Your Emblems = a single best set solved from the owned inventory.
   const yours: DisplayBuild[] = useMemo(() => {
     if (!pokemon) return [];
     const rec = recommendBuild(pokemon, [...heldItemById.values()], setBonuses);
-    return dedupe(
-      SEEDS.map((seed) => ({
-        name: "Your Emblems",
-        emblemName: "From your inventory",
-        source: "owned" as const,
-        heldItemIds: rec.heldItemIds,
-        battleItemId: rec.battleItemId ?? undefined,
-        emblems: solveOwnedEmblemSet(pokemon, allEmblems, owned, { seed }),
-      })),
-    );
+    const emblems = solveOwnedEmblemSet(pokemon, allEmblems, owned);
+    return emblems.length
+      ? [{
+          name: "Your Emblems",
+          emblemName: "From your inventory",
+          source: "owned" as const,
+          heldItemIds: rec.heldItemIds,
+          battleItemId: rec.battleItemId ?? undefined,
+          emblems,
+        }]
+      : [];
   }, [pokemon, owned]);
-
-  const moveByName = useMemo(
-    () => new Map((pokemon?.moves ?? []).map((m) => [m.name, m])),
-    [pokemon],
-  );
 
   const [tab, setTab] = useState<Tab>("recommended");
   const [idxByTab, setIdxByTab] = useState<Record<Tab, number>>({ recommended: 0, creative: 0, yours: 0 });
 
-  // Reset to the Recommended tab (or Creative if none curated) on Pokémon change.
+  // Reset to the Recommended tab on Pokémon change.
   useEffect(() => {
     setIdxByTab({ recommended: 0, creative: 0, yours: 0 });
-    setTab(curated.length > 0 ? "recommended" : "creative");
+    setTab("recommended");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pokemon]);
 
@@ -133,10 +107,27 @@ export function RecommendPanel() {
     .filter((x): x is NonNullable<typeof x> => x !== null);
 
   const apply = () =>
-    build && dispatch({ type: "applyBuild", heldItemIds: build.heldItemIds, battleItemId: build.battleItemId ?? null, emblems: build.emblems });
+    build && dispatch({
+      type: "applyBuild",
+      heldItemIds: build.heldItemIds,
+      battleItemId: build.battleItemId ?? null,
+      emblems: build.emblems,
+      ...moveIdsFromNames(pokemon, build.moves),
+    });
 
   const trainer = build?.battleItemId ? battleItemById.get(build.battleItemId) : null;
   const ownedCount = build?.emblems.length ?? 0;
+
+  // Final moves: Recommended/Creative show the curated build's picks; Your Emblems
+  // shows the loadout's live choices from the Moves card.
+  const finalMoveDisplays =
+    tab === "yours"
+      ? (["move1", "move2"] as const)
+          .map((slot) => resolveFinalMove(pokemon, slot, slot === "move1" ? loadout.move1Id : loadout.move2Id))
+          .filter((m): m is NonNullable<typeof m> => m != null)
+      : (build?.moves ?? [])
+          .map((name) => moveByName.get(name))
+          .filter((m): m is NonNullable<typeof m> => m != null);
 
   const applyBtn = (
     <button
@@ -199,10 +190,10 @@ export function RecommendPanel() {
       {!build ? (
         <p className="text-sm text-faint">
           {tab === "recommended"
-            ? `No curated builds for ${pokemon.displayName} yet — try Creative or Your Emblems.`
-            : tab === "yours"
-              ? "You haven't marked any emblems as owned yet. Mark some in the Emblem Inventory and your best set will appear here."
-              : "No build available."}
+            ? `No Recommended builds for ${pokemon.displayName} yet.`
+            : tab === "creative"
+              ? `No Creative builds for ${pokemon.displayName} yet.`
+              : "You haven't marked any emblems as owned yet. Mark some in the Emblem Inventory and your best set will appear here."}
         </p>
       ) : (
         <div className="flex flex-col gap-4">
@@ -229,22 +220,19 @@ export function RecommendPanel() {
                 })}
               </div>
             </div>
-            {/* Final moves (curated builds carry their two upgrade moves) */}
-            {build.moves && build.moves.length > 0 && (
+            {/* Final moves — curated per build, or live picks on Your Emblems */}
+            {finalMoveDisplays.length > 0 && (
               <div>
                 <p className="mb-1 text-xs font-medium text-faint">Final Moves</p>
                 <div className="flex gap-2">
-                  {build.moves.map((name) => {
-                    const mv = moveByName.get(name);
-                    return (
-                      <Tooltip key={name} content={mv ? moveTip(mv) : <span className="font-semibold">{name}</span>}>
-                        <span className="flex w-16 flex-col items-center">
-                          <MoveIcon src={mv?.iconAsset} alt={name} />
-                          <span className="mt-0.5 text-center text-[10px] leading-tight text-muted">{name}</span>
-                        </span>
-                      </Tooltip>
-                    );
-                  })}
+                  {finalMoveDisplays.map((mv) => (
+                    <Tooltip key={mv.id} content={moveTip(mv)}>
+                      <span className="flex w-16 flex-col items-center">
+                        <MoveIcon src={mv.iconAsset} alt={mv.name} />
+                        <span className="mt-0.5 text-center text-[10px] leading-tight text-muted">{mv.name}</span>
+                      </span>
+                    </Tooltip>
+                  ))}
                 </div>
               </div>
             )}

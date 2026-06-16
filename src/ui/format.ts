@@ -33,6 +33,28 @@ export function formatDelta(value: number, kind: StatKind): string {
   return `${sign}${Math.round(value).toLocaleString()}`;
 }
 
+/** Max fractional digits for UNITE-DB held-item stats (e.g. 8.75%, 15.25 Atk). */
+const HELD_ITEM_DECIMALS = 4;
+
+/** Strip float noise; never Math.round — integers stay integer, fractions keep UNITE-DB precision. */
+function trimHeldDecimals(n: number): string {
+  if (Number.isInteger(n)) return n.toLocaleString();
+  return n.toFixed(HELD_ITEM_DECIMALS).replace(/\.?0+$/, "");
+}
+
+/** Exact held-item / live-stat display (Beginner + Expert): no standard rounding. */
+export function formatExactStatValue(value: number, kind: StatKind): string {
+  if (kind === "percent") return `${trimHeldDecimals(value * 100)}%`;
+  return value < 0 ? `-${trimHeldDecimals(Math.abs(value))}` : trimHeldDecimals(value);
+}
+
+export function formatExactDelta(value: number, kind: StatKind): string {
+  const sign = value > 0 ? "+" : value < 0 ? "-" : "";
+  const abs = Math.abs(value);
+  if (kind === "percent") return `${sign}${trimHeldDecimals(abs * 100)}%`;
+  return `${sign}${trimHeldDecimals(abs)}`;
+}
+
 export interface StatLine {
   key: keyof StatBlock;
   label: string;
@@ -51,14 +73,24 @@ function formatPrecise(value: number, kind: StatKind): string {
 /**
  * Non-zero stats of a partial block as signed display lines (emblem/item
  * summaries). `precise` keeps decimals (Expert); otherwise standard rounding.
+ * `exact` never rounds — used for held items (UNITE-DB per-grade values).
  */
-export function statLines(stats: Partial<StatBlock>, precise = false): StatLine[] {
+export function statLines(stats: Partial<StatBlock>, precise = false, exact = false): StatLine[] {
   const out: StatLine[] = [];
   for (const row of STAT_ROWS) {
     const v = stats[row.key];
     if (v == null || v === 0) continue;
-    const value = precise ? formatPrecise(v, row.kind) : formatDelta(v, row.kind);
+    const value = exact
+      ? formatExactDelta(v, row.kind)
+      : precise
+        ? formatPrecise(v, row.kind)
+        : formatDelta(v, row.kind);
     out.push({ key: row.key, label: row.label, value, sign: v > 0 ? "pos" : "neg" });
   }
   return out;
+}
+
+/** Held-item stat lines at a grade — always exact, never rounded. */
+export function heldItemStatLines(stats: Partial<StatBlock>): StatLine[] {
+  return statLines(stats, false, true);
 }

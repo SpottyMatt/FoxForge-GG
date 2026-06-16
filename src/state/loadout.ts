@@ -3,6 +3,7 @@
 // (battle) item, an emblem set, and which active effects are toggled on.
 
 import type { EmblemGrade } from "../types";
+import { ITEM_GRADE_DEFAULT } from "../data/gameData";
 
 export interface EmblemPick {
   emblemId: string;
@@ -13,7 +14,10 @@ export interface Loadout {
   pokemonId: string | null;
   level: number; // 1-15
   heldItemIds: (string | null)[]; // exactly 3 slots
+  heldItemGrades: [number, number, number]; // grade 1–40 per held slot (parallel to heldItemIds)
   battleItemId: string | null; // "Trainer Item"
+  move1Id: string | null; // chosen final (upgrade) move for slot 1; null → derived default
+  move2Id: string | null; // chosen final (upgrade) move for slot 2; null → derived default
   emblems: EmblemPick[]; // up to 10
   activeBoostIds: string[]; // toggled-on active effects (default: none)
 }
@@ -36,7 +40,10 @@ export function emptyLoadout(pokemonId: string | null = null): Loadout {
     pokemonId,
     level: 15,
     heldItemIds: [null, null, null],
+    heldItemGrades: [ITEM_GRADE_DEFAULT, ITEM_GRADE_DEFAULT, ITEM_GRADE_DEFAULT],
     battleItemId: null,
+    move1Id: null,
+    move2Id: null,
     emblems: [],
     activeBoostIds: [],
   };
@@ -162,6 +169,14 @@ export function sanitizeLoadout(x: unknown): Loadout | null {
     const v = (o.heldItemIds as unknown[])[i];
     return typeof v === "string" ? v : null;
   });
+  const clampGrade = (g: unknown) =>
+    typeof g === "number" ? Math.max(1, Math.min(40, Math.round(g))) : ITEM_GRADE_DEFAULT;
+  const rawGrades = Array.isArray(o.heldItemGrades) ? o.heldItemGrades : [];
+  const heldItemGrades: [number, number, number] = [
+    clampGrade(rawGrades[0]),
+    clampGrade(rawGrades[1]),
+    clampGrade(rawGrades[2]),
+  ];
   const emblems: EmblemPick[] = (o.emblems as unknown[])
     .filter((e): e is EmblemPick => {
       const p = e as Record<string, unknown>;
@@ -173,7 +188,10 @@ export function sanitizeLoadout(x: unknown): Loadout | null {
     pokemonId: typeof o.pokemonId === "string" ? o.pokemonId : null,
     level: typeof o.level === "number" ? Math.max(1, Math.min(15, Math.round(o.level))) : 15,
     heldItemIds: held,
+    heldItemGrades,
     battleItemId: typeof o.battleItemId === "string" ? o.battleItemId : null,
+    move1Id: typeof o.move1Id === "string" ? o.move1Id : null,
+    move2Id: typeof o.move2Id === "string" ? o.move2Id : null,
     emblems,
     activeBoostIds: Array.isArray(o.activeBoostIds)
       ? (o.activeBoostIds as unknown[]).filter((b): b is string => typeof b === "string")

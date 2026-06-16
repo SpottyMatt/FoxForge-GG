@@ -57,7 +57,7 @@ const brownEmblems = bundle.emblems
   .map((emblem) => ({ emblem, grade: "gold" as const }));
 const loadout = computeEmblemLoadout(brownEmblems, bundle.setBonuses);
 const ctx: CalcContext = { inCombat: true, goalsScored: 0 };
-const eff = computeEffectiveStats(lucario, 15, loadout, [floatStone], 30, ctx);
+const eff = computeEffectiveStats(lucario, 15, loadout, [floatStone], [30], ctx);
 console.log(`\n6-Brown loadout: ${loadout.activeSetBonuses.map((b) => `${b.color}+${b.bonusPercent}`).join(", ") || "none"}`);
 const brownActive = loadout.activeSetBonuses.find((b) => b.color === "brown");
 check("6 Brown emblems => brown bonus active 0.04", brownActive?.bonusPercent, 0.04);

@@ -28,7 +28,7 @@ console.log(`Loaded bundle ${bundle.patchVersion} (zod validation passed)\n`);
 const lucario = bundle.pokemon.find((p) => p.id === "lucario")!;
 const noEmblems = computeEmblemLoadout([], bundle.setBonuses);
 const ctx = { inCombat: true, goalsScored: 0 };
-const lv15 = computeEffectiveStats(lucario, 15, noEmblems, [], 40, ctx);
+const lv15 = computeEffectiveStats(lucario, 15, noEmblems, [], [], ctx);
 check("Lucario Lv15 HP = 7249", lv15.hp, 7249);
 check("Lucario Lv15 Attack = 429", lv15.attack, 429);
 check("Lucario Lv15 Defense = 390", lv15.defense, 390);
@@ -62,7 +62,7 @@ const sixBrown = computeEmblemLoadout(
   bundle.setBonuses,
 );
 const floatStone = bundle.heldItems.find((i) => i.id === "float-stone")!;
-const ordered = computeEffectiveStats(lucario, 15, sixBrown, [floatStone], 40, ctx);
+const ordered = computeEffectiveStats(lucario, 15, sixBrown, [floatStone], [40], ctx);
 // floor((429 + round(100.2)) * 1.04) + 28 = floor(550.16) + 28 = 578
 // (item-flats-inside-% would give 579; flats-not-multiplied would give 574)
 check("6 Brown ×(base+flats), item flat AFTER -> Atk 578", ordered.attack, 578);

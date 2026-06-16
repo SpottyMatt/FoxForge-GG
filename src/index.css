@@ -39,6 +39,13 @@
   --color-header-b: #7c3aed;
   --color-tip-bg: #171717;
   --color-tip-ink: #ffffff;
+
+  /* Pokémon picker tiles: persistent UNITE-purple background, orange hover edge,
+     vivid purple selection ring (swapped in dark — orange bg, purple hover). */
+  --color-mon-bg: #ddd4f7;
+  --color-mon-hover: #f97316;
+  --color-mon-sel-bg: #c9bcf2;
+  --color-mon-sel-ring: #6d28d9;
 }
 
 /* manual class-based dark variant (for any dark: utilities) */
@@ -77,6 +84,13 @@
   --color-header-b: #0891b2;
   --color-tip-bg: #251f40;
   --color-tip-ink: #f4f0ff;
+
+  /* Picker tiles swap in dark: warm orange resting bg, purple hover edge,
+     vivid orange selection ring. */
+  --color-mon-bg: #5a3a15;
+  --color-mon-hover: #a78bfa;
+  --color-mon-sel-bg: #73491a;
+  --color-mon-sel-ring: #f59e0b;
 }
 
 /* ------------------------------------------------------------- base polish --

@@ -1,6 +1,7 @@
 // App state: the in-progress loadout (reducer) + saved loadouts (localStorage).
 import { createContext, useContext, useEffect, useMemo, useReducer, useState, type ReactNode } from "react";
 import type { EmblemGrade } from "../types";
+import { ITEM_GRADE_DEFAULT } from "../data/gameData";
 import {
   type Loadout,
   type SavedLoadout,
@@ -24,20 +25,23 @@ type Action =
   | { type: "setPokemon"; pokemonId: string }
   | { type: "setLevel"; level: number }
   | { type: "setHeldItem"; slot: number; id: string | null }
+  | { type: "setHeldItemGrade"; slot: number; grade: number }
   | { type: "setBattleItem"; id: string | null }
   | { type: "addEmblem"; emblemId: string; grade: EmblemGrade }
   | { type: "removeEmblem"; index: number }
   | { type: "setEmblemGrade"; index: number; grade: EmblemGrade }
   | { type: "toggleBoost"; id: string }
-  | { type: "applyBuild"; heldItemIds: (string | null)[]; battleItemId: string | null; emblems: EmblemPick[] }
+  | { type: "setMove"; slot: "move1" | "move2"; moveId: string }
+  | { type: "applyBuild"; heldItemIds: (string | null)[]; battleItemId: string | null; emblems: EmblemPick[]; move1Id?: string | null; move2Id?: string | null }
   | { type: "load"; loadout: Loadout }
   | { type: "reset" };
 
 function reducer(state: Loadout, action: Action): Loadout {
   switch (action.type) {
     case "setPokemon":
-      // Switching Pokémon invalidates move-based active boosts.
-      return { ...state, pokemonId: action.pokemonId, activeBoostIds: state.activeBoostIds.filter((b) => !b.startsWith("move:")) };
+      // Switching Pokémon invalidates move-based active boosts and move picks
+      // (null → the Moves UI derives the new Pokémon's default final moves).
+      return { ...state, pokemonId: action.pokemonId, move1Id: null, move2Id: null, activeBoostIds: state.activeBoostIds.filter((b) => !b.startsWith("move:")) };
     case "setLevel":
       return { ...state, level: Math.max(1, Math.min(15, action.level)) };
     case "setHeldItem": {
@@ -45,7 +49,14 @@ function reducer(state: Loadout, action: Action): Loadout {
       const heldItemIds = state.heldItemIds.map((cur, i) =>
         i === action.slot ? action.id : cur === action.id ? null : cur,
       );
-      return { ...state, heldItemIds };
+      const heldItemGrades = [...state.heldItemGrades] as [number, number, number];
+      if (action.id === null) heldItemGrades[action.slot] = ITEM_GRADE_DEFAULT;
+      return { ...state, heldItemIds, heldItemGrades };
+    }
+    case "setHeldItemGrade": {
+      const heldItemGrades = [...state.heldItemGrades] as [number, number, number];
+      heldItemGrades[action.slot] = Math.max(1, Math.min(40, Math.round(action.grade)));
+      return { ...state, heldItemGrades };
     }
     case "setBattleItem":
       return { ...state, battleItemId: action.id, activeBoostIds: state.activeBoostIds.filter((b) => b !== "x-attack") };
@@ -61,11 +72,17 @@ function reducer(state: Loadout, action: Action): Loadout {
       const on = state.activeBoostIds.includes(action.id);
       return { ...state, activeBoostIds: on ? state.activeBoostIds.filter((b) => b !== action.id) : [...state.activeBoostIds, action.id] };
     }
+    case "setMove":
+      return action.slot === "move1"
+        ? { ...state, move1Id: action.moveId }
+        : { ...state, move2Id: action.moveId };
     case "applyBuild":
       return {
         ...state,
         heldItemIds: [action.heldItemIds[0] ?? null, action.heldItemIds[1] ?? null, action.heldItemIds[2] ?? null],
         battleItemId: action.battleItemId,
+        move1Id: action.move1Id !== undefined ? action.move1Id : state.move1Id,
+        move2Id: action.move2Id !== undefined ? action.move2Id : state.move2Id,
         emblems: action.emblems.slice(0, MAX_EMBLEMS),
       };
     case "load":

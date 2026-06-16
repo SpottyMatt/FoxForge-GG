@@ -307,17 +307,33 @@ def build_pokemon(pokemon_rows, stats_rows, pokedex_to_id: dict) -> list:
 
 # ---- held items ------------------------------------------------------------
 
-def held_item_value(stat: dict) -> float:
-    """Max-level (30) value:  increment * 35/(skip+1) + initial_diff.
+HELD_ITEM_MAX_GRADE = 40
+
+
+def held_item_factor(level: int) -> float:
+    """Grade -> scaling factor for a held-item stat.
+
+    Levels 1-30 scale linearly (factor == level). The level 31-40 grades (added
+    in-game when the held-item cap was raised to 40) continue at half rate, so
+    factor(30) == 30 and factor(40) == 35 — matching UNITE-DB (e.g. Curse Bangle
+    Attack: 0.8*30 = 24 at G30, 0.8*35 = 28 at G40).
+    """
+    if level <= 30:
+        return float(level)
+    return 30.0 + 0.5 * (level - 30)
+
+
+def held_item_value_at(stat: dict, level: int) -> float:
+    """Stat value at a grade:  increment * factor(level)/(skip+1) + initial_diff.
 
     NB: the `float` field is a display-precision hint, NOT a rounding rule for
-    the canonical value — Muscle Band's true max is 17.5 Attack / 8.75% even
+    the canonical value — Muscle Band's true G40 is 17.5 Attack / 8.75% even
     though float=0/1. We keep full precision and only clean FP noise later.
     """
     incr = num(stat.get("increment"))
     skip = num(stat.get("skip"))
     diff = num(stat.get("initial_diff"))
-    return incr * 35.0 / (skip + 1.0) + diff
+    return incr * held_item_factor(level) / (skip + 1.0) + diff
 
 
 def icon_name(item: dict) -> str:
@@ -330,20 +346,24 @@ def build_held_items(rows) -> list:
     out = []
     for h in rows:
         name = h["display_name"]
-        flats = {}
-        for s in h.get("stats", []):
-            value = held_item_value(s)
-            mapped = map_stat(s.get("label", ""), value)
-            if mapped is None:
-                continue  # non-StatBlock stat (Energy Rate, HP/5s, Crit Dmg) -> skip flats
-            field, decimal_value = mapped
-            flats[field] = round(flats.get(field, 0) + decimal_value, 6)
+        stats_by_grade: dict[str, dict] = {}
+        for level in range(1, HELD_ITEM_MAX_GRADE + 1):
+            flats: dict[str, float] = {}
+            for s in h.get("stats", []):
+                value = held_item_value_at(s, level)
+                mapped = map_stat(s.get("label", ""), value)
+                if mapped is None:
+                    continue
+                field, decimal_value = mapped
+                flats[field] = flats.get(field, 0) + decimal_value
+            if flats:
+                stats_by_grade[str(level)] = flats
         out.append({
             "id": slugify(h["name"]),
             "displayName": name,
             "iconAsset": f"{ASSETS}/items/held/{icon_name(h)}.png",
             "description": h.get("description1", "") or "",
-            "statsByGrade": {"30": flats},
+            "statsByGrade": stats_by_grade,
             "conditionalEffects": [],
         })
     return out

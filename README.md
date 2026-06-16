@@ -123,7 +123,7 @@ npm run build:pages             # static build with the GitHub Pages base path
 npm run preview                 # serve the built dist/ locally
 npm run tauri dev               # run the native desktop app (needs the Rust toolchain)
 npm run tauri build             # build a desktop installer for the current OS
-npm test                        # engine + bundle + attack-speed + share tests (vitest, 58)
+npm test                        # engine + bundle + attack-speed + share tests (vitest, 90)
 npm run validate                # known-values gate from docs/03-Calculation-Engine.md
 npx tsx src/data/verifyPatch.ts # validate the live UNITE-DB bundle end-to-end
 npm run typecheck               # tsc --noEmit
@@ -162,12 +162,16 @@ and recompute pick it up automatically.
   (incl. X-Attack +20% Atk/SpAtk & +25% AS), loadout saver (20, localStorage), two-build comparison
 - [x] Milestone 4 — level-scaling graph ([`LevelGraph.tsx`](src/components/LevelGraph.tsx),
   Recharts, any stat or attacks/sec across Lv 1–15 with current-level marker)
-- [x] Milestone 5 — recommendation engine ([`recommend.ts`](src/engine/recommend.ts) +
-  [`RecommendPanel.tsx`](src/components/RecommendPanel.tsx)): surfaces each Pokémon's **curated
-  UNITE-DB builds** (held/battle items + the **exact 10-emblem set** with grades + resulting set
-  bonuses), **Reroll** to cycle a Pokémon's builds, and **Randomize** — a negative-minimizing emblem
-  solver ([respects per-stat floors + attack-type "unneeded" stats](src/engine/recommend.ts)) for
-  fresh sets and the few Pokémon without curated builds; one-click Apply
+- [x] Milestone 5 — Builds panel ([`recommend.ts`](src/engine/recommend.ts) +
+  [`RecommendPanel.tsx`](src/components/RecommendPanel.tsx)): three tabs — **Recommended**
+  (each Pokémon's curated UNITE-DB builds: held/trainer items, the **exact 10-emblem set** with
+  grades + resulting set bonuses, and the build's two final moves), **Creative** (data-driven,
+  empty until creative builds are supplied), and **Your Emblems** (the best 10-emblem set solved
+  from your owned inventory — [respects per-stat floors + attack-type "unneeded" stats](src/engine/recommend.ts));
+  each with one-click Apply
+- [x] **Interactive Moves card** ([`MovesCard.tsx`](src/components/MovesCard.tsx)): choose one
+  upgrade per move (Move 1 / Move 2), with icons + hover tooltips for every move and the passive;
+  the picks save with the build, and applying a Recommended build sets them
 - [x] **Beginner / Expert modes** ([App.tsx](src/App.tsx)): Beginner shows the recommended build +
   clean rounded stats; Expert adds attack-speed detail, analytics, active-effect toggles, the level
   graph, Compare, and decimal precision. Every section is a **collapsible card**

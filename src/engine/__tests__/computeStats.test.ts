@@ -22,7 +22,7 @@ const noEmblems = computeEmblemLoadout([], setBonuses);
 
 describe("Lucario level-15 base (documented validation target)", () => {
   it("matches HP 7249 / Atk 429 / Def 390 / SpAtk 115 / SpDef 300 / Crit 20% / AS 40% / MS 4300", () => {
-    const stats = computeEffectiveStats(lucario, 15, noEmblems, [], 40, IN_COMBAT);
+    const stats = computeEffectiveStats(lucario, 15, noEmblems, [], [], IN_COMBAT);
     expect(stats).toEqual({
       hp: 7249,
       attack: 429,
@@ -39,7 +39,7 @@ describe("Lucario level-15 base (documented validation target)", () => {
   });
 
   it("level 1 base also passes through untouched", () => {
-    const stats = computeEffectiveStats(lucario, 1, noEmblems, [], 40, IN_COMBAT);
+    const stats = computeEffectiveStats(lucario, 1, noEmblems, [], [], IN_COMBAT);
     expect(stats.hp).toBe(3250);
     expect(stats.attack).toBe(160);
   });
@@ -54,7 +54,7 @@ describe("stacking order (the #1 source of third-party inaccuracy)", () => {
       setBonuses,
     );
     const stats = computeEffectiveStats(
-      lucario, 15, emblems, [floatStone], 40, IN_COMBAT,
+      lucario, 15, emblems, [floatStone], [40], IN_COMBAT,
     );
     // correct:               floor((429+100) * 1.04) + 28 = 550 + 28  = 578
     // item flats inside %:   floor((429+100+28) * 1.04)   = 579   (wrong)
@@ -69,7 +69,7 @@ describe("stacking order (the #1 source of third-party inaccuracy)", () => {
       distinctEmblems(6, ["brown"], { attack: 3.1 }),
       setBonuses,
     );
-    const stats = computeEffectiveStats(lucario, 15, emblems, [], 40, IN_COMBAT);
+    const stats = computeEffectiveStats(lucario, 15, emblems, [], [], IN_COMBAT);
     // floor((429 + 19) * 1.04) = floor(465.92) = 465
     expect(stats.attack).toBe(465);
   });
@@ -79,7 +79,7 @@ describe("stacking order (the #1 source of third-party inaccuracy)", () => {
       distinctEmblems(4, ["brown"], { attack: 4.6 }),
       setBonuses,
     );
-    const stats = computeEffectiveStats(lucario, 15, emblems, [], 40, IN_COMBAT);
+    const stats = computeEffectiveStats(lucario, 15, emblems, [], [], IN_COMBAT);
     // 4 × 4.6 = 18.4 -> 18; floor((429+18) * 1.02) = floor(455.94) = 455
     expect(stats.attack).toBe(455);
   });
@@ -88,13 +88,13 @@ describe("stacking order (the #1 source of third-party inaccuracy)", () => {
 describe("percent-domain set bonuses add percentage points", () => {
   it("7 Red: attack speed 0.40 -> 0.48 (not ×1.08)", () => {
     const emblems = computeEmblemLoadout(distinctEmblems(7, ["red"]), setBonuses);
-    const stats = computeEffectiveStats(lucario, 15, emblems, [], 40, IN_COMBAT);
+    const stats = computeEffectiveStats(lucario, 15, emblems, [], [], IN_COMBAT);
     expect(stats.attackSpeed).toBeCloseTo(0.48, 9);
   });
 
   it("3 Black: CDR 0 -> 0.02 (multiplying a 0 base would do nothing)", () => {
     const emblems = computeEmblemLoadout(distinctEmblems(3, ["black"]), setBonuses);
-    const stats = computeEffectiveStats(lucario, 15, emblems, [], 40, IN_COMBAT);
+    const stats = computeEffectiveStats(lucario, 15, emblems, [], [], IN_COMBAT);
     expect(stats.cdr).toBeCloseTo(0.02, 9);
   });
 });
@@ -103,12 +103,12 @@ describe("yellow set bonus is out-of-combat only", () => {
   const emblems = computeEmblemLoadout(distinctEmblems(7, ["yellow"]), setBonuses);
 
   it("applies out of combat: floor(4300 × 1.12) = 4816", () => {
-    const stats = computeEffectiveStats(lucario, 15, emblems, [], 40, OUT_OF_COMBAT);
+    const stats = computeEffectiveStats(lucario, 15, emblems, [], [], OUT_OF_COMBAT);
     expect(stats.moveSpeed).toBe(4816);
   });
 
   it("does not apply in combat", () => {
-    const stats = computeEffectiveStats(lucario, 15, emblems, [], 40, IN_COMBAT);
+    const stats = computeEffectiveStats(lucario, 15, emblems, [], [], IN_COMBAT);
     expect(stats.moveSpeed).toBe(4300);
   });
 });
@@ -119,7 +119,7 @@ describe("real bundle emblems (Diglett / Aerodactyl)", () => {
       [gold(diglett), gold(aerodactyl)],
       setBonuses,
     );
-    const stats = computeEffectiveStats(lucario, 15, emblems, [], 40, IN_COMBAT);
+    const stats = computeEffectiveStats(lucario, 15, emblems, [], [], IN_COMBAT);
     expect(stats.attack).toBe(Math.floor(429 * 1.01)); // 433, no attack flats
     expect(stats.hp).toBe(7249 - 50);
     expect(stats.defense).toBe(390 - 5);
@@ -134,7 +134,7 @@ describe("real bundle emblems (Diglett / Aerodactyl)", () => {
       ],
       setBonuses,
     );
-    const stats = computeEffectiveStats(lucario, 15, emblems, [], 40, IN_COMBAT);
+    const stats = computeEffectiveStats(lucario, 15, emblems, [], [], IN_COMBAT);
     expect(stats.attack).toBe(429); // no 2-brown bonus
     expect(stats.hp).toBe(7249 - 80);
     expect(stats.moveSpeed).toBe(4300 + 56);
@@ -144,7 +144,7 @@ describe("real bundle emblems (Diglett / Aerodactyl)", () => {
 describe("conditional item effects", () => {
   it("Attack Weight: +12 attack per goal scored", () => {
     const stats = computeEffectiveStats(
-      lucario, 15, noEmblems, [attackWeight], 40,
+      lucario, 15, noEmblems, [attackWeight], [40],
       { inCombat: true, goalsScored: 2 },
     );
     // 429 + 21 (grade-40 flat) + 12×2
@@ -153,7 +153,7 @@ describe("conditional item effects", () => {
 
   it("Float Stone grade-40 flats: +28 Atk, +175 MS (documented target)", () => {
     const stats = computeEffectiveStats(
-      lucario, 15, noEmblems, [floatStone], 40, IN_COMBAT,
+      lucario, 15, noEmblems, [floatStone], [40], IN_COMBAT,
     );
     expect(stats.attack).toBe(429 + 28);
     expect(stats.moveSpeed).toBe(4300 + 175);
@@ -161,7 +161,7 @@ describe("conditional item effects", () => {
 
   it("Float Stone +20% move speed applies only out of combat (display layer)", () => {
     const stats = computeEffectiveStats(
-      lucario, 15, noEmblems, [floatStone], 40, OUT_OF_COMBAT,
+      lucario, 15, noEmblems, [floatStone], [40], OUT_OF_COMBAT,
     );
     expect(outOfCombatMoveSpeed(stats, [floatStone], OUT_OF_COMBAT)).toBe(
       Math.floor((4300 + 175) * 1.2), // 5370

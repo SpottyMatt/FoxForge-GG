@@ -122,7 +122,7 @@ export function computeEffectiveStats(
   level: number, // 1-15
   emblems: EmblemLoadout,
   items: HeldItem[],
-  itemGrade: number, // typically 40
+  itemGrades: number[], // parallel to items, each 1–40
   context: CalcContext,
 ): StatBlock {
   // 1. Base stat at the given level
@@ -160,8 +160,13 @@ export function computeEffectiveStats(
   }
 
   // 4. Held-item flat stats (added AFTER emblem %)
-  for (const item of items) {
-    const gradeStats = item.statsByGrade[itemGrade] ?? {};
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    const grade = itemGrades[i] ?? 30;
+    const gradeStats =
+      item.statsByGrade[grade as keyof typeof item.statsByGrade]
+      ?? (item.statsByGrade as Record<string, Partial<StatBlock>>)[String(grade)]
+      ?? {};
     for (const key of Object.keys(gradeStats) as (keyof StatBlock)[]) {
       stats[key] = (stats[key] ?? 0) + (gradeStats[key] ?? 0);
     }

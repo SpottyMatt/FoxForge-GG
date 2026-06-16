@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
 import { useStore } from "../state/store";
-import { heldItems, battleItems, emblems, heldItemById, battleItemById, emblemById } from "../data/gameData";
+import { heldItems, battleItems, emblems, heldItemById, battleItemById, emblemById, ITEM_GRADE_DEFAULT } from "../data/gameData";
 import { MAX_EMBLEMS } from "../state/loadout";
 import { asset } from "../ui/asset";
 import { emblemIconForGrade } from "../ui/emblemIcon";
+import { heldItemStatLines } from "../ui/format";
 import { gradesForEmblem } from "../ui/emblems";
 import { EMBLEM_COLOR_HEX, ALL_EMBLEM_COLORS } from "../ui/colors";
 import type { EmblemGrade } from "../types";
@@ -11,7 +12,7 @@ import { PickerModal, type PickItem } from "./PickerModal";
 import { EmblemSetSummary } from "./EmblemSetSummary";
 import { CollapsibleCard } from "./CollapsibleCard";
 import { Tooltip } from "./Tooltip";
-import { itemTip, emblemTip } from "./tips";
+import { itemTip, emblemTip, statsAtGrade } from "./tips";
 
 type Picker = { kind: "held"; slot: number } | { kind: "battle" } | { kind: "emblem" } | null;
 
@@ -34,25 +35,47 @@ export function LoadoutEditor() {
     <div className="flex flex-col gap-4">
       {/* Held items */}
       <Section title="Held Items">
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-3">
           {loadout.heldItemIds.map((id, slot) => {
             const item = id ? heldItemById.get(id) : null;
+            const grade = loadout.heldItemGrades[slot] ?? ITEM_GRADE_DEFAULT;
             return (
-              <Tooltip key={slot} content={item ? itemTip(item) : "Add a held item"}>
-                <button
-                  onClick={() => setPicker({ kind: "held", slot })}
-                  className="flex h-20 w-20 flex-col items-center justify-center rounded-xl border-2 border-dashed border-line p-1 hover:border-accent hover:bg-accent-weak"
-                >
-                  {item ? (
-                    <>
-                      <img src={asset(item.iconAsset)} alt={item.displayName} className="h-10 w-10 object-contain" />
-                      <span className="mt-0.5 text-[10px] leading-tight text-muted">{item.displayName}</span>
-                    </>
-                  ) : (
-                    <span className="text-2xl text-faint">+</span>
-                  )}
-                </button>
-              </Tooltip>
+              <div key={slot} className="flex flex-wrap items-start gap-3">
+                <Tooltip content={item ? itemTip(item, grade) : "Add a held item"}>
+                  <button
+                    onClick={() => setPicker({ kind: "held", slot })}
+                    className="flex h-20 w-20 shrink-0 flex-col items-center justify-center rounded-xl border-2 border-dashed border-line p-1 hover:border-accent hover:bg-accent-weak"
+                  >
+                    {item ? (
+                      <>
+                        <img src={asset(item.iconAsset)} alt={item.displayName} className="h-10 w-10 object-contain" />
+                        <span className="mt-0.5 text-[10px] leading-tight text-muted">{item.displayName}</span>
+                      </>
+                    ) : (
+                      <span className="text-2xl text-faint">+</span>
+                    )}
+                  </button>
+                </Tooltip>
+                {item && (
+                  <div className="min-w-[10rem] flex-1">
+                    <div className="mb-1 flex items-center justify-between">
+                      <label className="text-xs font-medium text-muted">Grade</label>
+                      <span className="rounded-md bg-accent px-2 py-0.5 text-xs font-bold text-white">{grade}</span>
+                    </div>
+                    <input
+                      type="range"
+                      min={1}
+                      max={40}
+                      value={grade}
+                      onChange={(e) => dispatch({ type: "setHeldItemGrade", slot, grade: Number(e.target.value) })}
+                      className="w-full accent-indigo-600"
+                    />
+                    <p className="mt-1 font-mono text-[10px] text-faint">
+                      {heldItemStatLines(statsAtGrade(item, grade)).map((l) => `${l.label} ${l.value}`).join(" · ") || "—"}
+                    </p>
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>

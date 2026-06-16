@@ -10,7 +10,7 @@ import {
   battleItemById,
   emblemById,
   setBonuses,
-  ITEM_GRADE,
+  ITEM_GRADE_DEFAULT,
 } from "../data/gameData";
 import { computeEmblemLoadout } from "./emblems";
 import { computeEffectiveStats, outOfCombatMoveSpeed } from "./formulas";
@@ -60,7 +60,11 @@ export function deriveBuild(loadout: Loadout, inCombat = true): DerivedBuild {
   const activeIds = new Set(loadout.activeBoostIds);
   const base = pokemon.baseStatsByLevel[loadout.level - 1];
   const equippedHeld = heldItems.filter((i): i is NonNullable<typeof i> => i !== null);
-  const effective = computeEffectiveStats(pokemon, loadout.level, emblemLoadout, equippedHeld, ITEM_GRADE, ctx);
+  const grades = loadout.heldItemGrades ?? [ITEM_GRADE_DEFAULT, ITEM_GRADE_DEFAULT, ITEM_GRADE_DEFAULT];
+  const equippedGrades = loadout.heldItemIds.map((id, i) =>
+    id ? grades[i] : ITEM_GRADE_DEFAULT,
+  ).filter((_, i) => loadout.heldItemIds[i]);
+  const effective = computeEffectiveStats(pokemon, loadout.level, emblemLoadout, equippedHeld, equippedGrades, ctx);
 
   // Apply active multiplicative buffs (e.g. X-Attack +20% Atk/SpAtk).
   const factors = activeStatFactors(availableBoosts, activeIds, loadout.level);

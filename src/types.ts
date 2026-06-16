@@ -45,7 +45,8 @@ export interface Pokemon {
   baseStatsByLevel: StatBlock[]; // index 0 = level 1 ... index 14 = level 15
   moves: Move[];
   passiveAbility: Ability;
-  builds?: PokemonBuild[]; // curated community builds (UNITE-DB)
+  builds?: PokemonBuild[]; // curated community builds (UNITE-DB) — the "Recommended" tab
+  creativeBuilds?: PokemonBuild[]; // optional "Creative" builds (empty until provided by data)
   excludeStats?: string[]; // stats this Pokémon doesn't use (UNITE-DB), e.g. ["attack"]
   hasMegaEvolution?: boolean;
   megaStats?: StatBlock[]; // if applicable (e.g. Mega Lucario)

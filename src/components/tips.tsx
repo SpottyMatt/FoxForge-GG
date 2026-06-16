@@ -1,8 +1,13 @@
 // Shared tooltip content builders for items and emblems (used by the Recommend
 // panel and the loadout editor).
-import { ITEM_GRADE } from "../data/gameData";
-import { statLines } from "../ui/format";
-import type { BattleItem, Emblem, EmblemGrade, HeldItem, Move } from "../types";
+import { ITEM_GRADE_DEFAULT } from "../data/gameData";
+import { heldItemStatLines, statLines } from "../ui/format";
+import type { BattleItem, Emblem, EmblemGrade, HeldItem, Move, StatBlock } from "../types";
+
+export function statsAtGrade(item: HeldItem, grade: number): Partial<StatBlock> {
+  const g = item.statsByGrade as Record<string | number, Partial<StatBlock>>;
+  return g[grade] ?? g[String(grade)] ?? {};
+}
 
 export function moveTip(move: Move) {
   return (
@@ -16,8 +21,8 @@ export function moveTip(move: Move) {
   );
 }
 
-export function itemTip(item: HeldItem | BattleItem) {
-  const stats = "statsByGrade" in item ? statLines(item.statsByGrade[ITEM_GRADE] ?? {}) : [];
+export function itemTip(item: HeldItem | BattleItem, grade = ITEM_GRADE_DEFAULT) {
+  const stats = "statsByGrade" in item ? heldItemStatLines(statsAtGrade(item as HeldItem, grade)) : [];
   return (
     <span>
       <span className="font-semibold">{item.displayName}</span>

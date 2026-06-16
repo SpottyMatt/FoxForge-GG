@@ -93,14 +93,14 @@ export function LoadoutBar() {
           title="Download this loadout as a .json file to share"
           className="flex-1 rounded-lg border border-line px-3 py-1.5 text-sm font-medium text-ink hover:bg-raise disabled:opacity-40"
         >
-          ↓ Export .json
+          ↓ Export
         </button>
         <button
           onClick={() => fileInputRef.current?.click()}
           title="Load a loadout from a .json file"
           className="flex-1 rounded-lg border border-line px-3 py-1.5 text-sm font-medium text-ink hover:bg-raise"
         >
-          ↑ Import .json
+          ↑ Import
         </button>
         <input
           ref={fileInputRef}

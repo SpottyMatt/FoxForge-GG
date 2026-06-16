@@ -11,7 +11,10 @@ describe("loadout sharing", () => {
       pokemonId: "lucario",
       level: 13,
       heldItemIds: ["muscle-band", "scope-lens", null],
+      heldItemGrades: [30, 30, 30],
       battleItemId: "x-attack",
+      move1Id: "power-up-punch",
+      move2Id: "bone-rush",
       emblems: [{ emblemId: "001-bulbasaur", grade: "gold" }, { emblemId: "004-charmander", grade: "silver" }],
       activeBoostIds: ["x-attack", "move:Feint"],
     };
@@ -35,7 +38,10 @@ describe("loadout file export/import", () => {
     pokemonId: "lucario",
     level: 13,
     heldItemIds: ["muscle-band", "scope-lens", null],
+    heldItemGrades: [30, 30, 30],
     battleItemId: "x-attack",
+    move1Id: null,
+    move2Id: null,
     emblems: [{ emblemId: "001-bulbasaur", grade: "gold" }, { emblemId: "004-charmander", grade: "silver" }],
     activeBoostIds: ["x-attack"],
   };

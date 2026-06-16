@@ -25,12 +25,12 @@ describe("patch-1.23.1.1 community bundle", () => {
     expect(s.moveSpeed).toBe(4300);
   });
 
-  it("has exact max-level held-item flats", () => {
-    const fs = bundle.heldItems.find((i) => i.id === "float-stone")!.statsByGrade[30];
+  it("has exact max-level held-item flats at grade 40", () => {
+    const fs = bundle.heldItems.find((i) => i.id === "float-stone")!.statsByGrade["40"];
     expect(fs).toMatchObject({ attack: 28, moveSpeed: 175 });
-    const mb = bundle.heldItems.find((i) => i.id === "muscle-band")!.statsByGrade[30];
+    const mb = bundle.heldItems.find((i) => i.id === "muscle-band")!.statsByGrade["40"];
     expect(mb.attack).toBe(17.5);
-    expect(mb.attackSpeed).toBe(0.0875);
+    expect(mb.attackSpeed).toBeCloseTo(0.0875, 6);
   });
 
   it("every pokemon has 15 level rows and a local asset path", () => {
@@ -49,7 +49,7 @@ describe("patch-1.23.1.1 community bundle", () => {
     const loadout = computeEmblemLoadout(brown, bundle.setBonuses);
     expect(loadout.activeSetBonuses.find((b) => b.color === "brown")?.bonusPercent).toBe(0.04);
     const ctx: CalcContext = { inCombat: true, goalsScored: 0 };
-    const eff = computeEffectiveStats(lucario, 15, loadout, [], 30, ctx);
+    const eff = computeEffectiveStats(lucario, 15, loadout, [], [], ctx);
     // attack must be strictly greater than base 429 after the +4% brown bonus
     expect(eff.attack).toBeGreaterThan(429);
   });
@@ -89,5 +89,13 @@ describe("patch-1.23.1.1 community bundle", () => {
         }
       }
     }
+  });
+
+  it("held items expose grades 1–40 with correct scaling (Muscle Band)", () => {
+    const mb = bundle.heldItems.find((i) => i.id === "muscle-band")!;
+    expect(Object.keys(mb.statsByGrade)).toHaveLength(40);
+    expect(mb.statsByGrade["30"]?.attack).toBe(15);
+    expect(mb.statsByGrade["40"]?.attack).toBe(17.5);
+    expect(mb.statsByGrade["40"]?.attackSpeed).toBeCloseTo(0.0875, 6);
   });
 });
