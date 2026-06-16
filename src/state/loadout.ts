@@ -40,7 +40,7 @@ export function emptyLoadout(pokemonId: string | null = null): Loadout {
     pokemonId,
     level: 15,
     heldItemIds: [null, null, null],
-    heldItemGrades: [ITEM_GRADE_DEFAULT, ITEM_GRADE_DEFAULT, ITEM_GRADE_DEFAULT],
+    heldItemGrades: defaultHeldItemGrades(),
     battleItemId: null,
     move1Id: null,
     move2Id: null,
@@ -49,12 +49,27 @@ export function emptyLoadout(pokemonId: string | null = null): Loadout {
   };
 }
 
+export function defaultHeldItemGrades(): [number, number, number] {
+  return [ITEM_GRADE_DEFAULT, ITEM_GRADE_DEFAULT, ITEM_GRADE_DEFAULT];
+}
+
+/** Safe grades for a partial/stale loadout (e.g. localStorage from before heldItemGrades existed). */
+export function heldItemGradesOf(loadout: Partial<Loadout>): [number, number, number] {
+  const raw = loadout.heldItemGrades;
+  const clamp = (g: unknown) =>
+    typeof g === "number" ? Math.max(1, Math.min(40, Math.round(g))) : ITEM_GRADE_DEFAULT;
+  return [clamp(raw?.[0]), clamp(raw?.[1]), clamp(raw?.[2])];
+}
+
 export function loadSavedLoadouts(): SavedLoadout[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .map((entry) => sanitizeSavedLoadout(entry))
+      .filter((l): l is SavedLoadout => l !== null);
   } catch {
     return [];
   }
@@ -89,9 +104,7 @@ export function deleteLoadout(current: SavedLoadout[], id: string): SavedLoadout
 
 /** Strip the saved-metadata fields back to a plain editable Loadout. */
 export function toLoadout(saved: SavedLoadout): Loadout {
-  const { id: _id, name: _name, savedAt: _savedAt, ...rest } = saved;
-  void _id; void _name; void _savedAt;
-  return structuredClone(rest);
+  return normalizeLoadout(saved);
 }
 
 // ----- Current (in-progress) build persistence ------------------------------
@@ -102,7 +115,8 @@ export function saveCurrent(loadout: Loadout): void {
 export function loadCurrent(): Loadout | null {
   try {
     const raw = localStorage.getItem(CURRENT_KEY);
-    return raw ? (JSON.parse(raw) as Loadout) : null;
+    if (!raw) return null;
+    return normalizeLoadout(JSON.parse(raw));
   } catch { return null; }
 }
 
@@ -114,9 +128,7 @@ export function encodeLoadout(loadout: Loadout): string {
 export function decodeLoadout(encoded: string): Loadout | null {
   try {
     const json = decodeURIComponent(escape(atob(encoded)));
-    const l = JSON.parse(json);
-    if (l && typeof l === "object" && Array.isArray(l.heldItemIds)) return l as Loadout;
-    return null;
+    return sanitizeLoadout(JSON.parse(json));
   } catch { return null; }
 }
 
@@ -169,14 +181,8 @@ export function sanitizeLoadout(x: unknown): Loadout | null {
     const v = (o.heldItemIds as unknown[])[i];
     return typeof v === "string" ? v : null;
   });
-  const clampGrade = (g: unknown) =>
-    typeof g === "number" ? Math.max(1, Math.min(40, Math.round(g))) : ITEM_GRADE_DEFAULT;
   const rawGrades = Array.isArray(o.heldItemGrades) ? o.heldItemGrades : [];
-  const heldItemGrades: [number, number, number] = [
-    clampGrade(rawGrades[0]),
-    clampGrade(rawGrades[1]),
-    clampGrade(rawGrades[2]),
-  ];
+  const heldItemGrades = heldItemGradesFromRaw(rawGrades);
   const emblems: EmblemPick[] = (o.emblems as unknown[])
     .filter((e): e is EmblemPick => {
       const p = e as Record<string, unknown>;
@@ -197,6 +203,34 @@ export function sanitizeLoadout(x: unknown): Loadout | null {
       ? (o.activeBoostIds as unknown[]).filter((b): b is string => typeof b === "string")
       : [],
   };
+}
+
+function heldItemGradesFromRaw(raw: unknown[]): [number, number, number] {
+  const clamp = (g: unknown) =>
+    typeof g === "number" ? Math.max(1, Math.min(40, Math.round(g))) : ITEM_GRADE_DEFAULT;
+  return [clamp(raw[0]), clamp(raw[1]), clamp(raw[2])];
+}
+
+function sanitizeSavedLoadout(x: unknown): SavedLoadout | null {
+  const loadout = sanitizeLoadout(x);
+  if (!loadout) return null;
+  const o = x as Record<string, unknown>;
+  if (typeof o.id !== "string" || typeof o.name !== "string") return null;
+  return {
+    ...loadout,
+    id: o.id,
+    name: o.name,
+    savedAt: typeof o.savedAt === "number" ? o.savedAt : Date.now(),
+  };
+}
+
+/** Coerce persisted/shared/partial loadouts into a valid in-memory Loadout. */
+export function normalizeLoadout(x: unknown): Loadout {
+  return sanitizeLoadout(x) ?? emptyLoadout(
+    x && typeof x === "object" && typeof (x as Record<string, unknown>).pokemonId === "string"
+      ? (x as Record<string, unknown>).pokemonId as string
+      : null,
+  );
 }
 
 /** Parse an exported file (wrapped or bare) into a Loadout, or null. */

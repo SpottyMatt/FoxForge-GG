@@ -18,6 +18,8 @@ import {
   loadOwnedEmblems,
   saveOwnedEmblems,
   ownedKey,
+  normalizeLoadout,
+  heldItemGradesOf,
   MAX_EMBLEMS,
 } from "./loadout";
 
@@ -49,12 +51,12 @@ function reducer(state: Loadout, action: Action): Loadout {
       const heldItemIds = state.heldItemIds.map((cur, i) =>
         i === action.slot ? action.id : cur === action.id ? null : cur,
       );
-      const heldItemGrades = [...state.heldItemGrades] as [number, number, number];
+      const heldItemGrades = [...heldItemGradesOf(state)] as [number, number, number];
       if (action.id === null) heldItemGrades[action.slot] = ITEM_GRADE_DEFAULT;
       return { ...state, heldItemIds, heldItemGrades };
     }
     case "setHeldItemGrade": {
-      const heldItemGrades = [...state.heldItemGrades] as [number, number, number];
+      const heldItemGrades = [...heldItemGradesOf(state)] as [number, number, number];
       heldItemGrades[action.slot] = Math.max(1, Math.min(40, Math.round(action.grade)));
       return { ...state, heldItemGrades };
     }
@@ -77,16 +79,16 @@ function reducer(state: Loadout, action: Action): Loadout {
         ? { ...state, move1Id: action.moveId }
         : { ...state, move2Id: action.moveId };
     case "applyBuild":
-      return {
+      return normalizeLoadout({
         ...state,
         heldItemIds: [action.heldItemIds[0] ?? null, action.heldItemIds[1] ?? null, action.heldItemIds[2] ?? null],
         battleItemId: action.battleItemId,
         move1Id: action.move1Id !== undefined ? action.move1Id : state.move1Id,
         move2Id: action.move2Id !== undefined ? action.move2Id : state.move2Id,
         emblems: action.emblems.slice(0, MAX_EMBLEMS),
-      };
+      });
     case "load":
-      return structuredClone(action.loadout);
+      return normalizeLoadout(action.loadout);
     case "reset":
       return emptyLoadout(state.pokemonId);
     default:
@@ -129,7 +131,13 @@ const Ctx = createContext<Store | null>(null);
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   // Initial build: a shared link (#b=) wins, else the last in-progress build, else empty.
-  const [loadout, dispatch] = useReducer(reducer, null, () => loadoutFromUrl() ?? loadCurrent() ?? emptyLoadout());
+  const [loadout, dispatch] = useReducer(reducer, null, () => {
+    const fromUrl = loadoutFromUrl();
+    if (fromUrl) return normalizeLoadout(fromUrl);
+    const current = loadCurrent();
+    if (current) return current;
+    return emptyLoadout();
+  });
   const [saved, setSaved] = useState<SavedLoadout[]>(() => loadSavedLoadouts());
   const [saveError, setSaveError] = useState<string | null>(null);
   const [owned, setOwned] = useState<Set<string>>(() => loadOwnedEmblems());

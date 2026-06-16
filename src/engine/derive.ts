@@ -2,7 +2,7 @@
 // speed (with active boosts), out-of-combat move speed, active set bonuses, and
 // the list of toggleable boosts. One path, reused by StatPanel and CompareView.
 
-import type { Loadout } from "../state/loadout";
+import { type Loadout, heldItemGradesOf } from "../state/loadout";
 import type { CalcContext, EmblemLoadout, Pokemon, StatBlock } from "../types";
 import {
   pokemonById,
@@ -60,7 +60,7 @@ export function deriveBuild(loadout: Loadout, inCombat = true): DerivedBuild {
   const activeIds = new Set(loadout.activeBoostIds);
   const base = pokemon.baseStatsByLevel[loadout.level - 1];
   const equippedHeld = heldItems.filter((i): i is NonNullable<typeof i> => i !== null);
-  const grades = loadout.heldItemGrades ?? [ITEM_GRADE_DEFAULT, ITEM_GRADE_DEFAULT, ITEM_GRADE_DEFAULT];
+  const grades = heldItemGradesOf(loadout);
   const equippedGrades = loadout.heldItemIds.map((id, i) =>
     id ? grades[i] : ITEM_GRADE_DEFAULT,
   ).filter((_, i) => loadout.heldItemIds[i]);

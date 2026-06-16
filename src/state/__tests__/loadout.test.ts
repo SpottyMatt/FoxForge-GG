@@ -31,6 +31,18 @@ describe("loadout sharing", () => {
     expect(decodeLoadout("not-valid-base64!!")).toBeNull();
     expect(decodeLoadout(btoa("{}"))).toBeNull(); // valid JSON, wrong shape
   });
+
+  it("defaults heldItemGrades when missing from shared links", () => {
+    const legacy = {
+      pokemonId: "pikachu",
+      level: 15,
+      heldItemIds: ["muscle-band", null, null],
+      battleItemId: null,
+      emblems: [],
+      activeBoostIds: [],
+    };
+    expect(sanitizeLoadout(legacy)?.heldItemGrades).toEqual([40, 40, 40]);
+  });
 });
 
 describe("loadout file export/import", () => {

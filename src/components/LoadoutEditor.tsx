@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useStore } from "../state/store";
 import { heldItems, battleItems, emblems, heldItemById, battleItemById, emblemById, ITEM_GRADE_DEFAULT } from "../data/gameData";
-import { MAX_EMBLEMS } from "../state/loadout";
+import { MAX_EMBLEMS, heldItemGradesOf } from "../state/loadout";
 import { asset } from "../ui/asset";
 import { emblemIconForGrade } from "../ui/emblemIcon";
 import { heldItemStatLines } from "../ui/format";
@@ -38,7 +38,7 @@ export function LoadoutEditor() {
         <div className="flex flex-col gap-3">
           {loadout.heldItemIds.map((id, slot) => {
             const item = id ? heldItemById.get(id) : null;
-            const grade = loadout.heldItemGrades[slot] ?? ITEM_GRADE_DEFAULT;
+            const grade = heldItemGradesOf(loadout)[slot];
             return (
               <div key={slot} className="flex flex-wrap items-start gap-3">
                 <Tooltip content={item ? itemTip(item, grade) : "Add a held item"}>
