@@ -67,6 +67,7 @@ export interface PokemonBuild {
   battleItemId?: string;
   battleItemOptional?: string;
   emblems: EmblemBuildPick[]; // the exact 10-emblem set
+  moves?: string[]; // the build's two final (upgraded) move names
 }
 
 // ----- Moves & Abilities (RSB damage model) ----------------------------------
@@ -112,6 +113,9 @@ export interface Move {
   damageInstances: DamageInstance[]; // a move may deal damage multiple times
   effects: MoveEffect[]; // CC, shields, heals, buffs
   tags: string[]; // "dash", "aoe", "lifesteal-source", etc.
+  iconAsset?: string; // skills/<Pokemon>/<Move>.png (absent for basic attack)
+  moveType?: string; // UNITE-DB move type, e.g. "Dash", "Ranged", "Buff"
+  isUpgrade?: boolean; // true for a chosen upgrade move (vs. the base skill)
 }
 
 export interface Ability {
@@ -119,6 +123,7 @@ export interface Ability {
   name: string;
   description: string;
   effects: MoveEffect[];
+  iconAsset?: string; // skills/<Pokemon>/<Passive>.png
 }
 
 // ----- Held Items ------------------------------------------------------------

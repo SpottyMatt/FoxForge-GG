@@ -58,6 +58,9 @@ const move = z.object({
   damageInstances: z.array(damageInstance),
   effects: z.array(moveEffect),
   tags: z.array(z.string()),
+  iconAsset: z.string().optional(),
+  moveType: z.string().optional(),
+  isUpgrade: z.boolean().optional(),
 });
 
 const ability = z.object({
@@ -65,6 +68,7 @@ const ability = z.object({
   name: z.string(),
   description: z.string(),
   effects: z.array(moveEffect),
+  iconAsset: z.string().optional(),
 });
 
 const emblemGrade = z.enum(["bronze", "silver", "gold", "platinum"]);
@@ -78,6 +82,7 @@ const pokemonBuild = z.object({
   battleItemId: z.string().optional(),
   battleItemOptional: z.string().optional(),
   emblems: z.array(z.object({ emblemId: z.string(), grade: emblemGrade })),
+  moves: z.array(z.string()).optional(),
 });
 
 const pokemon = z.object({

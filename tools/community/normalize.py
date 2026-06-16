@@ -136,21 +136,63 @@ def damage_instances(rsb: dict) -> list:
     return out
 
 
-def build_move(skill: dict, slot: str) -> dict:
+def plus(s: str) -> str:
+    """Space -> '+' for CDN art names (skills/<Pokemon>/<Move>.png)."""
+    return (s or "").replace(" ", "+")
+
+
+def skill_icon(folder: str, move_name: str) -> str:
+    return f"{ASSETS}/skills/{plus(folder)}/{plus(move_name)}.png"
+
+
+def build_move(skill: dict, slot: str, folder: str) -> dict:
     rsb = skill.get("rsb") or {}
-    tags = []
-    if skill.get("type"):
-        tags.append(str(skill["type"]).lower())
-    return {
-        "id": slugify(skill.get("name", slot)),
-        "name": skill.get("name", ""),
+    mtype = skill.get("type")
+    name = skill.get("name", "")
+    move = {
+        "id": slugify(name or slot),
+        "name": name,
         "slot": slot,
         "description": skill.get("description", "") or "",
         "cooldownSeconds": num(skill.get("cd")),
         "damageInstances": damage_instances(rsb),
         "effects": [],
-        "tags": tags,
+        "tags": [str(mtype).lower()] if mtype else [],
     }
+    if mtype:
+        move["moveType"] = mtype
+    # Every slot has CDN art except the basic attack ("Attack" has no icon).
+    if slot != "basicAttack":
+        move["iconAsset"] = skill_icon(folder, name)
+    return move
+
+
+def build_upgrade_move(up: dict, slot: str, folder: str) -> dict:
+    """An upgrade option for Move 1/Move 2 (the actual moves picked in a build)."""
+    rsb = up.get("rsb") or {}
+    mtype = up.get("type")
+    name = up.get("name", "")
+    move = {
+        "id": slugify(name or slot),
+        "name": name,
+        "slot": slot,
+        "description": up.get("description1", "") or "",
+        "cooldownSeconds": num(up.get("cd1")),
+        "damageInstances": damage_instances(rsb),
+        "effects": [],
+        "tags": [str(mtype).lower()] if mtype else [],
+        "iconAsset": skill_icon(folder, name),
+        "isUpgrade": True,
+    }
+    if mtype:
+        move["moveType"] = mtype
+    lvl = up.get("level1")
+    if lvl not in (None, ""):
+        try:
+            move["upgradeLevel"] = int(float(lvl))
+        except (TypeError, ValueError):
+            pass
+    return move
 
 
 def slugify(s: str) -> str:
@@ -179,7 +221,7 @@ def decode_emblem_link(link: str, pokedex_to_id: dict) -> list:
     return picks
 
 
-def build_one_build(b: dict, pokedex_to_id: dict) -> dict | None:
+def build_one_build(b: dict, pokedex_to_id: dict, valid_moves: set[str]) -> dict | None:
     """Normalize one UNITE-DB build entry. Skips placeholders (`soon`)."""
     if str(b.get("soon", "False")).lower() == "true":
         return None
@@ -202,6 +244,11 @@ def build_one_build(b: dict, pokedex_to_id: dict) -> dict | None:
         out["battleItemId"] = slugify(b["battle_item"])
     if b.get("battle_item_optional"):
         out["battleItemOptional"] = slugify(b["battle_item_optional"])
+    # UNITE-DB's `upgrade` is sometimes malformed (empty dicts, or an emblem-set
+    # name pasted in). Keep only entries that name a real move for this Pokémon.
+    final_moves = [m for m in (b.get("upgrade") or []) if isinstance(m, str) and m in valid_moves]
+    if final_moves:
+        out["moves"] = final_moves
     return out
 
 
@@ -220,10 +267,17 @@ def build_pokemon(pokemon_rows, stats_rows, pokedex_to_id: dict) -> list:
         moves = []
         for s in skills:
             slot = SLOT_MAP.get(s.get("ability", ""))
-            if slot:
-                moves.append(build_move(s, slot))
+            if not slot:
+                continue
+            moves.append(build_move(s, slot, name))
+            if slot in ("move1", "move2"):
+                for up in (s.get("upgrades") or []):
+                    if up.get("name"):
+                        moves.append(build_upgrade_move(up, slot, name))
         mega = stats_by_name.get(f"Mega-{name}")
-        builds = [nb for b in (p.get("builds") or []) if (nb := build_one_build(b, pokedex_to_id))]
+        move_names = {m["name"] for m in moves}
+        builds = [nb for b in (p.get("builds") or [])
+                  if (nb := build_one_build(b, pokedex_to_id, move_names))]
         exclude = p.get("exclude_stats")
         out.append({
             "id": slugify(name),
@@ -241,6 +295,7 @@ def build_pokemon(pokemon_rows, stats_rows, pokedex_to_id: dict) -> list:
                 "name": passive.get("name", "Passive") if passive else "Passive",
                 "description": (passive or {}).get("description", "") or "",
                 "effects": [],
+                **({"iconAsset": skill_icon(name, passive["name"])} if passive and passive.get("name") else {}),
             },
             **({"builds": builds} if builds else {}),
             **({"excludeStats": exclude} if isinstance(exclude, list) and exclude else {}),

@@ -60,4 +60,34 @@ describe("patch-1.23.1.1 community bundle", () => {
       ["Floragato", "Latias", "Latios", "Meowscarada", "Miraidon", "Sprigatito"],
     );
   });
+
+  it("gives every non-basic move a local skill-icon path", () => {
+    for (const p of bundle.pokemon) {
+      for (const m of p.moves) {
+        if (m.slot === "basicAttack") continue;
+        expect(m.iconAsset, `${p.id}/${m.name}`).toMatch(/^\/assets\/skills\//);
+      }
+    }
+  });
+
+  it("carries each curated build's two final moves (resolvable to icons)", () => {
+    const lucario = bundle.pokemon.find((p) => p.id === "lucario")!;
+    const moveByName = new Map(lucario.moves.map((m) => [m.name, m]));
+    const build = lucario.builds!.find((b) => b.name === "Extreme Rush")!;
+    expect(build.moves).toEqual(["Extreme Speed", "Bone Rush"]);
+    for (const name of build.moves!) {
+      expect(moveByName.get(name)?.iconAsset).toMatch(/^\/assets\/skills\//);
+    }
+  });
+
+  it("every build move name resolves to a move in that Pokémon's catalog", () => {
+    for (const p of bundle.pokemon) {
+      const names = new Set(p.moves.map((m) => m.name));
+      for (const b of p.builds ?? []) {
+        for (const mv of b.moves ?? []) {
+          expect(names.has(mv), `${p.id}: build "${b.name}" move "${mv}"`).toBe(true);
+        }
+      }
+    }
+  });
 });
