@@ -5,6 +5,7 @@ import { ROLE_COLOR, ROLE_LABEL } from "./ui/theme";
 import { asset } from "./ui/asset";
 import { PokemonPicker } from "./components/PokemonPicker";
 import { LoadoutEditor } from "./components/LoadoutEditor";
+import { MovesCard } from "./components/MovesCard";
 import { StatPanel } from "./components/StatPanel";
 import { LoadoutBar } from "./components/LoadoutBar";
 import { CompareView } from "./components/CompareView";
@@ -142,6 +143,7 @@ function Workspace() {
               <div className="flex flex-col gap-4">
                 <PokemonPicker />
                 <LoadoutEditor />
+                <MovesCard />
                 <LoadoutBar />
               </div>
               <StatPanel />

@@ -2,7 +2,19 @@
 // panel and the loadout editor).
 import { ITEM_GRADE } from "../data/gameData";
 import { statLines } from "../ui/format";
-import type { BattleItem, Emblem, EmblemGrade, HeldItem } from "../types";
+import type { BattleItem, Emblem, EmblemGrade, HeldItem, Move } from "../types";
+
+export function moveTip(move: Move) {
+  return (
+    <span>
+      <span className="font-semibold">{move.name}</span>
+      {move.moveType && <span className="ml-1 text-faint">· {move.moveType}</span>}
+      {move.upgradeLevel ? <span className="ml-1 text-faint">· Lv {move.upgradeLevel}</span> : null}
+      {move.cooldownSeconds > 0 && <span className="ml-1 text-faint">· {move.cooldownSeconds}s CD</span>}
+      {move.description && <span className="mt-0.5 block text-faint">{move.description}</span>}
+    </span>
+  );
+}
 
 export function itemTip(item: HeldItem | BattleItem) {
   const stats = "statsByGrade" in item ? statLines(item.statsByGrade[ITEM_GRADE] ?? {}) : [];

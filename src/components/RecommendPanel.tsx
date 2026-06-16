@@ -8,7 +8,8 @@ import { emblemIconForGrade } from "../ui/emblemIcon";
 import { EmblemSetSummary } from "./EmblemSetSummary";
 import { CollapsibleCard } from "./CollapsibleCard";
 import { Tooltip } from "./Tooltip";
-import { itemTip, emblemTip } from "./tips";
+import { MoveIcon } from "./MoveIcon";
+import { itemTip, emblemTip, moveTip } from "./tips";
 import type { EmblemBuildPick } from "../types";
 
 type Tab = "recommended" | "creative" | "yours";
@@ -97,6 +98,11 @@ export function RecommendPanel() {
       })),
     );
   }, [pokemon, owned]);
+
+  const moveByName = useMemo(
+    () => new Map((pokemon?.moves ?? []).map((m) => [m.name, m])),
+    [pokemon],
+  );
 
   const [tab, setTab] = useState<Tab>("recommended");
   const [idxByTab, setIdxByTab] = useState<Record<Tab, number>>({ recommended: 0, creative: 0, yours: 0 });
@@ -223,6 +229,25 @@ export function RecommendPanel() {
                 })}
               </div>
             </div>
+            {/* Final moves (curated builds carry their two upgrade moves) */}
+            {build.moves && build.moves.length > 0 && (
+              <div>
+                <p className="mb-1 text-xs font-medium text-faint">Final Moves</p>
+                <div className="flex gap-2">
+                  {build.moves.map((name) => {
+                    const mv = moveByName.get(name);
+                    return (
+                      <Tooltip key={name} content={mv ? moveTip(mv) : <span className="font-semibold">{name}</span>}>
+                        <span className="flex w-16 flex-col items-center">
+                          <MoveIcon src={mv?.iconAsset} alt={name} />
+                          <span className="mt-0.5 text-center text-[10px] leading-tight text-muted">{name}</span>
+                        </span>
+                      </Tooltip>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
             {/* Trainer item */}
             <div>
               <p className="mb-1 text-xs font-medium text-faint">Trainer Item</p>
