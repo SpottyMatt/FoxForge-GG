@@ -392,6 +392,14 @@
         "minLevel": 9
       }
     ],
+    "Tsareena": [
+      {
+        "source": "Triple Axel",
+        "asPoints": 4.0,
+        "perLevel": 1.5,
+        "minLevel": 5
+      }
+    ],
     "Zacian": [
       {
         "source": "Metal Claw",

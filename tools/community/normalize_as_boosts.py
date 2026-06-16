@@ -91,9 +91,12 @@ def main() -> None:
     cell = calc.cell(6, 2).value  # B6
     formula = cell.text if isinstance(cell, ArrayFormula) else str(cell)
 
+    # Most clauses end `),'Atk Speed Boosts'!$C$N`. A few wrap the value in a
+    # leading paren (e.g. Tsareena: `),('...$C$123+...$D$123*(B4-1))*$L$9`), so
+    # allow an optional `(` before the row ref — perLevel still comes from col D.
     clause = re.compile(
         r'\$A\$4="([^"]+)",\$I\$\d+="([^"]+)",\$K\$\d+=TRUE'
-        r"(?:,((?:OR\([^)]*\)|[^)])*?))?\),'Atk Speed Boosts'!\$C\$(\d+)"
+        r"(?:,((?:OR\([^)]*\)|[^)])*?))?\),\(?'Atk Speed Boosts'!\$C\$(\d+)"
     )
     moves: dict[str, list] = {}
     for pokemon, source, cond, row in clause.findall(formula):
