@@ -4787,7 +4787,7 @@
             }
           ],
           "lane": "Path Damage",
-          "emblemName": "Bulk Leaning Physical Standard",
+          "emblemName": "Standard All-Rounder",
           "heldItemOptional": "razor-claw",
           "battleItemId": "eject-button",
           "battleItemOptional": "full-heal"
@@ -4842,7 +4842,7 @@
             }
           ],
           "lane": "Center Damage",
-          "emblemName": "Bulk Leaning Physical Standard",
+          "emblemName": "Standard All-Rounder",
           "heldItemOptional": "weakness-policy",
           "battleItemId": "eject-button",
           "battleItemOptional": "full-heal"
@@ -6556,7 +6556,7 @@
             }
           ],
           "lane": "Anywhere Damage",
-          "emblemName": "Bulk Leaning Physical Standard",
+          "emblemName": "Standard All-Rounder",
           "heldItemOptional": "energy-amplifier",
           "battleItemId": "eject-button",
           "battleItemOptional": "full-heal",
@@ -6615,7 +6615,7 @@
             }
           ],
           "lane": "Anywhere Damage",
-          "emblemName": "Bulk Leaning Physical Standard",
+          "emblemName": "Standard All-Rounder",
           "heldItemOptional": "energy-amplifier",
           "battleItemId": "eject-button",
           "battleItemOptional": "full-heal",
@@ -6674,7 +6674,7 @@
             }
           ],
           "lane": "Anywhere Damage",
-          "emblemName": "Bulk Leaning Physical Standard",
+          "emblemName": "Standard All-Rounder",
           "heldItemOptional": "energy-amplifier",
           "battleItemId": "eject-button",
           "battleItemOptional": "full-heal",
@@ -6733,7 +6733,7 @@
             }
           ],
           "lane": "Anywhere Damage",
-          "emblemName": "Bulk Leaning Physical Standard",
+          "emblemName": "Standard All-Rounder",
           "battleItemId": "eject-button",
           "battleItemOptional": "full-heal",
           "moves": [
@@ -7930,7 +7930,7 @@
             }
           ],
           "lane": "Anywhere Damage",
-          "emblemName": "Bulk Leaning Physical Standard",
+          "emblemName": "Standard All-Rounder",
           "heldItemOptional": "energy-amplifier",
           "battleItemId": "x-speed",
           "battleItemOptional": "full-heal",
@@ -7989,7 +7989,7 @@
             }
           ],
           "lane": "Anywhere Damage",
-          "emblemName": "Bulk Leaning Physical Standard",
+          "emblemName": "Standard All-Rounder",
           "heldItemOptional": "energy-amplifier",
           "battleItemId": "x-speed",
           "battleItemOptional": "full-heal",
@@ -8048,7 +8048,7 @@
             }
           ],
           "lane": "Anywhere Damage",
-          "emblemName": "Bulk Leaning Physical Standard",
+          "emblemName": "Standard All-Rounder",
           "heldItemOptional": "energy-amplifier",
           "battleItemId": "full-heal",
           "battleItemOptional": "x-speed",
@@ -8490,7 +8490,7 @@
             }
           ],
           "lane": "Anywhere Damage",
-          "emblemName": "Bulk Leaning Physical Standard",
+          "emblemName": "Standard All-Rounder",
           "battleItemId": "full-heal",
           "battleItemOptional": "x-speed",
           "moves": [
@@ -8938,7 +8938,7 @@
             }
           ],
           "lane": "Anywhere Damage",
-          "emblemName": "Bulk Leaning Physical Standard",
+          "emblemName": "Standard All-Rounder",
           "heldItemOptional": "scope-lens",
           "battleItemId": "full-heal",
           "battleItemOptional": "x-speed",
@@ -9413,7 +9413,7 @@
             }
           ],
           "lane": "Center Damage",
-          "emblemName": "Offense Leaning Physical Standard",
+          "emblemName": "Attack Damage Carry (ADC)",
           "battleItemId": "eject-button",
           "battleItemOptional": "full-heal",
           "moves": [
@@ -9471,7 +9471,7 @@
             }
           ],
           "lane": "Path Damage",
-          "emblemName": "Offense Leaning Physical Standard",
+          "emblemName": "Attack Damage Carry (ADC)",
           "heldItemOptional": "attack-weight",
           "battleItemId": "eject-button",
           "battleItemOptional": "full-heal",
@@ -9530,7 +9530,7 @@
             }
           ],
           "lane": "Center Damage",
-          "emblemName": "Offense Leaning Physical Standard",
+          "emblemName": "Attack Damage Carry (ADC)",
           "battleItemId": "eject-button",
           "battleItemOptional": "full-heal",
           "moves": [
@@ -9588,7 +9588,7 @@
             }
           ],
           "lane": "Path Damage",
-          "emblemName": "Offense Leaning Physical Standard",
+          "emblemName": "Attack Damage Carry (ADC)",
           "heldItemOptional": "attack-weight",
           "battleItemId": "eject-button",
           "battleItemOptional": "full-heal",
@@ -36567,7 +36567,7 @@
             }
           ],
           "lane": "Path Damage",
-          "emblemName": "Special Attack Attack Speed (Chansey may be substituted with Pidgey)",
+          "emblemName": "Legendary Attack Speed",
           "battleItemId": "x-attack"
         }
       ]
@@ -43493,7 +43493,7 @@
             }
           ],
           "lane": "Anywhere Damage",
-          "emblemName": "Standard All-Rounder",
+          "emblemName": "Amplified Red Illusion Dance",
           "battleItemId": "full-heal",
           "battleItemOptional": "eject-button",
           "moves": [
@@ -43551,7 +43551,7 @@
             }
           ],
           "lane": "Anywhere Damage",
-          "emblemName": "Standard All-Rounder",
+          "emblemName": "Bullet Dance",
           "battleItemId": "full-heal",
           "battleItemOptional": "eject-button",
           "moves": [
@@ -43609,7 +43609,7 @@
             }
           ],
           "lane": "Anywhere Damage",
-          "emblemName": "Standard All-Rounder",
+          "emblemName": "Amplified Red Illusion Hit",
           "battleItemId": "full-heal",
           "battleItemOptional": "eject-button",
           "moves": [
@@ -43667,7 +43667,7 @@
             }
           ],
           "lane": "Anywhere Damage",
-          "emblemName": "Standard All-Rounder",
+          "emblemName": "Bullet Hit",
           "battleItemId": "full-heal",
           "battleItemOptional": "eject-button",
           "moves": [
@@ -44768,7 +44768,7 @@
             }
           ],
           "lane": "Anywhere Damage",
-          "emblemName": "Bulk Leaning Physical Standard",
+          "emblemName": "Standard All-Rounder",
           "heldItemOptional": "energy-amplifier",
           "battleItemId": "eject-button",
           "battleItemOptional": "potion",
@@ -44827,7 +44827,7 @@
             }
           ],
           "lane": "Anywhere Damage",
-          "emblemName": "Bulk Leaning Physical Standard",
+          "emblemName": "Standard All-Rounder",
           "heldItemOptional": "energy-amplifier",
           "battleItemId": "eject-button",
           "battleItemOptional": "potion",

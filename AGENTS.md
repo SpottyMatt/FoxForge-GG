@@ -67,7 +67,7 @@ Each Pokémon may carry two build arrays:
 - `builds` — **Recommended** tab; UNITE-DB builds emitted by `normalize.py`.
 - `creativeBuilds` — **Creative** tab; hand-curated community builds (not emitted by `normalize.py`).
 
-Curated Recommended/Creative builds and per-build title overrides live in `tools/community/curated_builds.json` and are merged by `normalize.py` (`apply_curated_builds`) after UNITE-DB normalization. Scope edits by Pokémon `id`—never global find-replace on `lane` or `emblemName` (shared strings appear across dozens of Pokémon). Role-aware emblem renames (e.g. `Bulk Leaning Standard Physical` → `Standard All-Rounder` / `Standard Defender` / …) must be applied per Pokémon or via `recommendedTitles` by index. The Builds card header shows `emblemName · lane` (`RecommendPanel.tsx`).
+Curated Recommended/Creative builds and per-build title overrides live in `tools/community/curated_builds.json` and are merged by `normalize.py` (`apply_curated_builds`) after UNITE-DB normalization. Scope `emblemName`/`lane` edits by Pokémon `id`—avoid blind global find-replace (shared strings appear across dozens of Pokémon). Exceptions: when a source `emblemName` maps to one uniform target and appears only on the intended Pokémon, a file-wide replace-all is safe. Otherwise scope per Pokémon, per build (anchor on the build's `name` when labels repeat within one Pokémon), or via `recommendedTitles` by index. Role-aware emblem renames (e.g. `Bulk Leaning Physical Standard` → `Standard All-Rounder` / `Standard Defender` / …) follow the same rules. The Builds card header shows `emblemName ?? name`, then optional ` · lane` (`RecommendPanel.tsx`).
 
 ### State and Persistence
 
