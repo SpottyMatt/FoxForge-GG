@@ -281,11 +281,11 @@ export function RecommendPanel() {
                 {resolvedEmblems.map(({ emblem, grade }, i) => (
                   <Tooltip key={i} content={emblemTip(emblem, grade)}>
                     <span className="relative inline-block">
-                      <img src={asset(emblemIconForGrade(emblem, grade))} alt={emblem.pokemonName} className="h-12 w-12 object-contain" />
-                      <span className="absolute -bottom-0.5 -right-0.5 rounded bg-neutral-800 px-0.5 text-[8px] font-bold text-white">{GRADE_LETTER[grade]}</span>
+                      <img src={asset(emblemIconForGrade(emblem, grade))} alt={emblem.pokemonName} className="h-16 w-16 object-contain" />
+                      <span className="absolute -bottom-0.5 -right-0.5 rounded bg-neutral-800 px-0.5 text-[9px] font-bold text-white">{GRADE_LETTER[grade]}</span>
                       <span className="absolute -left-0.5 -top-0.5 flex gap-0.5">
                         {emblem.colors.map((c) => (
-                          <span key={c} className="h-1.5 w-1.5 rounded-full ring-1 ring-white" style={{ background: EMBLEM_COLOR_HEX[c] }} />
+                          <span key={c} className="h-2 w-2 rounded-full ring-1 ring-white" style={{ background: EMBLEM_COLOR_HEX[c] }} />
                         ))}
                       </span>
                     </span>

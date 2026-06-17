@@ -20,6 +20,7 @@ Usage:  python3 normalize.py
 from __future__ import annotations
 
 import json
+import re
 from datetime import date
 from pathlib import Path
 
@@ -254,8 +255,15 @@ def build_one_build(b: dict, pokedex_to_id: dict, valid_moves: set[str]) -> dict
     return out
 
 
-def build_pokemon(pokemon_rows, stats_rows, pokedex_to_id: dict) -> list:
+def _norm_move_name(name: str) -> str:
+    n = re.sub(r"\s*\([^)]*\)\s*$", "", name or "")
+    return n.lower().replace("'", "").strip()
+
+
+def build_pokemon(pokemon_rows, stats_rows, pokedex_to_id: dict, descs: dict | None = None) -> list:
     stats_by_name = {p["name"]: p for p in stats_rows}
+    if descs is None:
+        descs = load_move_descriptions()
     out = []
     for p in pokemon_rows:
         name = p["name"]
@@ -281,8 +289,17 @@ def build_pokemon(pokemon_rows, stats_rows, pokedex_to_id: dict) -> list:
         builds = [nb for b in (p.get("builds") or [])
                   if (nb := build_one_build(b, pokedex_to_id, move_names))]
         exclude = p.get("exclude_stats")
+        pid = slugify(name)
+        over = descs.get(pid, {})
+        if over:
+            for m in moves:
+                if not (m.get("description") or "").strip():
+                    m["description"] = over.get(_norm_move_name(m["name"]), m.get("description", ""))
+        passive_desc = (passive or {}).get("description", "") or ""
+        if over and not passive_desc.strip():
+            passive_desc = over.get(_norm_move_name(passive.get("name", "") if passive else ""), passive_desc)
         out.append({
-            "id": slugify(name),
+            "id": pid,
             "displayName": p.get("display_name", name),
             "role": ROLE_MAP.get(tags.get("role"), "AllRounder"),
             "attackType": "special" if p.get("damage_type") == "Special" else "physical",
@@ -295,7 +312,7 @@ def build_pokemon(pokemon_rows, stats_rows, pokedex_to_id: dict) -> list:
             "passiveAbility": {
                 "id": slugify(passive["name"]) if passive else f"{slugify(name)}-passive",
                 "name": passive.get("name", "Passive") if passive else "Passive",
-                "description": (passive or {}).get("description", "") or "",
+                "description": passive_desc,
                 "effects": [],
                 **({"iconAsset": skill_icon(name, passive["name"])} if passive and passive.get("name") else {}),
             },
@@ -310,7 +327,17 @@ def build_pokemon(pokemon_rows, stats_rows, pokedex_to_id: dict) -> list:
 # ---- curated builds overlay ------------------------------------------------
 
 CURATED = HERE / "curated_builds.json"
+MOVE_DESCRIPTIONS = HERE / "move_descriptions.json"
 VALID_GRADES = {"bronze", "silver", "gold", "platinum"}
+
+
+def load_move_descriptions() -> dict:
+    """Serebii-sourced fallback descriptions, keyed by pokemon id -> normalized
+    move name -> description. Empty if the file is absent (scraper not run)."""
+    if not MOVE_DESCRIPTIONS.exists():
+        print("  (no move_descriptions.json — skipping description backfill)")
+        return {}
+    return json.loads(MOVE_DESCRIPTIONS.read_text()).get("descriptions", {})
 
 
 def _validate_curated_build(b, pid, kind, emblem_ids, held_ids, battle_ids, upgrade_moves):

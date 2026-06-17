@@ -47,7 +47,7 @@ FoxForge GG is a three-layer app: a **pure calculation engine**, a **versioned d
 
 User edits flow through `src/state/store.tsx` (reducer + context) into a `Loadout` model (`src/state/loadout.ts`, persisted in localStorage). Every stat display path calls `deriveBuild` / `deriveAtLevel` in `src/engine/derive.ts`, which is the single aggregation point: emblem flats and set bonuses → held items → active toggles → attack speed. UI components (`StatPanel`, `CompareView`, `LevelGraph`) consume `DerivedBuild` only—changing formulas happens in `src/engine/` without touching components.
 
-Game facts live in patch-keyed JSON (`src/data/patch-*.json`) loaded and validated by zod in `src/data/loadBundle.ts`, with lookup maps exposed via `src/data/gameData.ts`. Numeric data is refreshed by Python tooling under `tools/community/`—hand-editing bundle JSON is discouraged except for curated builds (see below). The bundled baseline (`src/data/`) and the published runtime copy (`public/data/`) must stay byte-identical. Art mirrors under `public/assets/` and resolves portably via `src/ui/asset.ts` (supports relative `base: "./"` for Tauri, static hosts, and GitHub Pages sub-paths).
+Game facts live in patch-keyed JSON (`src/data/patch-*.json`) loaded and validated by zod in `src/data/loadBundle.ts`, with lookup maps exposed via `src/data/gameData.ts`. Numeric data is refreshed by Python tooling under `tools/community/`—hand-editing bundle JSON is discouraged except for curated builds (see below). UNITE-DB ships blank move descriptions for many Pokémon; `tools/community/move_descriptions.json` (Serebii-sourced, via `scrape_serebii.py`) is merged by `normalize.py` to fill only empty `description` fields—existing UNITE-DB text always wins. The bundled baseline (`src/data/`) and the published runtime copy (`public/data/`) must stay byte-identical. Art mirrors under `public/assets/` and resolves portably via `src/ui/asset.ts` (supports relative `base: "./"` for Tauri, static hosts, and GitHub Pages sub-paths).
 
 Recommendations (`src/engine/recommend.ts`) sit beside the engine but must respect the same stat model and owned-emblem inventory semantics as the editor.
 
@@ -67,7 +67,7 @@ Each Pokémon may carry two build arrays:
 - `builds` — **Recommended** tab; UNITE-DB builds emitted by `normalize.py`.
 - `creativeBuilds` — **Creative** tab; hand-curated community builds (not emitted by `normalize.py`).
 
-Curated Recommended/Creative builds and per-build title overrides live in `tools/community/curated_builds.json` and are merged by `normalize.py` (`apply_curated_builds`) after UNITE-DB normalization. Scope `emblemName`/`lane` edits by Pokémon `id`—avoid blind global find-replace (shared strings appear across dozens of Pokémon). Exceptions: when a source `emblemName` maps to one uniform target and appears only on the intended Pokémon, a file-wide replace-all is safe. Otherwise scope per Pokémon, per build (anchor on the build's `name` when labels repeat within one Pokémon), or via `recommendedTitles` by index. Role-aware emblem renames (e.g. `Bulk Leaning Physical Standard` → `Standard All-Rounder` / `Standard Defender` / …) follow the same rules. The Builds card header shows `emblemName ?? name`, then optional ` · lane` (`RecommendPanel.tsx`).
+Curated Recommended/Creative builds and per-build title overrides live in `tools/community/curated_builds.json` and are merged by `normalize.py` (`apply_curated_builds`) after UNITE-DB normalization. Move descriptions use the same overlay pattern: `scrape_serebii.py` writes `move_descriptions.json`; `normalize.py` backfills blank move/passive descriptions from it (Serebii slug map is explicit—do not derive slugs algorithmically). Scope `emblemName`/`lane` edits by Pokémon `id`—avoid blind global find-replace (shared strings appear across dozens of Pokémon). Exceptions: when a source `emblemName` maps to one uniform target and appears only on the intended Pokémon, a file-wide replace-all is safe. Otherwise scope per Pokémon, per build (anchor on the build's `name` when labels repeat within one Pokémon), or via `recommendedTitles` by index. Role-aware emblem renames (e.g. `Bulk Leaning Physical Standard` → `Standard All-Rounder` / `Standard Defender` / …) follow the same rules. The Builds card header shows `emblemName ?? name`, then optional ` · lane` (`RecommendPanel.tsx`).
 
 ### State and Persistence
 
@@ -131,16 +131,22 @@ Game data refresh (not part of routine CI for app logic):
 
 ```bash
 cd tools/community && source ../extract/.venv/bin/activate
-python3 fetch.py && python3 normalize.py && python3 fetch_art.py && python3 normalize_as_boosts.py
+python3 fetch.py && python3 scrape_serebii.py && python3 normalize.py && python3 fetch_art.py && python3 normalize_as_boosts.py
 ```
 
-`normalize.py` writes `src/data/patch-*.json` and copies to `public/data/`; edit `curated_builds.json` before re-running to preserve hand-curated Recommended/Creative builds and title overrides.
+`scrape_serebii.py` fetches Serebii move text into `move_descriptions.json` (run after `fetch.py`, before `normalize.py`). `normalize.py` writes `src/data/patch-*.json` and copies to `public/data/`; edit `curated_builds.json` before re-running to preserve hand-curated Recommended/Creative builds and title overrides.
 
 Curated-build-only edits (no UNITE-DB re-scrape):
 
 ```bash
-python3 tools/community/normalize.py   # re-merge curated_builds.json into the bundle
+python3 tools/community/normalize.py   # re-merge curated_builds.json + move_descriptions.json into the bundle
 npx tsx src/data/verifyPatch.ts && npm run typecheck && npm test
+```
+
+To refresh move descriptions only (no UNITE-DB re-scrape):
+
+```bash
+python3 tools/community/scrape_serebii.py && python3 tools/community/normalize.py
 ```
 
 ### Design System
