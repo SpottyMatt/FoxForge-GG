@@ -1,0 +1,158 @@
+/**
+ * Basic optimizer mode — auto-derive search objectives from a Pokémon's role
+ * and attack type, using the recommendation meta-knowledge in recommend.ts.
+ *
+ * This is the "one-click" path: the user picks a Pokémon and hits Search; the
+ * engine derives everything else. Users who want custom settings switch to
+ * Advanced mode, which is pre-filled from these auto-derived values.
+ */
+
+import type { Emblem, HeldItem, Pokemon } from "../../types";
+import { colorTargetsFor, priorityWeights, scoreHeldItem, coreItemsFor } from "../recommend";
+import type { PokemonScoringContext, SearchOptions, StatFloors, StatWeights } from "./types";
+import { deriveDefaultProtectedStats } from "./protectDefaults";
+
+// ---------------------------------------------------------------------------
+// Objective
+// ---------------------------------------------------------------------------
+
+export interface BasicObjective {
+  /** Stat weights derived from priorityWeights(). Used in maximize mode. */
+  priorities: StatWeights;
+  /**
+   * Recommended color targets from the meta (archetype defaults or curated build).
+   * Informational — not enforced as hard constraints; the engine's colorBonuses
+   * incentive naturally steers toward these colors.
+   */
+  colorTargets: Map<string, number>;
+  /** Pokémon/level context for inner-loop scoring. */
+  pokemonContext: PokemonScoringContext;
+  /**
+   * Default protect floors derived from the Pokémon's population-relative base
+   * stats. Each entry maps a stat → floor of 0 ("don't let emblems net-reduce
+   * this stat"). Applied as a soft penalty in the search engine.
+   */
+  protectedFloors: StatFloors;
+}
+
+/**
+ * Derive the Basic-mode search objective for a given Pokémon at a given level.
+ *
+ * @param pokemon     The selected Pokémon.
+ * @param level       The level to optimize for (1–15).
+ * @param emblems     Full emblem list (needed to resolve curated build color counts).
+ * @param allPokemon  Full Pokémon roster, used for population-relative protect
+ *                    floor derivation. Pass [] (default) to skip protect defaults.
+ */
+export function deriveBasicObjective(
+  pokemon: Pokemon,
+  level: number,
+  emblems: Emblem[],
+  allPokemon: Pokemon[] = [],
+): BasicObjective {
+  const priorities = priorityWeights(pokemon);
+  const byId = new Map(emblems.map((e) => [e.id, e]));
+  const colorTargets = colorTargetsFor(pokemon, byId);
+  const baseStats = pokemon.baseStatsByLevel[Math.max(0, level - 1)] ?? pokemon.baseStatsByLevel[0];
+  const pokemonContext: PokemonScoringContext = {
+    pokemonId: pokemon.id,
+    level,
+    baseStats,
+  };
+  const protectedFloors = deriveDefaultProtectedStats(pokemon, allPokemon, level);
+  return { priorities, colorTargets, pokemonContext, protectedFloors };
+}
+
+/**
+ * Build the SearchOptions for Basic mode from a derived objective.
+ * Always uses: maximize mode, Pokémon-aware scoring, color-bonus incentive, no hard constraints.
+ */
+export function basicSearchOptions(objective: BasicObjective): SearchOptions {
+  return {
+    mode: "maximize",
+    priorities: objective.priorities,
+    targets: {},
+    targetActive: {},
+    // Use derived protect floors so Basic mode automatically guards the
+    // Pokémon's defining stats from being net-reduced by emblem choices.
+    protected: objective.protectedFloors,
+    // No hard color constraints — the engine's colorBonuses incentive steers naturally.
+    colorConstraints: null,
+    colorBonuses: true,
+    scoringMode: "pokemon",
+    pokemonContext: objective.pokemonContext,
+    slots: 10,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Owned held items
+// ---------------------------------------------------------------------------
+
+/**
+ * Resolve the held items available for Basic-mode recommendations.
+ *
+ * In Basic mode, recommendations are restricted to items the user owns
+ * (i.e. has explicitly graded on the Held Items page). If the user hasn't
+ * graded any items yet (`ownedIds` is empty), all items are eligible —
+ * graceful fallback so Basic works out of the box.
+ *
+ * @param allItems    Full held-item list from gameData.
+ * @param ownedIds    IDs of explicitly-graded items from `store.ownedHeldItemIds`.
+ */
+export function resolveOwnedHeldItems(
+  allItems: HeldItem[],
+  ownedIds: string[],
+): HeldItem[] {
+  if (ownedIds.length === 0) return allItems;
+  const ownedSet = new Set(ownedIds);
+  const owned = allItems.filter((i) => ownedSet.has(i.id));
+  // If no grades were set for eligible items, fall back to all
+  return owned.length > 0 ? owned : allItems;
+}
+
+// ---------------------------------------------------------------------------
+// Human-readable description
+// ---------------------------------------------------------------------------
+
+const STAT_LABEL: Partial<Record<string, string>> = {
+  attack: "Attack", spAttack: "Sp. Atk", hp: "HP", defense: "Def",
+  spDefense: "Sp. Def", critRate: "Crit", cdr: "CDR",
+  attackSpeed: "Atk Spd", moveSpeed: "Spd", lifesteal: "Lifesteal",
+};
+
+/**
+ * Return the top stat priorities (sorted by weight, labelled) for display in Basic mode's info chip row.
+ */
+export function topPriorityLabels(priorities: StatWeights, maxCount = 4): string[] {
+  return (Object.entries(priorities) as [string, number][])
+    .filter(([, w]) => w > 0)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, maxCount)
+    .map(([s]) => STAT_LABEL[s] ?? s);
+}
+
+/**
+ * Return a one-line role description for the Basic mode auto-objective card.
+ */
+export function basicObjectiveDescription(pokemon: Pokemon): string {
+  const type = pokemon.attackType === "hybrid" ? "physical/special" : pokemon.attackType;
+  return `${pokemon.role} · ${type}`;
+}
+
+/**
+ * Score held items for Basic mode using the auto-derived weights.
+ * Returns sorted (best first) item IDs from the owned pool.
+ */
+export function rankOwnedHeldItems(
+  pokemon: Pokemon,
+  ownedItems: HeldItem[],
+  grade = 30,
+): { itemId: string; score: number }[] {
+  const weights = priorityWeights(pokemon);
+  const coreIds = coreItemsFor(pokemon);
+  const eligible = ownedItems.filter((i) => Object.keys(i.statsByGrade).length > 0);
+  return eligible
+    .map((i) => ({ itemId: i.id, score: scoreHeldItem(i, weights, coreIds, grade) }))
+    .sort((a, b) => b.score - a.score);
+}

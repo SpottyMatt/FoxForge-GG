@@ -127,6 +127,13 @@ interface Store {
   setHeldItemGradeById: (itemId: string, grade: number) => void;
   heldSlotGrades: [number, number, number];
   setHeldItemGradeForSlot: (slot: number, grade: number) => void;
+  /**
+   * IDs of held items whose grade has been explicitly set by the user.
+   * These represent the user's "owned" held items (they've interacted with the
+   * grade slider for these items on the Held Items page).
+   * Empty = user hasn't set any grades yet (fall back to all items).
+   */
+  ownedHeldItemIds: string[];
 }
 
 const Ctx = createContext<Store | null>(null);
@@ -215,6 +222,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setHeldItemGradeById,
     heldSlotGrades,
     setHeldItemGradeForSlot,
+    ownedHeldItemIds: Object.keys(heldGradeMemory),
   }), [loadout, saved, saveError, owned, mode, theme, heldGradeMemory, heldSlotGrades]);
 
   return <Ctx.Provider value={store}>{children}</Ctx.Provider>;

@@ -14,11 +14,12 @@ import { RecommendPanel } from "./components/RecommendPanel";
 import { InventoryManager } from "./components/InventoryManager";
 import { HeldItemsInventory } from "./components/HeldItemsInventory";
 import { SettingsMenu } from "./components/SettingsMenu";
+import { EmblemOptimizer } from "./components/EmblemOptimizer";
 import { isTauri, autoUpdateEnabled, checkAppUpdate } from "./ui/runtime";
 import { APP_NAME, APP_TAGLINE, LEGAL_DISCLAIMER, copyrightLine } from "./ui/brand";
 
 type Tab = "build" | "compare";
-type Page = "app" | "emblems" | "heldItems";
+type Page = "app" | "emblems" | "heldItems" | "optimizer";
 
 function Segmented<T extends string>({
   value, options, onChange, disabled = false, title,
@@ -91,6 +92,12 @@ function Header({ tab, setTab, page, setPage }: { tab: Tab; setTab: (t: Tab) => 
             >
               Held Items
             </button>
+            <button
+              onClick={() => setPage("optimizer")}
+              className={`rounded-xl px-3 py-1.5 text-sm font-medium text-white hover:bg-white/25 ${page === "optimizer" ? "bg-white/25" : "bg-white/15"}`}
+            >
+              ⚡ Optimize
+            </button>
             {page !== "app" && (
               <button
                 onClick={() => setPage("app")}
@@ -153,6 +160,8 @@ function Workspace() {
           <InventoryManager />
         ) : page === "heldItems" ? (
           <HeldItemsInventory />
+        ) : page === "optimizer" ? (
+          <EmblemOptimizer onNavigate={(p) => setPage(p as Page)} />
         ) : activeTab === "build" ? (
           <>
             <RecommendPanel />
