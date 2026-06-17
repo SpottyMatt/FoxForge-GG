@@ -330,11 +330,13 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
   // label so the user understands the two dimensions.
   const poolDistinctNames = useMemo(() => distinctPokemonCount(pool), [pool]);
 
-  // Basic mode always uses owned pool with mixed grades enabled
+  // Basic mode always uses owned pool; mixedGrades toggle controls grade variants
   const basicPool = useMemo(
-    () => buildPool(allEmblems, { useOwned: true, mixedGrades: true, allowedGrades: new Set(["gold"]) }, owned),
-    [owned],
+    () => buildPool(allEmblems, { useOwned: true, mixedGrades, allowedGrades: new Set(["gold"]) }, owned),
+    [owned, mixedGrades],
   );
+  const basicBuildCount = useMemo(() => approximateBuildCount(basicPool, SLOTS), [basicPool]);
+  const basicPoolDistinctNames = useMemo(() => distinctPokemonCount(basicPool), [basicPool]);
 
   // ---- Auto-derived Basic objective ----
   // Pass pokemonList so protect floors are derived from population statistics.
@@ -672,7 +674,17 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
                   </div>
                 </div>
                 <div className="text-right text-xs text-muted">
-                  <p>{basicPool.length} owned emblems</p>
+                  <p>
+                    {basicPool.length.toLocaleString()} emblem candidate{basicPool.length !== 1 ? "s" : ""}
+                    {" · "}{basicPoolDistinctNames} Pokémon
+                  </p>
+                  {basicPool.length > basicPoolDistinctNames && (
+                    <p className="text-faint">
+                      {mixedGrades
+                        ? `Mixed grades · ~${formatBuildCount(basicBuildCount)} builds`
+                        : "Best owned grade only"}
+                    </p>
+                  )}
                   {ownedHeldItemIds.length > 0 && (
                     <p>{ownedItems.length} owned items</p>
                   )}
@@ -760,7 +772,24 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
             </div>
           )}
 
-          {/* Find Best Build button */}
+          {/* Mixed grades + Find Best Build */}
+          {pokemon && (
+            <label className="flex cursor-pointer items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={mixedGrades}
+                onChange={(e) => setMixedGrades(e.target.checked)}
+                className="accent-accent"
+              />
+              <span>
+                Mixed grades{" "}
+                <span className="text-xs text-faint">
+                  — combine Bronze/Silver/Gold across the 10 slots (recommended)
+                </span>
+              </span>
+            </label>
+          )}
+
           <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={handleBasicSearch}
