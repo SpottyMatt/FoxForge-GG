@@ -114,8 +114,8 @@ No router library — navigation is local React state.
 - **Build screen** — `BuildScreen` composes `BuildSummaryBar` (sticky glance hero pinned under the app bar), `RecommendPanel`, `LoadoutEditor`, `MovesCard`, `StatPanel`, `LoadoutBar`, and `LevelGraph` (Expert only). Pokémon selection is not inline; the hero empty state and app-bar title tap open `PokemonPickerSheet`.
 - **Other tab screens** — `EmblemsScreen`, `ItemsScreen`, and `CompareScreen` are placeholder wrappers; `InventoryManager`, `HeldItemsInventory`, and `CompareView` are not mounted from those screens.
 - **Layout** — single column, `max-w-2xl` centered. `<main>` padding clears the fixed app bar and tab bar (safe-area aware).
-- **Overlays** — `SettingsMenu` (centered modal from gear). Pokémon picker: `PokemonPickerSheet` (`src/components/PokemonPicker.tsx`, `BottomSheet` shell, title "Choose Pokémon"; opened from app-bar tap or hero empty state). `PickerModal` and `HeldItemDetailModal` keep their existing centered-modal shells; held/trainer/emblem pickers are reachable from `LoadoutEditor` on the Build tab.
-- **Footer** — legal disclaimer, copyright, and patch line are not rendered in `App.tsx` (strings remain in `src/ui/brand.ts`).
+- **Overlays** — `BottomSheet` (`src/components/shell/BottomSheet.tsx`) is the shared responsive overlay (bottom sheet on phones, centered card on `sm+`). Callers: `SettingsMenu` (gear), `PokemonPickerSheet` (app-bar tap or hero empty state), and `PickerModal` (held/trainer/emblem pickers from `LoadoutEditor`). `HeldItemDetailModal` keeps its existing centered-modal shell.
+- **Footer** — legal disclaimer, copyright, and patch line live in Settings → Legal (sourced from `src/ui/brand.ts`); they are not rendered in `App.tsx`.
 - **Data updates** — `unite-data-updated` window event shows a reload banner inside `<main>`; Tauri runs a silent app-update check on launch when auto-update is enabled.
 
 ### Semantic Theming
@@ -139,7 +139,7 @@ UI surfaces use Tailwind v4 semantic tokens defined in `src/index.css` (`bg-surf
 
 `system` follows `prefers-color-scheme`, defaulting to dark when the OS states no preference. A `matchMedia` listener updates `theme` live while `themePref === "system"`. Resolved theme sets `document.documentElement.dataset.theme` and the `theme-color` meta (`#110d1f` dark, `#ffffff` light). Explicit `light`/`dark` persist in localStorage; `system` removes the key.
 
-`SettingsMenu` currently exposes Light and Dark buttons only (no System option in the UI yet). When `themePref` is `system`, the active button reflects the resolved `theme`.
+`SettingsMenu` → Appearance exposes a 3-way `System · Light · Dark` control bound to `themePref` / `setThemePref`.
 
 **Token families in `src/index.css`:** core surfaces (`--color-bg`, `--color-surface`, …), tone cards (`--color-rec-*`, `--color-as-*`, `--color-an-*`), picker tiles (`--color-mon-*`), grade controls (`--color-grade-*`), app-bar tokens (`--color-appbar-*`), tab-bar tokens (`--color-tab-*`). Legacy `--color-header-a/-b` remain defined but are unused by the new shell. Safe-area helpers: `@utility pt-safe` / `pb-safe` via `env(safe-area-inset-*)`. Viewport meta includes `viewport-fit=cover` in `index.html`.
 
@@ -219,7 +219,7 @@ Semantic color and surface tokens are defined in `src/index.css` using Tailwind 
 
 Stat role colors (positive/negative, recommend/attack-speed/analytics tone cards) are intentional literals layered on top of semantic surfaces.
 
-Shared modal behavior (`Escape` + scroll lock): `src/ui/useModalDismiss.ts`. `BottomSheet` (`src/components/shell/BottomSheet.tsx`) is the shared responsive overlay primitive (bottom sheet on phones, centered card on `sm+`); `PokemonPickerSheet` is its current caller, mounted from `App.tsx`.
+Shared modal behavior (`Escape` + scroll lock): `src/ui/useModalDismiss.ts` (used inside `BottomSheet`). `BottomSheet` (`src/components/shell/BottomSheet.tsx`) is the shared responsive overlay primitive; callers are `SettingsMenu`, `PokemonPickerSheet`, and `PickerModal`.
 
 ## Key Components
 
@@ -230,7 +230,7 @@ Shared modal behavior (`Escape` + scroll lock): `src/ui/useModalDismiss.ts`. `Bo
 | Build tab | `src/components/screens/BuildScreen.tsx` — `BuildSummaryBar`, `RecommendPanel`, `LoadoutEditor`, `MovesCard`, `StatPanel`, `LoadoutBar`, `LevelGraph` (Expert) |
 | Pokémon picker | `PokemonPickerSheet` in `src/components/PokemonPicker.tsx` (no inline picker on Build) |
 | Tab placeholders | `EmblemsScreen`, `ItemsScreen`, `CompareScreen` — `InventoryManager`, `HeldItemsInventory`, `CompareView` not mounted |
-| Pickers / settings | `PickerModal`, `SettingsMenu` |
+| Pickers / settings | `PickerModal`, `SettingsMenu` (both use `BottomSheet`) |
 | Item detail | `src/ui/heldItemDetail.tsx` (`HeldItemDetailModal`) |
 | Tooltips | `src/components/Tooltip.tsx`, `src/components/tips.tsx` |
 | State | `src/state/store.tsx`, `src/state/loadout.ts`, `src/state/heldItemGrades.ts` |
