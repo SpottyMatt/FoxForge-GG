@@ -1,8 +1,6 @@
-/** Emblems tab content — filled in Phase 5. */
+import { InventoryManager } from "../InventoryManager";
+
+/** Emblems tab — inventory ownership per grade. */
 export function EmblemsScreen() {
-  return (
-    <div className="rounded-2xl border border-line bg-surface p-4 text-sm text-muted">
-      Emblems screen — Phase 5 adds inventory management.
-    </div>
-  );
+  return <InventoryManager />;
 }
