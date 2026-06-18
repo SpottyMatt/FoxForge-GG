@@ -159,11 +159,9 @@ interface ResultPanelProps {
   optimizeLevel: number;
   pokemonAwareScoring: boolean;
   applied: AppliedState;
-  canOpenBuilder: boolean;
   onApplyEmblems: () => void;
   onApplyItems: (ids: string[]) => void;
   onApplyAll: (ids: string[]) => void;
-  onOpenBuilder: () => void;
 }
 
 interface EffectiveDelta {
@@ -180,11 +178,9 @@ function ResultCards({
   optimizeLevel,
   pokemonAwareScoring,
   applied,
-  canOpenBuilder,
   onApplyEmblems,
   onApplyItems,
   onApplyAll,
-  onOpenBuilder,
 }: ResultPanelProps) {
   const itemIds = heldItemSynergy?.suggestions.map((s) => s.itemId) ?? [];
   const hasItems = itemIds.length > 0;
@@ -278,18 +274,10 @@ function ResultCards({
                   {applied.emblems && applied.items ? "Applied ✓ — Re-apply All" : "Apply Emblems + Held Items"}
                 </button>
               )}
-              {canOpenBuilder && (
-                <button
-                  type="button"
-                  onClick={onOpenBuilder}
-                  className="rounded-xl border border-line bg-white/10 px-4 py-2 text-sm font-medium text-ink hover:bg-white/20 active:scale-95"
-                >
-                  View in Builder →
-                </button>
-              )}
             </div>
             <p className="text-xs text-faint">
-              Applies to your current loadout without leaving this page. Held items apply
+              Applies to your current loadout without leaving this page. Once applied, a
+              confirmation appears with a link to view it in the Builder. Held items apply
               separately below.
             </p>
           </div>
@@ -1012,11 +1000,9 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
               optimizeLevel={optimizeLevel}
               pokemonAwareScoring
               applied={applied}
-              canOpenBuilder={!!onNavigate}
               onApplyEmblems={handleApplyEmblems}
               onApplyItems={handleApplyItems}
               onApplyAll={handleApplyAll}
-              onOpenBuilder={handleOpenBuilder}
             />
           )}
 
@@ -1613,11 +1599,9 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
               optimizeLevel={optimizeLevel}
               pokemonAwareScoring={pokemonAwareScoring}
               applied={applied}
-              canOpenBuilder={!!onNavigate}
               onApplyEmblems={handleApplyEmblems}
               onApplyItems={handleApplyItems}
               onApplyAll={handleApplyAll}
-              onOpenBuilder={handleOpenBuilder}
             />
           )}
 
