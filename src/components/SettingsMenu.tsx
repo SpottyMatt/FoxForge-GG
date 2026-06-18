@@ -80,12 +80,12 @@ export function SettingsMenu({ open, onClose }: { open: boolean; onClose: () => 
             <span className="text-sm font-medium">Game data</span>
             <span className="font-mono text-xs text-faint">patch {activePatch}</span>
           </div>
-          <button type="button" onClick={checkData} className="mt-1 rounded-lg border border-line px-3 py-1.5 text-xs font-medium hover:bg-raise">
+          <button type="button" onClick={checkData} className="mt-1 min-h-11 rounded-lg border border-line px-3 py-2.5 text-sm font-medium hover:bg-raise">
             Check for data update
           </button>
           {dataMsg && <p className="mt-1 text-xs text-muted">{dataMsg}</p>}
           {dataUpdated && (
-            <button type="button" onClick={() => location.reload()} className="mt-1 rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-white hover:bg-accent-strong">
+            <button type="button" onClick={() => location.reload()} className="mt-1 min-h-11 rounded-lg bg-accent px-3 py-2.5 text-sm font-semibold text-white hover:bg-accent-strong">
               Reload to apply
             </button>
           )}
@@ -101,7 +101,7 @@ export function SettingsMenu({ open, onClose }: { open: boolean; onClose: () => 
                 <span className="text-sm font-medium">Auto-update the app</span>
                 <input type="checkbox" checked={auto} onChange={toggleAuto} className="h-4 w-4 accent-[var(--color-accent)]" />
               </label>
-              <button type="button" onClick={checkApp} className="mt-2 rounded-lg border border-line px-3 py-1.5 text-xs font-medium hover:bg-raise">
+              <button type="button" onClick={checkApp} className="mt-2 min-h-11 rounded-lg border border-line px-3 py-2.5 text-sm font-medium hover:bg-raise">
                 Check for app updates
               </button>
               {appMsg && <p className="mt-1 text-xs text-muted">{appMsg}</p>}

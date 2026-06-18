@@ -100,7 +100,7 @@ function FilterChip({
     <button
       type="button"
       onClick={onClick}
-      className={`shrink-0 rounded-full border px-3 py-2 text-xs font-medium capitalize ${
+      className={`shrink-0 rounded-full border px-3 py-2 text-sm font-medium capitalize min-h-11 ${
         active
           ? "border-transparent bg-accent text-white"
           : "border-transparent bg-raise text-muted hover:bg-raise"

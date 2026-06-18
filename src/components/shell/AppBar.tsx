@@ -46,7 +46,7 @@ function ModeSegmented({
           key={o.id}
           type="button"
           onClick={() => onChange(o.id)}
-          className={`rounded-lg px-2.5 py-1.5 text-xs font-medium transition sm:px-3 sm:text-sm ${
+          className={`min-h-11 rounded-lg px-2.5 text-sm font-medium transition sm:px-3 ${
             value === o.id
               ? "bg-surface text-accent-ink shadow"
               : inactiveClass
