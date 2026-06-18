@@ -107,6 +107,25 @@ describe("evaluate — maximize scoring", () => {
     expect(ev.valid).toBe(true);
     expect(ev.score).toBeLessThan(0); // penalty should dominate
   });
+
+  it("moveSpeed protect floor penalizes builds below the floor", () => {
+    const pool = buildCandidatePool(emblems, { grades: ["gold"] }).slice(0, 10);
+    const seen = new Set<string>();
+    const distinct = pool.filter((c) => {
+      if (seen.has(c.pokemonName)) return false;
+      seen.add(c.pokemonName);
+      return true;
+    });
+    if (distinct.length < 10) return;
+
+    const opts: SearchOptions = {
+      ...makeMaximizeOpts(),
+      protected: { moveSpeed: 10000 },
+    };
+    const ev = evaluateLoadout(distinct.slice(0, 10), opts, setBonuses);
+    expect(ev.valid).toBe(true);
+    expect(ev.score).toBeLessThan(0);
+  });
 });
 
 describe("evaluate — target mode", () => {

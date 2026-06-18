@@ -119,6 +119,7 @@ const PROTECT_STATS: Array<[string, string]> = [
   ["critRate",  "Crit Rate"],
   ["cdr",       "CDR"],
   ["attackSpeed", "Atk Spd"],
+  ["moveSpeed", "Move Speed"],
 ];
 
 const STAT_LABELS: Partial<Record<string, string>> = {
