@@ -184,7 +184,7 @@ Clone, `npm install`, and you're ready to develop.
 
 Key scripts (from `package.json`): `npm run dev`, `npm run build`, `npm run build:pages`, `npm run typecheck`, `npm run lint`, `npm run lint:fix`, `npm run format`, `npm run format:check`.
 
-Version is sourced from `package.json`.
+App version shown in Settings → Updates comes from the `"version"` field in `package.json`, injected at build time via `vite.config.ts` (`define.__APP_VERSION__`) into `src/ui/version.ts` (`APP_VERSION`). Bump with `npm version <semver> --no-git-tag-version` (or edit `package.json` and sync `package-lock.json`).
 
 ### Testing Process
 
