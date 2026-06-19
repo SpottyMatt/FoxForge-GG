@@ -74,7 +74,7 @@ import { Segmented } from "./Segmented";
 import { EmblemSetSummary } from "./EmblemSetSummary";
 import { SearchProgressOverlay } from "./SearchProgressOverlay";
 import { Tooltip } from "./Tooltip";
-import { emblemTip } from "./tips";
+import { emblemTip, itemTip } from "./tips";
 import { EMBLEM_COLOR_HEX, GRADE_LETTER } from "../ui/colors";
 import { emblemIconForGrade } from "../ui/emblemIcon";
 import { asset } from "../ui/asset";
@@ -224,18 +224,19 @@ function ResultCards({
   const itemIds = heldItemSynergy?.suggestions.map((s) => s.itemId) ?? [];
   const hasItems = itemIds.length > 0;
   return (
-    <>
-      <CollapsibleCard title="Result" persistKey="optimizer-results" tone="indigo">
-        <div className="flex flex-col gap-4">
-          {/* Stale banner — settings changed since this build was found */}
-          {isStale && (
-            <div className="flex items-center gap-2 rounded-lg border border-accent/40 bg-accent-weak px-3 py-2 text-xs text-accent-ink">
-              <span aria-hidden>⚠</span>
-              <span>Settings changed since this build — re-run the search to refresh. You can still apply it.</span>
-            </div>
-          )}
+    <CollapsibleCard title="Result" persistKey="optimizer-results" tone="indigo">
+      <div className="flex flex-col gap-4">
+        {/* Stale banner — settings changed since this build was found */}
+        {isStale && (
+          <div className="flex items-center gap-2 rounded-lg border border-accent/40 bg-accent-weak px-3 py-2 text-xs text-accent-ink">
+            <span aria-hidden>⚠</span>
+            <span>Settings changed since this build — re-run the search to refresh. You can still apply it.</span>
+          </div>
+        )}
 
-          {/* Emblem icons row — same size + tooltip pattern as the build page */}
+        {/* Emblems — matches RecommendPanel / build page section layout */}
+        <div className="flex flex-col gap-2.5">
+          <p className="text-xs font-medium text-faint">Emblems</p>
           <div className="flex flex-wrap gap-1">
             {picks.map((p, i) => {
               const emblem = emblemById.get(p.emblemId);
@@ -265,124 +266,111 @@ function ResultCards({
               );
             })}
           </div>
+        </div>
 
-          <EmblemSetSummary picks={picks} />
+        <EmblemSetSummary picks={picks} />
 
-          {/* Effective-stat delta — layout matches build Effective Stats panel */}
-          {effectiveDelta && Object.keys(effectiveDelta.delta).length > 0 && pokemon && (
-            <div>
-              <p className="mb-2 text-xs font-medium text-faint">
-                Stat gains at {pokemon.displayName} Lv.{optimizeLevel}
-                {pokemonAwareScoring && <span className="ml-1 text-accent-ink">· Pokémon-aware</span>}
-              </p>
-              <dl className="grid grid-cols-2 gap-x-6 gap-y-0 sm:grid-cols-3">
-                {(Object.entries(effectiveDelta.delta) as [keyof StatBlock, number][])
-                  .filter(([k]) => STAT_LABELS[k])
-                  .map(([stat, delta]) => (
-                    <div key={stat} className="flex items-baseline justify-between border-b border-line-soft py-1">
-                      <dt className="text-sm text-muted">{STAT_LABELS[stat]}</dt>
-                      <dd className={`font-mono text-sm font-semibold ${delta >= 0 ? "text-pos" : "text-neg"}`}>
-                        {fmtDelta(stat, delta)}
-                      </dd>
-                    </div>
-                  ))}
-              </dl>
-            </div>
-          )}
-
-          {/* Target error */}
-          {searchResult?.error !== undefined && (
-            <p className="text-xs text-muted">
-              Target error:{" "}
-              <span className={`font-mono ${searchResult.error < 0.01 ? "text-pos" : "text-neg"}`}>
-                {searchResult.error.toFixed(3)}
-              </span>
-              {searchResult.error < 0.01 && " (exact)"}
+        {/* Effective-stat delta — layout matches build Effective Stats panel */}
+        {effectiveDelta && Object.keys(effectiveDelta.delta).length > 0 && pokemon && (
+          <div>
+            <p className="mb-2 text-xs font-medium text-faint">
+              Stat gains at {pokemon.displayName} Lv.{optimizeLevel}
+              {pokemonAwareScoring && <span className="ml-1 text-accent-ink">· Pokémon-aware</span>}
             </p>
-          )}
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-0 sm:grid-cols-3">
+              {(Object.entries(effectiveDelta.delta) as [keyof StatBlock, number][])
+                .filter(([k]) => STAT_LABELS[k])
+                .map(([stat, delta]) => (
+                  <div key={stat} className="flex items-baseline justify-between border-b border-line-soft py-1">
+                    <dt className="text-sm text-muted">{STAT_LABELS[stat]}</dt>
+                    <dd className={`font-mono text-sm font-semibold ${delta >= 0 ? "text-pos" : "text-neg"}`}>
+                      {fmtDelta(stat, delta)}
+                    </dd>
+                  </div>
+                ))}
+            </dl>
+          </div>
+        )}
 
-          {/* Apply actions — each is independent and stays on this page.
-              Emblems and held items apply separately so the user can do
-              either or both without being navigated away. */}
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                type="button"
-                onClick={onApplyEmblems}
-                className="rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-accent/90 active:scale-95"
-              >
-                {applied.emblems ? "Applied ✓ — Re-apply Emblems" : "Apply Emblems"}
-              </button>
-              {hasItems && (
+        {/* Target error */}
+        {searchResult?.error !== undefined && (
+          <p className="text-xs text-muted">
+            Target error:{" "}
+            <span className={`font-mono ${searchResult.error < 0.01 ? "text-pos" : "text-neg"}`}>
+              {searchResult.error.toFixed(3)}
+            </span>
+            {searchResult.error < 0.01 && " (exact)"}
+          </p>
+        )}
+
+        {/* Held items — same card, same section pattern as the build page */}
+        {heldItemSynergy && pokemon && hasItems && (
+          <div className="border-t border-line-soft pt-4">
+            <div className="flex flex-col gap-2">
+              <p className="text-xs font-medium text-faint">Held Items</p>
+              {heldItemSynergy.reasoning && (
+                <p className="text-xs text-muted">{heldItemSynergy.reasoning}</p>
+              )}
+              <div className="flex flex-wrap gap-2">
+              {heldItemSynergy.suggestions.map((sug) => {
+                const item = heldItemById.get(sug.itemId);
+                if (!item) return null;
+                return (
+                  <Tooltip key={sug.itemId} content={itemTip(item)}>
+                    <span className="flex w-16 flex-col items-center">
+                      <img
+                        src={asset(item.iconAsset)}
+                        alt={item.displayName}
+                        className="h-10 w-10 object-contain"
+                      />
+                      <span className="mt-0.5 text-center text-[10px] leading-tight text-muted">
+                        {item.displayName}
+                      </span>
+                    </span>
+                  </Tooltip>
+                );
+              })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Apply actions — emblems and held items in one footer */}
+        <div className="flex flex-col gap-2 border-t border-line-soft pt-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={onApplyEmblems}
+              className="rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-accent/90 active:scale-95"
+            >
+              {applied.emblems ? "Applied ✓ — Re-apply Emblems" : "Apply Emblems"}
+            </button>
+            {hasItems && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => onApplyItems(itemIds)}
+                  className="rounded-xl border border-line bg-white/10 px-4 py-2 text-sm font-semibold text-ink hover:bg-white/20 active:scale-95"
+                >
+                  {applied.items ? "Applied ✓ — Re-apply Items" : "Apply Held Items"}
+                </button>
                 <button
                   type="button"
                   onClick={() => onApplyAll(itemIds)}
                   className="rounded-xl border border-accent/40 bg-accent/10 px-4 py-2 text-sm font-semibold text-accent-ink hover:bg-accent/20 active:scale-95"
                 >
-                  {applied.emblems && applied.items ? "Applied ✓ — Re-apply All" : "Apply Emblems + Held Items"}
+                  {applied.emblems && applied.items ? "Applied ✓ — Re-apply All" : "Apply All"}
                 </button>
-              )}
-            </div>
-            <p className="text-xs text-faint">
-              Applies to your current loadout without leaving this page. Switch to the Build
-              tab anytime to review your loadout. Held items apply separately below.
-            </p>
+              </>
+            )}
           </div>
+          <p className="text-xs text-faint">
+            Applies to your current loadout without leaving this page. Switch to the Build tab
+            anytime to review.
+          </p>
         </div>
-      </CollapsibleCard>
-
-      {/* Held items synergy card */}
-      {heldItemSynergy && pokemon && (
-        <CollapsibleCard title="Recommended Held Items" persistKey="optimizer-items" tone="sky">
-          <div className="flex flex-col gap-3">
-            <p className="text-xs text-muted">{heldItemSynergy.reasoning}</p>
-            <div className="flex flex-wrap gap-4">
-              {heldItemSynergy.suggestions.map((sug) => {
-                const item = heldItemById.get(sug.itemId);
-                if (!item) return null;
-                return (
-                  <Tooltip
-                    key={sug.itemId}
-                    content={
-                      <div className="flex flex-col gap-1 text-xs">
-                        <span className="font-semibold">{sug.displayName}</span>
-                        <span className="text-muted">{sug.reason}</span>
-                      </div>
-                    }
-                  >
-                    <div className="flex flex-col items-center gap-1">
-                      <img
-                        src={asset(item.iconAsset)}
-                        alt={item.displayName}
-                        className="h-11 w-11 rounded-xl ring-1 ring-line"
-                      />
-                      <span className="max-w-[60px] text-center text-[10px] leading-tight text-muted">
-                        {item.displayName}
-                      </span>
-                      <span className="max-w-[72px] text-center text-xs leading-snug text-faint">
-                        {sug.reason}
-                      </span>
-                    </div>
-                  </Tooltip>
-                );
-              })}
-            </div>
-            <div className="flex flex-col gap-1">
-              <button
-                type="button"
-                onClick={() => onApplyItems(itemIds)}
-                className="self-start rounded-xl border border-line bg-white/10 px-4 py-1.5 text-xs font-medium text-ink hover:bg-white/20 active:scale-95"
-              >
-                {applied.items ? "Applied ✓ — Re-apply Held Items" : "Apply Held Items"}
-              </button>
-              <span className="text-xs text-faint">
-                Held items only — your applied emblems are left untouched.
-              </span>
-            </div>
-          </div>
-        </CollapsibleCard>
-      )}
-    </>
+      </div>
+    </CollapsibleCard>
   );
 }
 
