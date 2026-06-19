@@ -165,17 +165,15 @@ describe("deriveDefaultProtectedStats", () => {
 
 describe("deriveMobilityFloor", () => {
   it("[MOB-1] mobile roles get a moveSpeed floor of 0", () => {
-    for (const role of ["Attacker", "Speedster", "AllRounder"] as const) {
+    for (const role of ["Attacker", "Speedster", "AllRounder", "Supporter"] as const) {
       const poke = makePokemon(`m-${role}`, BASELINE, { role });
       expect(deriveMobilityFloor(poke)).toEqual({ moveSpeed: 0 });
     }
   });
 
-  it("[MOB-2] stationary roles get no move-speed floor", () => {
-    for (const role of ["Defender", "Supporter"] as const) {
-      const poke = makePokemon(`s-${role}`, BASELINE, { role });
-      expect(deriveMobilityFloor(poke)).toEqual({});
-    }
+  it("[MOB-2] Defender gets no move-speed floor", () => {
+    const poke = makePokemon("s-Defender", BASELINE, { role: "Defender" });
+    expect(deriveMobilityFloor(poke)).toEqual({});
   });
 
   it("[MOB-3] does not interfere with z-score defining-stat picks", () => {
@@ -198,7 +196,7 @@ describe("deriveMobilityFloor", () => {
     expect(obj.protectedFloors.attack).toBe(0);
   });
 
-  it("[MOB-5] deriveBasicObjective omits move-speed floor for stationary roles", () => {
+  it("[MOB-5] deriveBasicObjective omits move-speed floor for Defender", () => {
     const defender = makePokemon(
       "tank-mob",
       { ...BASELINE, hp: 12000, defense: 300 },
@@ -207,6 +205,16 @@ describe("deriveMobilityFloor", () => {
     const pop = [...POP_BASE, defender];
     const obj = deriveBasicObjective(defender, 15, [], pop);
     expect(obj.protectedFloors.moveSpeed).toBeUndefined();
+  });
+
+  it("[MOB-8] Supporter gets move-speed floor (Sableye regression)", () => {
+    const bundle = loadBundle(rawPatch);
+    const pop = bundle.pokemon;
+    const sableye = pop.find((p) => p.id === "sableye")!;
+    expect(sableye.role).toBe("Supporter");
+    expect(deriveMobilityFloor(sableye)).toEqual({ moveSpeed: 0 });
+    const obj = deriveBasicObjective(sableye, 15, bundle.emblems, pop);
+    expect(obj.protectedFloors.moveSpeed).toBe(0);
   });
 
   it("[MOB-6] empty roster → no move-speed floor (backward-compatible)", () => {

@@ -110,14 +110,14 @@ const GLASS_ROLES: ReadonlySet<Role> = new Set(["Attacker", "Speedster"]);
 
 /**
  * Roles whose kit depends on mobility. For these, net-negative move speed from
- * emblems is a default-bad trade — we guard it with a floor of 0. Stationary
- * roles (Defender / Supporter) intentionally trade mobility for survivability,
- * so they are excluded.
+ * emblems is a default-bad trade — we guard it with a floor of 0. Defenders
+ * intentionally trade mobility for survivability, so they are excluded.
  */
 const MOBILITY_ROLES: ReadonlySet<Role> = new Set([
   "Attacker",
   "Speedster",
   "AllRounder",
+  "Supporter",
 ]);
 
 // ---------------------------------------------------------------------------
