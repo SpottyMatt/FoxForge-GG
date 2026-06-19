@@ -58,7 +58,9 @@ const brownEmblems = bundle.emblems
 const loadout = computeEmblemLoadout(brownEmblems, bundle.setBonuses);
 const ctx: CalcContext = { inCombat: true, goalsScored: 0 };
 const eff = computeEffectiveStats(lucario, 15, loadout, [floatStone], [40], ctx);
-console.log(`\n6-Brown loadout: ${loadout.activeSetBonuses.map((b) => `${b.color}+${b.bonusPercent}`).join(", ") || "none"}`);
+console.log(
+  `\n6-Brown loadout: ${loadout.activeSetBonuses.map((b) => `${b.color}+${b.bonusPercent}`).join(", ") || "none"}`,
+);
 const brownActive = loadout.activeSetBonuses.find((b) => b.color === "brown");
 check("6 Brown emblems => brown bonus active 0.04", brownActive?.bonusPercent, 0.04);
 console.log(`Lucario Lv15 Attack with 6-Brown + Float Stone: ${eff.attack}`);

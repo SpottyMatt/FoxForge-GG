@@ -14,8 +14,7 @@ const moves = asb.moves as Record<
 describe("attack-speed boost data (audited from the community calculator)", () => {
   it("has a numeric asPoints for every move boost", () => {
     for (const [pk, list] of Object.entries(moves))
-      for (const e of list)
-        expect(typeof e.asPoints, `${pk}/${e.source}`).toBe("number");
+      for (const e of list) expect(typeof e.asPoints, `${pk}/${e.source}`).toBe("number");
   });
 
   it("includes Tsareena (the recovered parser-gap entry)", () => {
