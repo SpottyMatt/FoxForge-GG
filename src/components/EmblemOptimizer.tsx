@@ -173,7 +173,7 @@ function PriorityFlatEstimate({ stat, pred, weight }: { stat: keyof StatBlock; p
   const signClass = v > 0 ? "text-pos" : v < 0 ? "text-neg" : "text-muted";
   return (
     <>
-      <span className="text-faint">≈ </span>
+      <span className="text-faint">Approx. </span>
       <span className={`font-mono font-semibold tabular-nums ${signClass}`}>
         {fmtDelta(stat, v)}
       </span>
@@ -1335,7 +1335,7 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
                               : `${formatBuildCount(constrainedBuildCount)} builds exceeds the cap — smart search finds a strong result`
                           }
                         >
-                          {willRunExact ? "⚡ Exact" : "≈ Smart search"}
+                          {willRunExact ? "⚡ Exact" : "Smart search"}
                         </span>
                       </div>
                     )}
@@ -1370,7 +1370,7 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
                 </p>
               </div>
               <div className="flex flex-col gap-1.5">
-                <span className="text-xs font-medium text-muted">Effort</span>
+                <span className="text-xs font-medium text-muted">Smart search effort</span>
                 <Segmented<Effort>
                   fluid
                   value={effort}
@@ -1380,10 +1380,10 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
                 />
                 <p className="text-xs text-faint">
                   {effort === "quick"
-                    ? "Quick pass (~2s)."
+                    ? "Smart search · quick pass (~2s). Not exact — finds a strong build heuristically."
                     : effort === "thorough"
-                      ? "Longer search (~25s)."
-                      : "Default balance (~8s)."}
+                      ? "Smart search · longer pass (~25s). Not exact — finds a strong build heuristically."
+                      : "Smart search · default balance (~8s). Not exact — finds a strong build heuristically."}
                 </p>
               </div>
 
@@ -1578,7 +1578,7 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
                             delta !== null
                               ? b.percentPoint
                                 ? ` (+${(delta * 100).toFixed(1)}%)`
-                                : ` (≈ +${Math.floor(delta)})`
+                                : ` (Approx. +${Math.floor(delta)})`
                               : null;
                           return (
                             <span
