@@ -43,8 +43,6 @@ import {
 import {
   useEmblemSearch,
   buildSearchSettingsKey,
-  getSessionSearchSettingsKey,
-  persistSessionSearchSettings,
   clampResultCount,
   DEFAULT_RESULT_COUNT,
   RESULT_COUNT_MAX,
@@ -59,7 +57,6 @@ import {
 } from "../engine/emblemSearch/basicObjective";
 import { buildPresetSearchOptions, deriveAdvancedColorUiDefaults, resolveBasicEffort, resolveColorSearchMode, EXACT_FALLBACK_EFFORT, type BasicEffort } from "../engine/emblemSearch/searchPresets";
 import { deriveProtectFloors } from "../engine/emblemSearch/protectDefaults";
-import { isSearchResultStale } from "../engine/emblemSearch/staleResult";
 import { predictFlatStatRanges, type FlatStatPrediction } from "../engine/emblemSearch/predictStats";
 import type {
   PokemonScoringContext,
@@ -202,8 +199,6 @@ interface ResultPanelProps {
   pokemon: ReturnType<typeof pokemonById.get> | null;
   optimizeLevel: number;
   pokemonAwareScoring: boolean;
-  /** True when settings changed since this result was produced (kept, but stale). */
-  isStale?: boolean;
   applied: AppliedState;
   historyCount: number;
   historyIndex: number;
@@ -222,7 +217,6 @@ function ResultCards({
   pokemon,
   optimizeLevel,
   pokemonAwareScoring,
-  isStale,
   applied,
   historyCount,
   historyIndex,
@@ -257,14 +251,6 @@ function ResultCards({
             >
               ›
             </button>
-          </div>
-        )}
-
-        {/* Stale banner — settings changed since this build was found */}
-        {isStale && (
-          <div className="flex items-center gap-2 rounded-lg border border-accent/40 bg-accent-weak px-3 py-2 text-xs text-accent-ink">
-            <span aria-hidden>⚠</span>
-            <span>Settings changed since this build — re-run the search to refresh. You can still apply it.</span>
           </div>
         )}
 
@@ -775,27 +761,8 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
     ],
   );
 
-  // Settings fingerprint for the generation currently on screen (from history stack).
-  const viewedSettingsKey =
-    searchState.historyIndex >= 0
-      ? searchState.history[searchState.historyIndex]?.settingsKey ?? null
-      : getSessionSearchSettingsKey();
-
-  // Persist the fingerprint for the latest generation on completion (remount baseline).
-  useEffect(() => {
-    if (
-      searchState.status === "done" &&
-      searchState.result &&
-      searchState.history.length > 0 &&
-      searchState.historyIndex === searchState.history.length - 1
-    ) {
-      const key = searchState.history[searchState.historyIndex]?.settingsKey;
-      if (key) persistSessionSearchSettings(key);
-    }
-  }, [searchState.status, searchState.result, searchState.history, searchState.historyIndex]);
-
-  // Changing the selected Pokémon clears result history. Editing other settings
-  // keeps the stack visible but marks the viewed generation stale.
+  // Changing the selected Pokémon clears result history. Other setting edits
+  // keep the stack visible so prior builds remain browsable and applyable.
   const prevPokemonIdRef = useRef(loadout.pokemonId);
   useEffect(() => {
     if (searchState.status === "running") return;
@@ -804,11 +771,6 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
       clearResult();
     }
   }, [loadout.pokemonId, searchState.status, clearResult]);
-
-  const isResultStale =
-    searchState.status === "done" &&
-    !!searchState.result &&
-    isSearchResultStale(viewedSettingsKey, searchSettingsKey);
 
   const resultPicks = useMemo(
     () => emblemPicksFromResult(searchState.result),
@@ -1172,7 +1134,6 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
               pokemon={pokemon}
               optimizeLevel={optimizeLevel}
               pokemonAwareScoring
-              isStale={isResultStale}
               applied={applied}
               historyCount={historyCount}
               historyIndex={historyIndex}
@@ -1849,7 +1810,6 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
               pokemon={pokemon}
               optimizeLevel={optimizeLevel}
               pokemonAwareScoring={pokemonAwareScoring}
-              isStale={isResultStale}
               applied={applied}
               historyCount={historyCount}
               historyIndex={historyIndex}
