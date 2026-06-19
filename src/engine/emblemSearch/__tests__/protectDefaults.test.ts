@@ -18,9 +18,12 @@
 import { describe, it, expect } from "vitest";
 import { deriveDefaultProtectedStats, deriveMobilityFloor, deriveProtectFloors } from "../protectDefaults";
 import { deriveBasicObjective, basicSearchOptions } from "../basicObjective";
-import { evaluateLoadout } from "../evaluate";
+import { evaluateLoadout, sumStats } from "../evaluate";
 import { makeEmblem } from "../../__tests__/fixtures";
-import { buildCandidatePool } from "../adapt";
+import { buildCandidatePool, emblemToCandidate } from "../adapt";
+import { buildPool } from "../pool";
+import { runSearch } from "../orchestrator";
+import { buildPresetSearchOptions } from "../searchPresets";
 import { loadBundle } from "../../../data/loadBundle";
 import rawPatch from "../../../data/patch-current.json";
 import type { Pokemon, StatBlock } from "../../../types";
@@ -277,6 +280,43 @@ describe("deriveDefaultProtectedStats — live roster cases", () => {
     expect(obj.protectedFloors.moveSpeed).toBe(0);
     expect(obj.protectedFloors.attack).toBe(0);
   });
+
+  it("[PROT-20] Dragapult search keeps moveSpeed ≥ 0 with mobility floor", async () => {
+    const dragapult = pop.find((p) => p.id === "dragapult")!;
+    const pool = buildPool(
+      bundle.emblems,
+      { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold", "silver", "bronze"]) },
+      new Set(),
+    );
+    const { options } = buildPresetSearchOptions({
+      pokemon: dragapult,
+      level: 15,
+      pool,
+      emblems: bundle.emblems,
+      pokemonList: pop,
+    });
+    expect(options.protected.moveSpeed).toBe(0);
+
+    const result = await runSearch({ pool, options, setBonuses: bundle.setBonuses, effort: "quick" });
+    expect(result).not.toBeNull();
+    const totals = sumStats(
+      result!.picks.map((slot) => emblemToCandidate(slot.emblem, slot.grade!)),
+    );
+    expect(totals.moveSpeed ?? 0).toBeGreaterThanOrEqual(0);
+
+    // Without the mobility guard the engine may stack −moveSpeed HP emblems.
+    const withoutMobility = { ...options, protected: { attack: options.protected.attack } };
+    const unguarded = await runSearch({
+      pool,
+      options: withoutMobility,
+      setBonuses: bundle.setBonuses,
+      effort: "normal",
+    });
+    const unguardedTotals = sumStats(
+      unguarded!.picks.map((slot) => emblemToCandidate(slot.emblem, slot.grade!)),
+    );
+    expect(unguardedTotals.moveSpeed ?? 0).toBeLessThanOrEqual(totals.moveSpeed ?? 0);
+  }, 60_000);
 });
 
 // ---------------------------------------------------------------------------

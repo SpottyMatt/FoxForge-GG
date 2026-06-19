@@ -53,4 +53,12 @@ describe("predictFlatStatRanges", () => {
       expect(high.predicted).toBeGreaterThanOrEqual(low.predicted);
     }
   });
+
+  it("alsoReport includes zero-weight stats from the same greedy build", () => {
+    const out = predictFlatStatRanges(pool, { attack: 3, hp: 1 }, 5, undefined, ["moveSpeed"]);
+    const move = out.find((p) => p.stat === "moveSpeed");
+    expect(move).toBeDefined();
+    expect(move!.weight).toBe(0);
+    expect(Number.isFinite(move!.predicted)).toBe(true);
+  });
 });

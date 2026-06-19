@@ -161,13 +161,14 @@ function fmtDelta(stat: keyof StatBlock, delta: number): string {
 }
 
 /** Inline estimate under a priority slider — sign is color-coded for quick scanning. */
-function PriorityFlatEstimate({ stat, pred }: { stat: keyof StatBlock; pred?: FlatStatPrediction }) {
+function PriorityFlatEstimate({ stat, pred, weight }: { stat: keyof StatBlock; pred?: FlatStatPrediction; weight: number }) {
   if (stat === "cdr") {
     return <span className="text-faint">from black set bonus, not flat emblems</span>;
   }
   if (!pred) {
     return <span className="text-faint">no priority</span>;
   }
+  const protectedOnly = weight <= 0 && pred.weight <= 0;
   const v = pred.predicted;
   const signClass = v > 0 ? "text-pos" : v < 0 ? "text-neg" : "text-muted";
   return (
@@ -176,7 +177,9 @@ function PriorityFlatEstimate({ stat, pred }: { stat: keyof StatBlock; pred?: Fl
       <span className={`font-mono font-semibold tabular-nums ${signClass}`}>
         {fmtDelta(stat, v)}
       </span>
-      <span className="text-faint"> flat from emblems</span>
+      <span className="text-faint">
+        {protectedOnly ? " flat (protect floor only)" : " flat from emblems"}
+      </span>
     </>
   );
 }
@@ -552,9 +555,16 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
         if (n > 0) targets.set(col, n);
       }
     }
-    for (const p of predictFlatStatRanges(pool, priorities, 20, targets)) m.set(p.stat, p);
+    // Include active protect floors so zero-weight stats (e.g. moveSpeed on
+    // Attackers) still show a flat estimate beside the slider.
+    const alsoReport = (Object.entries(floorActive) as [keyof StatBlock, boolean][])
+      .filter(([, active]) => active)
+      .map(([stat]) => stat);
+    for (const p of predictFlatStatRanges(pool, priorities, 20, targets, alsoReport)) {
+      m.set(p.stat, p);
+    }
     return m;
-  }, [mode, pool, priorities, colorMode, activeColors, colorCounts]);
+  }, [mode, pool, priorities, colorMode, activeColors, colorCounts, floorActive]);
 
   const pokemonContext = useMemo((): PokemonScoringContext | undefined => {
     if (!pokemon || !pokemonAwareScoring) return undefined;
@@ -1643,7 +1653,7 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
                           {uiValue.toFixed(1)}
                         </span>
                         <div className="col-start-2 row-start-2 leading-tight">
-                          <PriorityFlatEstimate stat={stat as keyof StatBlock} pred={pred} />
+                          <PriorityFlatEstimate stat={stat as keyof StatBlock} pred={pred} weight={w} />
                         </div>
                       </div>
                     );

@@ -83,18 +83,22 @@ function sumStat(build: EmblemCandidate[], stat: keyof StatBlock): number {
  * @param maxStats      Cap on how many stats to report (highest-weighted first).
  * @param colorTargets  Active color counts to satisfy first (optional). Pass the
  *                      Advanced color shell so the estimate matches the search.
+ * @param alsoReport    Extra stats to report from the same greedy build even when
+ *                      their priority weight is 0 — e.g. moveSpeed when a protect
+ *                      floor is active but the role gives the stat no weight.
  */
 export function predictFlatStatRanges(
   pool: EmblemCandidate[],
   priorities: Partial<Record<keyof StatBlock, number>>,
   maxStats = 5,
   colorTargets?: Map<EmblemColor, number>,
+  alsoReport: ReadonlyArray<keyof StatBlock> = [],
 ): FlatStatPrediction[] {
   if (pool.length < SLOTS) return [];
 
   const weighted = (Object.entries(priorities) as [keyof StatBlock, number][])
     .filter(([, w]) => w > 0);
-  if (weighted.length === 0) return [];
+  if (weighted.length === 0 && alsoReport.length === 0) return [];
 
   const weightedScore = (c: EmblemCandidate): number => {
     let v = 0;
@@ -106,8 +110,20 @@ export function predictFlatStatRanges(
   const sorted = [...pool].sort((a, b) => weightedScore(b) - weightedScore(a));
   const build = greedyPick(sorted, colorTargets);
 
-  return weighted
+  const reported = new Set<keyof StatBlock>();
+  const out: FlatStatPrediction[] = weighted
     .sort(([, a], [, b]) => b - a)
     .slice(0, maxStats)
-    .map(([stat, weight]) => ({ stat, weight, predicted: sumStat(build, stat) }));
+    .map(([stat, weight]) => {
+      reported.add(stat);
+      return { stat, weight, predicted: sumStat(build, stat) };
+    });
+
+  for (const stat of alsoReport) {
+    if (reported.has(stat)) continue;
+    reported.add(stat);
+    out.push({ stat, weight: priorities[stat] ?? 0, predicted: sumStat(build, stat) });
+  }
+
+  return out;
 }
