@@ -55,7 +55,7 @@ import {
   BASIC_POOL_DEFAULTS,
   DEFAULT_ALLOWED_GRADES,
 } from "../engine/emblemSearch/basicObjective";
-import { buildPresetSearchOptions, deriveAdvancedColorUiDefaults, resolveBasicEffort, resolveColorSearchMode, EXACT_FALLBACK_EFFORT, type BasicEffort } from "../engine/emblemSearch/searchPresets";
+import { buildPresetSearchOptions, deriveAdvancedColorUiDefaults, resolveBasicSearchParams, resolveColorSearchMode, type BasicEffort } from "../engine/emblemSearch/searchPresets";
 import { deriveProtectFloors } from "../engine/emblemSearch/protectDefaults";
 import {
   presetPriorities,
@@ -508,11 +508,12 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
   );
   const [mode, setMode] = useState<SearchMode>("maximize");
   const [effort, setEffort] = useState<Effort>("normal");
-  // Beginner effort is independent of the Expert `effort` so the extra "exact"
-  // option never leaks into Expert. Defaults to "exact" so one click gives the
-  // optimal build whenever exact is feasible (falls back to a heuristic effort
-  // automatically when it isn't — see resolvedBasicEffort below).
-  const [basicEffort, setBasicEffort] = useState<BasicEffort>("exact");
+  // Beginner effort is independent of the Expert `effort`. It is purely the
+  // heuristic search-quality tier (Fast/Balanced/Thorough) and is orthogonal to
+  // color matching — exact color enforcement is pool-driven and applied
+  // automatically when feasible (see basicWillRunExactSearch). Defaults to
+  // "normal" (Balanced).
+  const [basicEffort, setBasicEffort] = useState<BasicEffort>("normal");
   const [colorBonuses, setColorBonuses] = useState(true);
   const [optimizeLevel, setOptimizeLevel] = useState<number>(15);
   const [pokemonAwareScoring, setPokemonAwareScoring] = useState(true);
@@ -585,19 +586,26 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
     );
   }, [basicObjective, basicPool]);
 
-  // Whether the Beginner exact option should be offered: the resolver says the
-  // meta color targets are enforceable AND within the exact-enumeration cap.
-  const basicExactFeasible = basicColorResolution?.willRunExact ?? false;
+  // Concept A — exact COLOR matching feasible: the meta targets are enforceable
+  // on the pool as hard constraints (capacity + a feasible build exists), even
+  // if the constrained count is over the enumeration cap. When true the engine
+  // enforces hard color constraints automatically on ANY effort.
+  const basicExactColorFeasible = basicColorResolution?.mode === "exact";
 
-  // The Beginner effort actually in effect — shared resolver keeps UI + search aligned.
-  const resolvedBasicEffort = resolveBasicEffort(basicEffort, basicExactFeasible);
+  // Concept B — exhaustive exact ENUMERATION feasible: color-feasible AND within
+  // the exact cap. Drives whether the "Exact" effort button is offered.
+  const basicExactEnumFeasible = basicColorResolution?.willRunExact ?? false;
 
-  // Keep stored effort in sync when exact becomes unavailable (pool/settings change).
-  useEffect(() => {
-    if (basicEffort === "exact" && !basicExactFeasible) {
-      setBasicEffort(EXACT_FALLBACK_EFFORT);
-    }
-  }, [basicEffort, basicExactFeasible]);
+  // Pool-driven Basic search wiring. Hard color constraints are always kept when
+  // feasible (forceHeuristic === false). Enumeration vs heuristic is the user's
+  // effort choice, expressed via exactCap (0 keeps constraints but skips
+  // enumeration). resolvedBasicEffort is the picker value (falls back off
+  // "exact" when enumeration is infeasible, without mutating the stored choice).
+  const basicSearchParams = useMemo(
+    () => resolveBasicSearchParams(basicEffort, basicColorResolution),
+    [basicEffort, basicColorResolution],
+  );
+  const { displayEffort: resolvedBasicEffort, willRunExact: basicWillRunExactSearch } = basicSearchParams;
 
   // ---- Expert weights + context ----
   // Advanced defaults (priorities, floors, colors) use the per-Pokémon preset when
@@ -692,8 +700,7 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
     return shouldRunExact(constrainedBuildCount, exactCap);
   }, [colorMode, colorConstraints, colorConstraintValid, constrainedBuildCount, exactCap]);
 
-  const basicWillRunExact = resolvedBasicEffort === "exact" && basicExactFeasible;
-  const searchWillRunExact = expert ? willRunExact : basicWillRunExact;
+  const searchWillRunExact = expert ? willRunExact : basicWillRunExactSearch;
   const effectiveResultCount = searchWillRunExact ? 1 : resultCount;
 
   // Proposed color set-bonus preview — shown in the Color card regardless of
@@ -927,21 +934,19 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
     if (pokemonChanged) syncAdvancedFromPokemon();
   }, [expert, loadout.pokemonId, pokemon, syncAdvancedFromBasic, syncAdvancedFromPokemon]);
 
-  // Beginner search — builds the Expert-equivalent SearchOptions (meta color
-  // targets enforced as hard constraints when feasible on the ACTUAL Beginner
-  // pool, so exact enumeration runs whenever Expert would) with the controls
-  // hidden. Feasibility is judged on basicPool (owned or full per the Beginner
-  // toggle), never the Expert full pool.
+  // Beginner search — builds the Expert-equivalent SearchOptions. Meta color
+  // targets are enforced as hard constraints whenever feasible on the ACTUAL
+  // Beginner pool (Concept A: automatic, on any effort). Exhaustive exact
+  // enumeration runs only when the user picked the "Exact" quality and it is
+  // feasible (Concept B); otherwise exactCap=0 keeps the hard constraints but
+  // runs the heuristic at the chosen effort. Feasibility is judged on basicPool
+  // (owned or full per the Beginner toggle), never the Expert full pool.
   const handleBasicSearch = useCallback(async () => {
     if (!pokemon || !basicObjective || basicPool.length < SLOTS) return;
-    // "exact" → keep hard color constraints for Phase-2 enumeration. A time-based
-    // effort strips constraints only when exact enumeration is actually feasible
-    // (user deliberately trades optimality for speed). When targets are feasible
-    // but over-cap, keep constraints so the heuristic enforces hard targets —
-    // same as Expert.
-    const runExact = resolvedBasicEffort === "exact";
-    const userChoseHeuristicEffort = resolvedBasicEffort !== "exact";
-    const forceHeuristic = userChoseHeuristicEffort && (basicColorResolution?.willRunExact ?? false);
+    const { forceHeuristic, heuristicEffort, exactCap: basicExactCap } = resolveBasicSearchParams(
+      basicEffort,
+      basicColorResolution,
+    );
     const { options } = buildPresetSearchOptions({
       pokemon,
       level: optimizeLevel,
@@ -949,10 +954,27 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
       emblems: allEmblems,
       pokemonList,
       forceHeuristic,
+      exactCap: basicExactCap,
     });
-    const heuristicEffort: Effort = runExact ? EXACT_FALLBACK_EFFORT : (resolvedBasicEffort as Effort);
-    await run(basicPool, options, setBonuses, heuristicEffort, searchSettingsKey, effectiveResultCount);
-  }, [pokemon, basicObjective, basicPool, basicColorResolution, optimizeLevel, resolvedBasicEffort, run, searchSettingsKey, effectiveResultCount]);
+    await run(
+      basicPool,
+      options,
+      setBonuses,
+      heuristicEffort as Effort,
+      searchSettingsKey,
+      effectiveResultCount,
+    );
+  }, [
+    pokemon,
+    basicObjective,
+    basicPool,
+    basicColorResolution,
+    optimizeLevel,
+    basicEffort,
+    run,
+    searchSettingsKey,
+    effectiveResultCount,
+  ]);
 
   // Expert search (Expert tab only — pool source toggle applies here, not in Beginner)
   const handleAdvancedSearch = useCallback(async () => {
@@ -1115,18 +1137,30 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
                 )}
               </div>
 
-              {/* Search quality */}
+              {/* Search quality — orthogonal to color matching. The Exact option
+                  (exhaustive enumeration) is offered only when feasible. */}
               <div className="flex flex-col gap-2">
                 <span className="text-xs font-medium text-muted">Search quality</span>
                 <Segmented<BasicEffort>
                   fluid
-                  value={basicEffort}
-                  options={(["quick", "normal", "thorough", "exact"] as BasicEffort[]).filter(
-                    (e) => e !== "exact" || basicExactFeasible,
-                  )}
-                  labels={{ exact: "Exact", quick: "Fast", normal: "Balanced", thorough: "Thorough" }}
+                  value={resolvedBasicEffort}
+                  options={
+                    basicExactEnumFeasible
+                      ? (["quick", "normal", "thorough", "exact"] as BasicEffort[])
+                      : (["quick", "normal", "thorough"] as BasicEffort[])
+                  }
+                  labels={{ quick: "Fast", normal: "Balanced", thorough: "Thorough", exact: "Exact" }}
                   onChange={setBasicEffort}
                 />
+                <p className="text-xs text-muted">
+                  {!basicExactColorFeasible
+                    ? "This pool can't hit the exact meta colors, so colors are steered toward the meta. Quality controls how hard the search works."
+                    : basicWillRunExactSearch
+                      ? "Exact colors are matched automatically, and Exact runs an exhaustive search for the guaranteed-best build."
+                      : basicExactEnumFeasible
+                        ? "Exact colors are matched automatically at any quality. Pick Exact for an exhaustive search, or Fast/Balanced/Thorough for quicker results."
+                        : "Exact colors are matched automatically at any quality. This pool is too large for an exhaustive search, so just pick how hard the search works."}
+                </p>
               </div>
 
               <VariationsControl

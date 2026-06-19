@@ -48,7 +48,7 @@ const BASE: EmblemSearchSettingsSnapshot = {
   useOwned: false,
   mixedGrades: true,
   allowedGrades: ["bronze", "gold", "silver"],
-  basicEffort: "exact",
+  basicEffort: "normal",
   effort: "normal",
   colorBonuses: true,
   pokemonAwareScoring: true,

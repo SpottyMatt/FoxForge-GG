@@ -27,22 +27,87 @@ import type { EmblemCandidate, SearchOptions } from "./types";
 /** UNITE emblem loadouts are always 10 slots. */
 const SLOTS = 10;
 
-/** Beginner search effort — exact enumeration or a time-budgeted heuristic. */
+/**
+ * Beginner search effort/quality picker value.
+ *
+ *  • "quick" / "normal" / "thorough" → heuristic search at increasing effort.
+ *  • "exact" → exhaustive exact enumeration. Only offered when enumeration is
+ *    feasible on the current pool (see {@link resolveColorSearchMode}).
+ *
+ * Effort is ONLY about search strategy/quality. It is orthogonal to color
+ * matching: hard color constraints are applied automatically whenever they are
+ * feasible (Concept A), on ANY effort — see {@link resolveBasicSearchParams}.
+ * Defaults to "normal" (Balanced) in the UI.
+ */
 export type BasicEffort = "exact" | "quick" | "normal" | "thorough";
 
-/** Heuristic effort used when "exact" is selected but infeasible on the current pool. */
+/** Heuristic effort substituted when "exact" is selected but enumeration is infeasible. */
 export const EXACT_FALLBACK_EFFORT = "normal" as const;
 
+/** The heuristic effort tiers (the orchestrator never receives "exact"). */
+export type HeuristicEffort = "quick" | "normal" | "thorough";
+
+/** Basic-tab search wiring derived from pool feasibility + user effort preference. */
+export interface BasicSearchParams {
+  /**
+   * Picker value to display. Falls back to {@link EXACT_FALLBACK_EFFORT} when
+   * "exact" is selected but enumeration is infeasible, so the segmented control
+   * never highlights an option that isn't offered. The raw `basicEffort` state
+   * is left untouched so restoring a feasible pool re-selects "exact".
+   */
+  displayEffort: BasicEffort;
+  /** Heuristic effort passed to runSearch — governs only the heuristic phase. */
+  heuristicEffort: HeuristicEffort;
+  /** Basic UI never strips pool-resolved hard color constraints. */
+  forceHeuristic: false;
+  /**
+   * Whether the orchestrator will run exhaustive exact enumeration: the user
+   * picked "exact" AND it is feasible (color targets enforceable + within the
+   * exact cap).
+   */
+  willRunExact: boolean;
+  /**
+   * exactCap to pass to buildPresetSearchOptions:
+   *  • DEFAULT_EXACT_CAP when enumerating ("exact" selected + feasible).
+   *  • 0 otherwise → the orchestrator skips Phase-2 enumeration but KEEPS any
+   *    hard color constraints, so the heuristic phase still enforces exact
+   *    colors when feasible. This is what decouples color matching (Concept A,
+   *    automatic) from the enumeration-vs-heuristic strategy (Concept B).
+   */
+  exactCap: number;
+}
+
 /**
- * Map the user's Beginner effort choice to the effort the search will actually use.
- * "exact" is only honored when exact enumeration is feasible; otherwise fall back
- * so UI state, settings fingerprint, and run() stay aligned.
+ * Map Beginner/Basic UI state to the search the engine should run.
+ *
+ * Two independent concepts:
+ *  • Concept A — exact COLOR matching (hard constraints): pool-driven. Whenever
+ *    {@link resolveColorSearchMode} says the meta targets are enforceable,
+ *    buildPresetSearchOptions keeps them as hard constraints (forceHeuristic is
+ *    always false here). This applies on ANY effort, so even a Balanced
+ *    heuristic search enforces exact colors when feasible.
+ *  • Concept B — effort/strategy: "exact" runs exhaustive enumeration (only
+ *    when feasible); "quick"/"normal"/"thorough" run the heuristic at that
+ *    effort. We express "heuristic but keep hard constraints" by passing
+ *    exactCap=0 (skip enumeration, retain constraints).
  */
-export function resolveBasicEffort(
+export function resolveBasicSearchParams(
   basicEffort: BasicEffort,
-  exactFeasible: boolean,
-): BasicEffort {
-  return basicEffort === "exact" && !exactFeasible ? EXACT_FALLBACK_EFFORT : basicEffort;
+  resolution: ColorSearchResolution | null,
+): BasicSearchParams {
+  const exactFeasible = resolution?.willRunExact ?? false;
+  const willRunExact = basicEffort === "exact" && exactFeasible;
+  const displayEffort: BasicEffort =
+    basicEffort === "exact" && !exactFeasible ? EXACT_FALLBACK_EFFORT : basicEffort;
+  const heuristicEffort: HeuristicEffort =
+    displayEffort === "exact" ? EXACT_FALLBACK_EFFORT : displayEffort;
+  return {
+    displayEffort,
+    heuristicEffort,
+    forceHeuristic: false,
+    willRunExact,
+    exactCap: willRunExact ? DEFAULT_EXACT_CAP : 0,
+  };
 }
 
 /** Color control mode the resolver chose for a given pool + targets. */
@@ -187,6 +252,13 @@ export interface BuildPresetParams {
    * steers the heuristic when constraints are stripped. Defaults to false.
    */
   forceHeuristic?: boolean;
+  /**
+   * Exact-enumeration budget passed through to SearchOptions. Pass 0 to keep
+   * any hard color constraints but force the heuristic phase (the orchestrator
+   * only enumerates when the constrained build count is ≤ this cap). Defaults
+   * to {@link DEFAULT_EXACT_CAP}.
+   */
+  exactCap?: number;
 }
 
 export interface PresetSearchBuild {
@@ -201,12 +273,13 @@ export interface PresetSearchBuild {
  * Produces the Expert-equivalent configuration: stat priorities, protect
  * floors and Pokémon-aware scoring from {@link deriveBasicObjective}, plus the
  * meta color targets enforced as hard constraints whenever they are feasible
- * on `pool` (otherwise soft color-bonus steering). exactCap is the default 1B,
- * so exact enumeration runs whenever the constrained build count is countable
- * and within budget — identical to an Expert search with auto defaults.
+ * on `pool` (otherwise soft color-bonus steering). With the default exactCap
+ * (1B) exact enumeration runs whenever the constrained build count is countable
+ * and within budget — identical to an Expert search with auto defaults. Pass
+ * exactCap=0 to keep the hard constraints but force the heuristic phase.
  */
 export function buildPresetSearchOptions(params: BuildPresetParams): PresetSearchBuild {
-  const { pokemon, level, pool, emblems, pokemonList = [], forceHeuristic = false } = params;
+  const { pokemon, level, pool, emblems, pokemonList = [], forceHeuristic = false, exactCap = DEFAULT_EXACT_CAP } = params;
   const resolved = resolveEmblemPreset(pokemon);
   const objective = deriveBasicObjective(pokemon, level, emblems, pokemonList, resolved?.preset ?? null);
   const targets = objective.colorTargets as Map<EmblemColor, number>;
@@ -228,7 +301,7 @@ export function buildPresetSearchOptions(params: BuildPresetParams): PresetSearc
     scoringMode: "pokemon",
     pokemonContext: objective.pokemonContext,
     slots: SLOTS,
-    exactCap: DEFAULT_EXACT_CAP,
+    exactCap,
   };
 
   return { options, resolution, objective };
