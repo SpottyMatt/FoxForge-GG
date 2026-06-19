@@ -10,8 +10,8 @@ import { runSearch } from "../src/engine/emblemSearch/orchestrator";
 import { sumStats } from "../src/engine/emblemSearch/evaluate";
 import { emblemToCandidate } from "../src/engine/emblemSearch/adapt";
 import { deriveProtectFloors } from "../src/engine/emblemSearch/protectDefaults";
-import { deriveBasicObjective } from "../src/engine/emblemSearch/basicObjective";
 import { priorityWeights } from "../src/engine/recommend";
+import { resolveGradeKey } from "../src/engine/emblemSearch/adapt";
 
 const IDS = ["sableye", "blissey", "lucario", "zeraora", "gengar"] as const;
 
@@ -35,23 +35,19 @@ async function searchMoveSpeed(id: string, withMobilityFloor: boolean) {
   });
   const protectedFloors = withMobilityFloor
     ? options.protected
-    : Object.fromEntries(
-        Object.entries(options.protected).filter(([k]) => k !== "moveSpeed"),
-      );
+    : Object.fromEntries(Object.entries(options.protected).filter(([k]) => k !== "moveSpeed"));
   const result = await runSearch({
     pool,
     options: { ...options, protected: protectedFloors },
     setBonuses: bundle.setBonuses,
     effort: "quick",
   });
-  const totals = sumStats(
-    result!.picks.map((slot) => emblemToCandidate(slot.emblem, slot.grade!)),
-  );
+  const totals = sumStats(result!.picks.map((slot) => emblemToCandidate(slot.emblem, slot.grade!)));
   return {
     moveSpeed: totals.moveSpeed ?? 0,
     hp: totals.hp ?? 0,
     picks: result!.picks
-      .filter((s) => (s.emblem.statsByGrade[s.grade!]?.moveSpeed ?? 0) < 0)
+      .filter((s) => (s.emblem.statsByGrade[resolveGradeKey(s.grade!)]?.moveSpeed ?? 0) < 0)
       .map((s) => `${s.emblem.pokemonName}(${s.grade})`),
   };
 }

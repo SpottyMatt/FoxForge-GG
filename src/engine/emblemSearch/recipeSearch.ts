@@ -186,7 +186,7 @@ function solveRecipeCounts(
   if (!recipes.length) return null;
   let bestCounts: number[] | null = null;
   let bestErr = Infinity;
-  const counts = new Array<number>(recipes.length).fill(0);
+  const counts = Array.from({ length: recipes.length }, () => 0);
   const totals: Partial<StatBlock> = {};
   for (const r of recipes) {
     for (const k of Object.keys(r.stats) as (keyof StatBlock)[]) totals[k] = 0;
@@ -202,8 +202,14 @@ function solveRecipeCounts(
   }
 
   function dfs(idx: number, used: number) {
-    if (shouldAbort?.()) { aborted = true; return; }
-    if (++steps > RECIPE_MAX_STEPS) { aborted = true; return; }
+    if (shouldAbort?.()) {
+      aborted = true;
+      return;
+    }
+    if (++steps > RECIPE_MAX_STEPS) {
+      aborted = true;
+      return;
+    }
     if (bestErr <= SCORE_EPS) return;
 
     if (idx === recipes.length) {
@@ -293,7 +299,9 @@ function polishLoadout(
   const tries = Math.min(120, pool.length);
   for (let t = 0; t < tries; t++) {
     const slot = Math.floor(Math.random() * best.length);
-    const names = new Set(best.map((x, i) => (i === slot ? null : x.pokemonName)).filter(Boolean) as string[]);
+    const names = new Set(
+      best.map((x, i) => (i === slot ? null : x.pokemonName)).filter(Boolean) as string[],
+    );
     const cand = shuffle(pool)[0];
     if (!cand || names.has(cand.pokemonName)) continue;
     const trial = best.slice();
@@ -356,7 +364,10 @@ export function searchByRecipes(
     const L = assignFromCounts(solved, slots, opts);
     if (!L) continue;
     const polished = polishLoadout(L, pool, opts);
-    if (polished.error < bestErr - SCORE_EPS || (!bestLoadout && polished.error <= bestErr + SCORE_EPS)) {
+    if (
+      polished.error < bestErr - SCORE_EPS ||
+      (!bestLoadout && polished.error <= bestErr + SCORE_EPS)
+    ) {
       bestErr = polished.error;
       bestLoadout = polished.loadout;
     }

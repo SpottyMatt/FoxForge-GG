@@ -100,16 +100,22 @@ export async function searchColorExactParallel(
 
   return new Promise<ExactColorResult | null>((resolve) => {
     const workers: Worker[] = [];
-    const shardEval = new Array<number>(n).fill(0);
-    const results: (ExactColorResult | null)[] = new Array(n).fill(null);
+    const shardEval = Array.from({ length: n }, () => 0);
+    const results: (ExactColorResult | null)[] = Array.from({ length: n }, () => null);
     let doneCount = 0;
     let resolved = false;
 
     const cleanup = (cancel = false) => {
       clearInterval(abortPoll);
       workers.forEach((w) => {
-        if (cancel) { try { w.postMessage({ type: "cancel", id: jobId }); } catch {} }
-        try { w.terminate(); } catch {}
+        if (cancel) {
+          try {
+            w.postMessage({ type: "cancel", id: jobId });
+          } catch {}
+        }
+        try {
+          w.terminate();
+        } catch {}
       });
     };
 
@@ -135,7 +141,10 @@ export async function searchColorExactParallel(
     };
 
     const emitProgress = () => {
-      const sum = Math.min(totalCombos, shardEval.reduce((a, b) => a + b, 0));
+      const sum = Math.min(
+        totalCombos,
+        shardEval.reduce((a, b) => a + b, 0),
+      );
       const pct = 3 + Math.min(96, (sum / Math.max(1, totalCombos)) * 96);
       onProgress?.(pct, `Exact · ${n} workers`, sum);
     };
@@ -151,10 +160,9 @@ export async function searchColorExactParallel(
 
     try {
       for (let i = 0; i < n; i++) {
-        const worker = new Worker(
-          new URL("../../workers/exactShard.worker.ts", import.meta.url),
-          { type: "module" },
-        );
+        const worker = new Worker(new URL("../../workers/exactShard.worker.ts", import.meta.url), {
+          type: "module",
+        });
         workers.push(worker);
 
         worker.addEventListener("message", (ev: MessageEvent) => {
@@ -207,7 +215,10 @@ export async function searchColorExactParallel(
     } catch {
       // Worker construction failed (old browser / strict CSP / test env)
       cleanup();
-      if (!resolved) { resolved = true; resolve(null); }
+      if (!resolved) {
+        resolved = true;
+        resolve(null);
+      }
     }
   });
 }

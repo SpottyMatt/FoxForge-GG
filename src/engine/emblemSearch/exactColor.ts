@@ -23,12 +23,7 @@
 
 import type { EmblemColor, EmblemSetBonus } from "../../types";
 import type { EmblemCandidate, SearchOptions } from "./types";
-import {
-  evaluateLoadout,
-  candidateGreedyValue,
-  isBetter,
-  type EvalResult,
-} from "./evaluate";
+import { evaluateLoadout, candidateGreedyValue, isBetter, type EvalResult } from "./evaluate";
 
 // ---------------------------------------------------------------------------
 // Color-type group
@@ -95,14 +90,17 @@ export function enumerateColorKVectors(
   const zeroKey = `0|${targetVec.map(() => 0).join(",")}`;
 
   // Phase 0: backward feasibility
-  const feasible: Set<string>[] = new Array(G + 1);
+  const feasible: Set<string>[] = Array.from({ length: G + 1 });
   feasible[G] = new Set([goalKey]);
   for (let gi = G - 1; gi >= 0; gi--) {
     const cur = new Set<string>();
     for (const key of feasible[gi + 1]) {
       const bar = key.indexOf("|");
       const su = +key.slice(0, bar);
-      const counts = key.slice(bar + 1).split(",").map(Number);
+      const counts = key
+        .slice(bar + 1)
+        .split(",")
+        .map(Number);
       for (let x = 0; x <= sizes[gi]; x++) {
         const ps = su - x;
         if (ps < 0) break;
@@ -110,7 +108,10 @@ export function enumerateColorKVectors(
         let ok = true;
         for (let j = 0; j < nColors; j++) {
           pc[j] -= x * groups[gi].vec[j];
-          if (pc[j] < 0) { ok = false; break; }
+          if (pc[j] < 0) {
+            ok = false;
+            break;
+          }
         }
         if (!ok) break;
         cur.add(`${ps}|${pc.join(",")}`);
@@ -142,7 +143,10 @@ export function enumerateColorKVectors(
       let ok = true;
       for (let j = 0; j < nColors; j++) {
         nc[j] += x * g.vec[j];
-        if (nc[j] > targetVec[j]) { ok = false; break; }
+        if (nc[j] > targetVec[j]) {
+          ok = false;
+          break;
+        }
       }
       if (!ok) break;
       if (!feasible[fr.gi + 1].has(`${ns}|${nc.join(",")}`)) continue;
@@ -182,13 +186,17 @@ export function binomNum(n: number, k: number): number {
  *   C(n-1-v, k-1-i) > remaining rank; that v is result[i].
  */
 export function unrankCombination(n: number, k: number, rank: number): number[] {
-  const result = new Array<number>(k);
+  const result = Array.from<number>({ length: k });
   let r = rank;
   let start = 0;
   for (let i = 0; i < k; i++) {
     for (let v = start; v < n; v++) {
       const cnt = binomNum(n - 1 - v, k - 1 - i);
-      if (r < cnt) { result[i] = v; start = v + 1; break; }
+      if (r < cnt) {
+        result[i] = v;
+        start = v + 1;
+        break;
+      }
       r -= cnt;
     }
   }
@@ -203,14 +211,10 @@ export function unrankCombination(n: number, k: number, rank: number): number[] 
  * Algorithm: mixed-radix decomposition where radix[gi] = C(sizes[gi], k[gi]),
  * then unrank each per-group remainder.
  */
-export function unrankLocalState(
-  sizes: number[],
-  k: number[],
-  local: number,
-): number[][] {
+export function unrankLocalState(sizes: number[], k: number[], local: number): number[][] {
   const G = sizes.length;
   const radix = k.map((kg, gi) => binomNum(sizes[gi], kg) || 1);
-  const r = new Array<number>(G).fill(0);
+  const r = Array.from({ length: G }, () => 0);
   for (let gi = G - 1; gi >= 0; gi--) {
     r[gi] = local % radix[gi];
     local = Math.floor(local / radix[gi]);
@@ -306,11 +310,15 @@ export async function searchColorExactSlice(
   }
 
   // Binary-search kPrefix for the k-vector owning startGlobal
-  let lo = 0, hi = kVectors.length - 1, j = 0;
+  let lo = 0,
+    hi = kVectors.length - 1,
+    j = 0;
   while (lo <= hi) {
     const mid = (lo + hi) >> 1;
-    if (kPrefix[mid] <= startGlobal) { j = mid; lo = mid + 1; }
-    else hi = mid - 1;
+    if (kPrefix[mid] <= startGlobal) {
+      j = mid;
+      lo = mid + 1;
+    } else hi = mid - 1;
   }
 
   // Decode the within-kVector starting position
@@ -335,9 +343,7 @@ export async function searchColorExactSlice(
     }
 
     // Pick best grade variant per name, evaluate
-    const loadout = names.map(
-      (name) => bestVariantForMode(variantsByName.get(name)!, opts),
-    );
+    const loadout = names.map((name) => bestVariantForMode(variantsByName.get(name)!, opts));
     const ev = evaluateLoadout(loadout, opts, setBonuses);
     evaluated++;
 
@@ -366,8 +372,7 @@ export async function searchColorExactSlice(
       k = kVectors[j];
       // Start of a new k-vector: local index 0 → initial combination per group
       idxs = k.map((kg) => {
-        const a = new Array<number>(kg);
-        for (let i = 0; i < kg; i++) a[i] = i;
+        const a = Array.from({ length: kg }, (_, i) => i);
         return a;
       });
     }
@@ -412,9 +417,14 @@ export async function searchColorExact(
   const totalCombos = kPrefix[kPrefix.length - 1];
 
   const result = await searchColorExactSlice(
-    pool, opts, setBonuses,
-    groups, kVectors, kPrefix,
-    0, totalCombos,
+    pool,
+    opts,
+    setBonuses,
+    groups,
+    kVectors,
+    kPrefix,
+    0,
+    totalCombos,
     onProgress
       ? async (ev) => {
           const pct = 3 + Math.min(96, (ev / Math.max(1, totalCombos)) * 96);
@@ -435,17 +445,17 @@ export async function searchColorExact(
 // ---------------------------------------------------------------------------
 
 /** Pick the best grade variant for a Pokémon depending on the objective. */
-function bestVariantForMode(
-  variants: EmblemCandidate[],
-  opts: SearchOptions,
-): EmblemCandidate {
+function bestVariantForMode(variants: EmblemCandidate[], opts: SearchOptions): EmblemCandidate {
   if (variants.length === 1) return variants[0];
   if (opts.mode === "maximize") {
     let best = variants[0];
     let bestV = candidateGreedyValue(variants[0], opts);
     for (let i = 1; i < variants.length; i++) {
       const v = candidateGreedyValue(variants[i], opts);
-      if (v > bestV) { bestV = v; best = variants[i]; }
+      if (v > bestV) {
+        bestV = v;
+        best = variants[i];
+      }
     }
     return best;
   }
@@ -459,7 +469,10 @@ function bestVariantForMode(
       const target = (opts.targets[stat as keyof typeof opts.targets] ?? 0) / opts.slots;
       dist += Math.abs((c.stats[stat as keyof typeof c.stats] ?? 0) - target);
     }
-    if (dist < bestDist) { bestDist = dist; best = c; }
+    if (dist < bestDist) {
+      bestDist = dist;
+      best = c;
+    }
   }
   return best;
 }

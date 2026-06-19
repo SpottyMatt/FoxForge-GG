@@ -17,7 +17,7 @@ import { buildPool } from "../../src/engine/emblemSearch/pool";
 import { buildPresetSearchOptions } from "../../src/engine/emblemSearch/searchPresets";
 import { runSearch } from "../../src/engine/emblemSearch/orchestrator";
 import { sumStats } from "../../src/engine/emblemSearch/evaluate";
-import { emblemToCandidate } from "../../src/engine/emblemSearch/adapt";
+import { emblemToCandidate, resolveGradeKey } from "../../src/engine/emblemSearch/adapt";
 import { deriveProtectFloors } from "../../src/engine/emblemSearch/protectDefaults";
 import { priorityWeights } from "../../src/engine/recommend";
 import type { Pokemon, StatBlock } from "../../src/types";
@@ -122,7 +122,7 @@ export const VARIANTS: VariantSpec[] = [
 
 /** Higher is better. Penalises negative net move speed; rewards non-negative. */
 export function metaMobilityScore(moveSpeed: number, searchScore: number): number {
-  const mobilityPenalty = moveSpeed < 0 ? Math.abs(moveSpeed) / 150 * 3 : 0;
+  const mobilityPenalty = moveSpeed < 0 ? (Math.abs(moveSpeed) / 150) * 3 : 0;
   const mobilityBonus = moveSpeed > 0 ? (moveSpeed / 150) * 0.5 : 0;
   return searchScore - mobilityPenalty + mobilityBonus;
 }
@@ -234,7 +234,7 @@ export async function analyzePokemon(
     );
     const moveSpeed = totals.moveSpeed ?? 0;
     const negMoveSpeedPicks = result!.picks
-      .filter((s) => (s.emblem.statsByGrade[s.grade!]?.moveSpeed ?? 0) < 0)
+      .filter((s) => (s.emblem.statsByGrade[resolveGradeKey(s.grade!)]?.moveSpeed ?? 0) < 0)
       .map((s) => `${s.emblem.pokemonName}(${s.grade})`);
 
     variants.push({
@@ -284,9 +284,15 @@ function printTextReport(results: PokemonAnalysis[]) {
   for (const r of results) {
     const baseline = r.variants.find((v) => v.kind === "current")!;
     console.log(`── ${r.displayName} (${r.id}) ──`);
-    console.log(`  role=${r.role}  attackType=${r.attackType}  baseMoveSpeedZ=${r.baseMoveSpeedZ.toFixed(2)}`);
-    console.log(`  current floors: ${JSON.stringify(r.currentFloors)}  moveSpeed weight: ${r.currentMoveSpeedWeight}`);
-    console.log(`  baseline search: moveSpeed=${baseline.moveSpeed} hp=${baseline.hp} score=${baseline.score.toFixed(2)}`);
+    console.log(
+      `  role=${r.role}  attackType=${r.attackType}  baseMoveSpeedZ=${r.baseMoveSpeedZ.toFixed(2)}`,
+    );
+    console.log(
+      `  current floors: ${JSON.stringify(r.currentFloors)}  moveSpeed weight: ${r.currentMoveSpeedWeight}`,
+    );
+    console.log(
+      `  baseline search: moveSpeed=${baseline.moveSpeed} hp=${baseline.hp} score=${baseline.score.toFixed(2)}`,
+    );
     if (baseline.negMoveSpeedPicks.length) {
       console.log(`    neg-ms picks: ${baseline.negMoveSpeedPicks.join(", ")}`);
     }
@@ -304,9 +310,7 @@ function printTextReport(results: PokemonAnalysis[]) {
   if (needsFix.length) {
     console.log("=== Summary: Pokémon benefiting from non-default settings ===");
     for (const r of needsFix) {
-      console.log(
-        `  ${r.id.padEnd(14)} ${r.role.padEnd(11)} → ${r.recommendation.label}`,
-      );
+      console.log(`  ${r.id.padEnd(14)} ${r.role.padEnd(11)} → ${r.recommendation.label}`);
     }
   }
 }

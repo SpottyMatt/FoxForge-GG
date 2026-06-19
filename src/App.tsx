@@ -144,7 +144,7 @@ function Workspace() {
             </button>
           </div>
         )}
-        {tab === "build" && <BuildScreen onOpenPokePicker={() => setPokePickerOpen(true)} />}
+        {tab === "build" && <BuildScreen />}
         <div className={tab === "optimize" ? undefined : "hidden"} aria-hidden={tab !== "optimize"}>
           <OptimizeScreen onNavigate={setTab} />
         </div>

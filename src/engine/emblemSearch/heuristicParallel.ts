@@ -79,17 +79,23 @@ export async function runHeuristicParallel(
 
   return new Promise<HeuristicResult | null>((resolve) => {
     const workers: Worker[] = [];
-    const shardEval = new Array<number>(n).fill(0);
-    const shardPct = new Array<number>(n).fill(0);
-    const results: (HeuristicResult | null)[] = new Array(n).fill(null);
+    const shardEval = Array.from({ length: n }, () => 0);
+    const shardPct = Array.from({ length: n }, () => 0);
+    const results: (HeuristicResult | null)[] = Array.from({ length: n }, () => null);
     let doneCount = 0;
     let resolved = false;
 
     const cleanup = (cancel = false) => {
       clearInterval(abortPoll);
       workers.forEach((w) => {
-        if (cancel) { try { w.postMessage({ type: "cancel", id: jobId }); } catch {} }
-        try { w.terminate(); } catch {}
+        if (cancel) {
+          try {
+            w.postMessage({ type: "cancel", id: jobId });
+          } catch {}
+        }
+        try {
+          w.terminate();
+        } catch {}
       });
     };
 
@@ -103,11 +109,7 @@ export async function runHeuristicParallel(
     const emitProgress = () => {
       const sum = shardEval.reduce((a, b) => a + b, 0);
       const avgPct = shardPct.reduce((a, b) => a + b, 0) / n;
-      onProgress?.(
-        Math.min(99, avgPct),
-        `Smart search · ${n} workers`,
-        sum,
-      );
+      onProgress?.(Math.min(99, avgPct), `Smart search · ${n} workers`, sum);
     };
 
     // Periodically check the external abort signal.
@@ -182,7 +184,10 @@ export async function runHeuristicParallel(
     } catch {
       // Worker construction failed (old browser / strict CSP / test env).
       cleanup();
-      if (!resolved) { resolved = true; resolve(null); }
+      if (!resolved) {
+        resolved = true;
+        resolve(null);
+      }
     }
   });
 }
