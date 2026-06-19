@@ -49,7 +49,15 @@ export type Action =
   // applyBuild is a partial merge: only the fields that are provided overwrite
   // the loadout. This lets the optimizer apply emblems-only or held-items-only
   // without clobbering the other, and makes repeated applies composable.
-  | { type: "applyBuild"; heldItemIds?: (string | null)[]; battleItemId?: string | null; emblems?: EmblemPick[]; level?: number; move1Id?: string | null; move2Id?: string | null }
+  | {
+      type: "applyBuild";
+      heldItemIds?: (string | null)[];
+      battleItemId?: string | null;
+      emblems?: EmblemPick[];
+      level?: number;
+      move1Id?: string | null;
+      move2Id?: string | null;
+    }
   | { type: "load"; loadout: Loadout }
   | { type: "reset" };
 
@@ -112,16 +120,20 @@ export function reducer(state: Loadout, action: Action): Loadout {
     case "applyBuild":
       return normalizeLoadout({
         ...state,
-        level: action.level !== undefined
-          ? Math.max(1, Math.min(15, action.level))
-          : state.level,
-        heldItemIds: action.heldItemIds !== undefined
-          ? [action.heldItemIds[0] ?? null, action.heldItemIds[1] ?? null, action.heldItemIds[2] ?? null]
-          : state.heldItemIds,
+        level: action.level !== undefined ? Math.max(1, Math.min(15, action.level)) : state.level,
+        heldItemIds:
+          action.heldItemIds !== undefined
+            ? [
+                action.heldItemIds[0] ?? null,
+                action.heldItemIds[1] ?? null,
+                action.heldItemIds[2] ?? null,
+              ]
+            : state.heldItemIds,
         battleItemId: action.battleItemId !== undefined ? action.battleItemId : state.battleItemId,
         move1Id: action.move1Id !== undefined ? action.move1Id : state.move1Id,
         move2Id: action.move2Id !== undefined ? action.move2Id : state.move2Id,
-        emblems: action.emblems !== undefined ? action.emblems.slice(0, MAX_EMBLEMS) : state.emblems,
+        emblems:
+          action.emblems !== undefined ? action.emblems.slice(0, MAX_EMBLEMS) : state.emblems,
       });
     case "load":
       return normalizeLoadout(action.loadout);

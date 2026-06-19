@@ -99,11 +99,7 @@ export const DEFENSE_SOFT_FLOOR = -5;
 export const DEFENSE_SOFT_FLOOR_WEIGHT_THRESHOLD = 1;
 
 /** Roles that benefit from primary-offense protect fallback. */
-const OFFENSIVE_ROLES: ReadonlySet<Role> = new Set([
-  "Attacker",
-  "Speedster",
-  "AllRounder",
-]);
+const OFFENSIVE_ROLES: ReadonlySet<Role> = new Set(["Attacker", "Speedster", "AllRounder"]);
 
 /** Roles that should not receive HP via sub-threshold role rules. */
 const GLASS_ROLES: ReadonlySet<Role> = new Set(["Attacker", "Speedster"]);
@@ -195,9 +191,7 @@ export function deriveDefaultProtectedStats(
     return { stat, z: (thisNorm - mean) / std };
   }).sort((a, b) => b.z - a.z);
 
-  const zByStat = new Map<ProtectStat, number>(
-    zScores.map(({ stat, z }) => [stat, z]),
-  );
+  const zByStat = new Map<ProtectStat, number>(zScores.map(({ stat, z }) => [stat, z]));
   const protectedStats = new Set<ProtectStat>();
 
   // Phase 1: primary z-score picks (z > Z_THRESHOLD), highest first.
@@ -225,10 +219,7 @@ export function deriveDefaultProtectedStats(
     const defZ = zByStat.get("defense") ?? 0;
     if (hpZ > Z_DEFENDER_BULK || defZ > Z_DEFENDER_BULK) {
       const bulkStat: ProtectStat = hpZ >= defZ ? "hp" : "defense";
-      if (
-        !protectedStats.has(bulkStat) &&
-        canAddViaRoleRule(pokemon, bulkStat, zByStat)
-      ) {
+      if (!protectedStats.has(bulkStat) && canAddViaRoleRule(pokemon, bulkStat, zByStat)) {
         protectedStats.add(bulkStat);
       }
     }

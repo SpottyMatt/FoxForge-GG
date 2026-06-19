@@ -96,8 +96,9 @@ export function predictFlatStatRanges(
 ): FlatStatPrediction[] {
   if (pool.length < SLOTS) return [];
 
-  const weighted = (Object.entries(priorities) as [keyof StatBlock, number][])
-    .filter(([, w]) => w > 0);
+  const weighted = (Object.entries(priorities) as [keyof StatBlock, number][]).filter(
+    ([, w]) => w > 0,
+  );
   if (weighted.length === 0 && alsoReport.length === 0) return [];
 
   const weightedScore = (c: EmblemCandidate): number => {

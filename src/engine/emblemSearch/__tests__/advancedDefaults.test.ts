@@ -38,7 +38,11 @@ function buildSyntheticPool(specs: Array<{ name: string; colors: EmblemColor[] }
 }
 
 /** Repeat a color assignment N times with distinct names. */
-function nOf(n: number, colors: EmblemColor[], prefix = "p"): Array<{ name: string; colors: EmblemColor[] }> {
+function nOf(
+  n: number,
+  colors: EmblemColor[],
+  prefix = "p",
+): Array<{ name: string; colors: EmblemColor[] }> {
   return Array.from({ length: n }, (_, i) => ({ name: `${prefix}${i}`, colors }));
 }
 
@@ -90,13 +94,16 @@ describe("feasibility check — Advanced defaults gating", () => {
     // (brown+white) that each contribute 1 to both counts in a 10-slot build.
     // Use 8 dual-color + 6 single-color fill → pick e.g. 6 dual + 2 brown + 2 white = 10.
     const specs = [
-      ...nOf(8, ["brown", "white"], "bw"),   // dual-color
-      ...nOf(4, ["brown"], "br"),             // single brown
-      ...nOf(4, ["white"], "wh"),             // single white
-      ...nOf(4, ["green"], "gr"),             // fill
+      ...nOf(8, ["brown", "white"], "bw"), // dual-color
+      ...nOf(4, ["brown"], "br"), // single brown
+      ...nOf(4, ["white"], "wh"), // single white
+      ...nOf(4, ["green"], "gr"), // fill
     ];
     const pool = buildSyntheticPool(specs);
-    const targets = new Map<EmblemColor, number>([["brown", 6], ["white", 6]]);
+    const targets = new Map<EmblemColor, number>([
+      ["brown", 6],
+      ["white", 6],
+    ]);
 
     // Capacity check
     const caps = colorGroupSizes(pool);
@@ -110,12 +117,12 @@ describe("feasibility check — Advanced defaults gating", () => {
 
   it("[ADV-6] pool with too few brown emblems → infeasible (weighted fallback)", () => {
     // Only 3 brown available; target is 6 → impossible
-    const specs = [
-      ...nOf(3, ["brown"], "br"),
-      ...nOf(7, ["white"], "wh"),
-    ];
+    const specs = [...nOf(3, ["brown"], "br"), ...nOf(7, ["white"], "wh")];
     const pool = buildSyntheticPool(specs);
-    const targets = new Map<EmblemColor, number>([["brown", 6], ["white", 6]]);
+    const targets = new Map<EmblemColor, number>([
+      ["brown", 6],
+      ["white", 6],
+    ]);
 
     const caps = colorGroupSizes(pool);
     const capacityOk = [...targets.entries()].every(([c, n]) => n <= (caps.get(c) ?? 0));
@@ -124,12 +131,12 @@ describe("feasibility check — Advanced defaults gating", () => {
 
   it("[ADV-7] target sum > 20 → countConstrainedBuilds returns 0n (infeasible)", () => {
     // brown=11 + white=11 = sum 22 > 2*SLOTS(20) → impossible even with dual-color.
-    const specs = [
-      ...nOf(15, ["brown"], "br"),
-      ...nOf(15, ["white"], "wh"),
-    ];
+    const specs = [...nOf(15, ["brown"], "br"), ...nOf(15, ["white"], "wh")];
     const pool = buildSyntheticPool(specs);
-    const targets = new Map<EmblemColor, number>([["brown", 11], ["white", 11]]);
+    const targets = new Map<EmblemColor, number>([
+      ["brown", 11],
+      ["white", 11],
+    ]);
     const sum = [...targets.values()].reduce((a, b) => a + b, 0);
     expect(sum).toBeGreaterThan(2 * SLOTS);
     // countConstrainedBuilds internally catches sum > 2*slots → 0n
@@ -154,7 +161,10 @@ describe("feasibility check — Advanced defaults gating", () => {
       ...nOf(5, ["green"], "gr"), // padding so we can pick exactly 10
     ];
     const pool = buildSyntheticPool(specs);
-    const targets = new Map<EmblemColor, number>([["brown", 6], ["white", 6]]);
+    const targets = new Map<EmblemColor, number>([
+      ["brown", 6],
+      ["white", 6],
+    ]);
     const count = countConstrainedBuilds(pool, targets, SLOTS);
     expect(count).not.toBeNull();
     expect(count! > 0n).toBe(true);

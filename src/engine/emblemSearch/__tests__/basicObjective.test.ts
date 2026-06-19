@@ -27,8 +27,17 @@ import { buildPool } from "../pool";
 
 function makeStats() {
   return {
-    hp: 5000, attack: 200, defense: 100, spAttack: 80, spDefense: 100,
-    critRate: 0, cdr: 0, lifesteal: 0, spLifesteal: 0, attackSpeed: 0.4, moveSpeed: 3700,
+    hp: 5000,
+    attack: 200,
+    defense: 100,
+    spAttack: 80,
+    spDefense: 100,
+    critRate: 0,
+    cdr: 0,
+    lifesteal: 0,
+    spLifesteal: 0,
+    attackSpeed: 0.4,
+    moveSpeed: 3700,
   };
 }
 
@@ -103,7 +112,7 @@ describe("deriveBasicObjective — color targets", () => {
     const obj = deriveBasicObjective(pokemon, 15, emptyEmblems);
 
     expect(obj.colorTargets.has("brown")).toBe(true);
-    expect((obj.colorTargets.get("brown") ?? 0)).toBeGreaterThan(0);
+    expect(obj.colorTargets.get("brown") ?? 0).toBeGreaterThan(0);
   });
 
   it("special attacker: green (spAttack) in color targets", () => {
@@ -179,7 +188,10 @@ describe("basicSearchOptions", () => {
   it("enforces hard color constraints when supplied (Expert-equivalent path)", () => {
     const pokemon = makePokemon("lucario", "physical", "Attacker");
     const obj = deriveBasicObjective(pokemon, 15, []);
-    const constraints = new Map<EmblemColor, number>([["brown", 6], ["white", 6]]);
+    const constraints = new Map<EmblemColor, number>([
+      ["brown", 6],
+      ["white", 6],
+    ]);
     const opts = basicSearchOptions(obj, constraints);
 
     expect(opts.colorConstraints).not.toBeNull();

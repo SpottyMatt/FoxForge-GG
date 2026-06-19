@@ -46,10 +46,7 @@ export interface ColorBonusPreviewItem {
  * Stats that receive percentage-point additive bonuses (not base-multiplied).
  * Mirrors PERCENT_POINT_STATS in formulas.ts — kept local to avoid coupling.
  */
-const PERCENT_POINT_STATS: ReadonlySet<keyof StatBlock> = new Set([
-  "attackSpeed",
-  "cdr",
-] as const);
+const PERCENT_POINT_STATS: ReadonlySet<keyof StatBlock> = new Set(["attackSpeed", "cdr"] as const);
 
 // ---------------------------------------------------------------------------
 // Core functions
@@ -114,10 +111,7 @@ export function proposedColorBonuses(
  * - Multiplied stats: delta ≈ baseStat × percent (using base stat only as
  *   an approximation; actual in-game value includes emblem flats too).
  */
-export function concreteBonusDelta(
-  item: ColorBonusPreviewItem,
-  baseStat: number,
-): number {
+export function concreteBonusDelta(item: ColorBonusPreviewItem, baseStat: number): number {
   if (item.percentPoint) return item.percent;
   return baseStat * item.percent;
 }

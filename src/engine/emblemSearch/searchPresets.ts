@@ -279,9 +279,23 @@ export interface PresetSearchBuild {
  * exactCap=0 to keep the hard constraints but force the heuristic phase.
  */
 export function buildPresetSearchOptions(params: BuildPresetParams): PresetSearchBuild {
-  const { pokemon, level, pool, emblems, pokemonList = [], forceHeuristic = false, exactCap = DEFAULT_EXACT_CAP } = params;
+  const {
+    pokemon,
+    level,
+    pool,
+    emblems,
+    pokemonList = [],
+    forceHeuristic = false,
+    exactCap = DEFAULT_EXACT_CAP,
+  } = params;
   const resolved = resolveEmblemPreset(pokemon);
-  const objective = deriveBasicObjective(pokemon, level, emblems, pokemonList, resolved?.preset ?? null);
+  const objective = deriveBasicObjective(
+    pokemon,
+    level,
+    emblems,
+    pokemonList,
+    resolved?.preset ?? null,
+  );
   const targets = objective.colorTargets as Map<EmblemColor, number>;
   const resolution = resolveColorSearchMode(pool, targets, SLOTS);
 

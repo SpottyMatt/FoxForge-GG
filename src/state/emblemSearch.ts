@@ -42,10 +42,9 @@ export function mapMultiRunProgress(
   if (totalRuns <= 1) return inner;
   const i = runIndex - 1;
   const pct = Math.min(100, (i / totalRuns) * 100 + (inner.pct / 100) * (100 / totalRuns));
-  const batchLabel =
-    inner.label.startsWith("Smart search")
-      ? inner.label.replace(/^Smart search/, `Smart search ${runIndex}/${totalRuns}`)
-      : `Smart search ${runIndex}/${totalRuns}…`;
+  const batchLabel = inner.label.startsWith("Smart search")
+    ? inner.label.replace(/^Smart search/, `Smart search ${runIndex}/${totalRuns}`)
+    : `Smart search ${runIndex}/${totalRuns}…`;
   return {
     pct,
     label: batchLabel,
@@ -248,9 +247,7 @@ export function seedEmblemSearchSession(
   if (state.status === "done" && state.result) {
     const key = settingsKey ?? "";
     const history =
-      state.history.length > 0
-        ? state.history
-        : [{ result: state.result, settingsKey: key }];
+      state.history.length > 0 ? state.history : [{ result: state.result, settingsKey: key }];
     const historyIndex = state.historyIndex >= 0 ? state.historyIndex : 0;
     const fullState: EmblemSearchState = { ...state, history, historyIndex };
     sessionCache = { state: fullState, settingsKey: settingsKeyForState(fullState) };
@@ -269,10 +266,9 @@ export function getEmblemSearchSessionState(): EmblemSearchState | null {
 /** Lazily create the worker; returns null if workers aren't supported. */
 function tryCreateWorker(): Worker | null {
   try {
-    return new Worker(
-      new URL("../workers/emblemSearch.worker.ts", import.meta.url),
-      { type: "module" },
-    );
+    return new Worker(new URL("../workers/emblemSearch.worker.ts", import.meta.url), {
+      type: "module",
+    });
   } catch {
     return null;
   }
@@ -358,7 +354,12 @@ export function useEmblemSearch(): UseEmblemSearchReturn {
 
   // Tear down the worker (and any nested shard workers) when the hook unmounts
   // so a backgrounded long search doesn't leak a grinding worker thread.
-  useEffect(() => () => { terminateWorker(); }, [terminateWorker]);
+  useEffect(
+    () => () => {
+      terminateWorker();
+    },
+    [terminateWorker],
+  );
 
   const clearResult = useCallback(() => {
     if (runningRef.current) return;
@@ -397,17 +398,14 @@ export function useEmblemSearch(): UseEmblemSearchReturn {
     runIndex: number,
     totalRuns: number,
   ): Promise<SearchResult | null> {
-    return getWorkerController().run(
-      { pool, options, setBonuses, effort },
-      (progress) => {
-        reportProgress(runToken, runIndex, totalRuns, {
-          pct: progress.pct,
-          label: progress.label,
-          candidates: progress.candidates,
-          totalCandidates: progress.totalCandidates,
-        });
-      },
-    );
+    return getWorkerController().run({ pool, options, setBonuses, effort }, (progress) => {
+      reportProgress(runToken, runIndex, totalRuns, {
+        pct: progress.pct,
+        label: progress.label,
+        candidates: progress.candidates,
+        totalCandidates: progress.totalCandidates,
+      });
+    });
   }
 
   function reportProgress(
@@ -419,9 +417,7 @@ export function useEmblemSearch(): UseEmblemSearchReturn {
     if (!runCoordinatorRef.current.isCurrent(runToken)) return;
     const progress = mapMultiRunProgress(runIndex, totalRuns, inner);
     const eta = computeSearchEta(progress.pct, searchStartTimeRef.current, etaSmoothedRef);
-    setState((s) =>
-      s.status === "running" ? { ...s, progress, eta } : s,
-    );
+    setState((s) => (s.status === "running" ? { ...s, progress, eta } : s));
   }
 
   /** Run on main thread (fallback). */
@@ -483,8 +479,7 @@ export function useEmblemSearch(): UseEmblemSearchReturn {
       searchStartTimeRef.current = Date.now();
       etaSmoothedRef.current = null;
 
-      const startLabel =
-        totalRuns > 1 ? `Smart search 1/${totalRuns}…` : "Starting…";
+      const startLabel = totalRuns > 1 ? `Smart search 1/${totalRuns}…` : "Starting…";
 
       setState((s) => ({
         status: "running",
@@ -535,8 +530,7 @@ export function useEmblemSearch(): UseEmblemSearchReturn {
             );
             const historyIndex =
               appendedIndex >= 0 ? appendedIndex : s.historyIndex >= 0 ? s.historyIndex : 0;
-            const viewedResult =
-              historyIndex >= 0 ? history[historyIndex]?.result ?? null : null;
+            const viewedResult = historyIndex >= 0 ? (history[historyIndex]?.result ?? null) : null;
             const next: EmblemSearchState = {
               status: viewedResult ? "done" : "cancelled",
               progress: null,
@@ -562,14 +556,14 @@ export function useEmblemSearch(): UseEmblemSearchReturn {
             appendedIndex >= 0 ? appendedIndex : s.historyIndex >= 0 ? s.historyIndex : 0;
           const viewedResult =
             historyIndex >= 0
-              ? history[historyIndex]?.result ?? null
+              ? (history[historyIndex]?.result ?? null)
               : s.historyIndex >= 0
-                ? s.history[s.historyIndex]?.result ?? null
+                ? (s.history[s.historyIndex]?.result ?? null)
                 : null;
 
           const lastBatchResult =
             batchEntries.length > 0
-              ? batchEntries[batchEntries.length - 1]?.result ?? null
+              ? (batchEntries[batchEntries.length - 1]?.result ?? null)
               : null;
 
           const doneLabel =
@@ -597,7 +591,7 @@ export function useEmblemSearch(): UseEmblemSearchReturn {
           status: "error",
           progress: null,
           eta: null,
-          result: s.historyIndex >= 0 ? s.history[s.historyIndex]?.result ?? null : null,
+          result: s.historyIndex >= 0 ? (s.history[s.historyIndex]?.result ?? null) : null,
           errorMsg: err instanceof Error ? err.message : String(err),
           history: s.history,
           historyIndex: s.historyIndex,

@@ -35,10 +35,7 @@ export const DEFAULT_EXACT_CAP = 1_000_000_000;
  * Exported so the UI indicator and tests share this definition exactly,
  * preventing silent drift between the indicator and real search behavior.
  */
-export function shouldRunExact(
-  constrainedCount: bigint | null,
-  exactCap: number,
-): boolean {
+export function shouldRunExact(constrainedCount: bigint | null, exactCap: number): boolean {
   if (constrainedCount === null || constrainedCount === 0n) return false;
   return constrainedCount <= BigInt(exactCap);
 }
@@ -74,11 +71,14 @@ export async function runSearch(
   };
 
   function updateBest(loadout: EmblemCandidate[], ev: EvalResult, newPhase: string) {
-    if (!bestEv || !bestEv.valid || (ev.valid && (
-      options.mode === "target"
-        ? (ev.error ?? Infinity) < (bestEv.error ?? Infinity) - SCORE_EPS
-        : ev.score > bestEv.score + SCORE_EPS
-    ))) {
+    if (
+      !bestEv ||
+      !bestEv.valid ||
+      (ev.valid &&
+        (options.mode === "target"
+          ? (ev.error ?? Infinity) < (bestEv.error ?? Infinity) - SCORE_EPS
+          : ev.score > bestEv.score + SCORE_EPS))
+    ) {
       bestLoadout = loadout;
       bestEv = ev;
       phase = newPhase;
@@ -142,8 +142,14 @@ export async function runSearch(
     if (totalCombos >= EXACT_PARALLEL_MIN) {
       try {
         result = await searchColorExactParallel(
-          pool, options, setBonuses, totalCombos,
-          async (pct, label, ev) => { candidates = ev; report(pct, label); },
+          pool,
+          options,
+          setBonuses,
+          totalCombos,
+          async (pct, label, ev) => {
+            candidates = ev;
+            report(pct, label);
+          },
           shouldAbort,
         );
       } catch {
@@ -153,8 +159,13 @@ export async function runSearch(
 
     if (!result) {
       result = await searchColorExact(
-        pool, options, setBonuses,
-        async (pct, label, ev) => { candidates = ev; report(pct, label); },
+        pool,
+        options,
+        setBonuses,
+        async (pct, label, ev) => {
+          candidates = ev;
+          report(pct, label);
+        },
         shouldAbort,
       );
     }
@@ -165,7 +176,10 @@ export async function runSearch(
       // Mirrors uniteemblemfinder's exact path which returns at this point.
       candidates = result.evaluated;
       updateBest(result.loadout, result.ev, "exact");
-      report(100, `Done — exact · ${candidates.toLocaleString()} builds · ${((Date.now() - t0) / 1000).toFixed(1)}s`);
+      report(
+        100,
+        `Done — exact · ${candidates.toLocaleString()} builds · ${((Date.now() - t0) / 1000).toFixed(1)}s`,
+      );
       return buildResult(bestLoadout!, bestEv!, candidates, t0, phase);
     } else if (result) {
       // result non-null but somehow invalid — count the work and fall through
@@ -201,14 +215,7 @@ export async function runSearch(
     shouldAbort,
   );
   if (!hResult) {
-    hResult = await runHeuristic(
-      pool,
-      options,
-      setBonuses,
-      effort,
-      heuristicProgress,
-      shouldAbort,
-    );
+    hResult = await runHeuristic(pool, options, setBonuses, effort, heuristicProgress, shouldAbort);
   }
 
   if (hResult.loadout.length === slots) {
@@ -218,7 +225,10 @@ export async function runSearch(
 
   if (shouldAbort?.()) return buildResult(bestLoadout, bestEv, candidates, t0, phase);
 
-  report(100, `Done · ${candidates.toLocaleString()} candidates · ${((Date.now() - t0) / 1000).toFixed(1)}s`);
+  report(
+    100,
+    `Done · ${candidates.toLocaleString()} candidates · ${((Date.now() - t0) / 1000).toFixed(1)}s`,
+  );
   return buildResult(bestLoadout, bestEv, candidates, t0, phase);
 }
 

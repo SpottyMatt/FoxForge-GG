@@ -65,9 +65,7 @@ export function buildCandidatePool(
       } else {
         // Only the best-owned grade among allowed grades
         const bestGrade = GRADE_ORDER.find(
-          (g) =>
-            (!gradeFilter || gradeFilter.has(g)) &&
-            opts.ownedKeys!.has(`${emblem.id}:${g}`),
+          (g) => (!gradeFilter || gradeFilter.has(g)) && opts.ownedKeys!.has(`${emblem.id}:${g}`),
         );
         if (!bestGrade) continue;
         candidates.push(emblemToCandidate(emblem, bestGrade));

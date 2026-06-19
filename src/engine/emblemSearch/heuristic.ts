@@ -36,9 +36,12 @@ interface Preset {
 
 function getPreset(effort: "quick" | "normal" | "thorough"): Preset {
   switch (effort) {
-    case "quick": return { budgetMs: 1_500 };
-    case "normal": return { budgetMs: 8_000 };
-    case "thorough": return { budgetMs: 25_000 };
+    case "quick":
+      return { budgetMs: 1_500 };
+    case "normal":
+      return { budgetMs: 8_000 };
+    case "thorough":
+      return { budgetMs: 25_000 };
   }
 }
 
@@ -214,11 +217,17 @@ function runAnnealSegment(
   const L: EmblemCandidate[] = [];
   for (let i = start; i < sortedPool.length && L.length < slots; i++) {
     const c = sortedPool[i];
-    if (!used.has(c.pokemonName)) { used.add(c.pokemonName); L.push(c); }
+    if (!used.has(c.pokemonName)) {
+      used.add(c.pokemonName);
+      L.push(c);
+    }
   }
   for (let i = 0; i < sortedPool.length && L.length < slots; i++) {
     const c = sortedPool[i];
-    if (!used.has(c.pokemonName)) { used.add(c.pokemonName); L.push(c); }
+    if (!used.has(c.pokemonName)) {
+      used.add(c.pokemonName);
+      L.push(c);
+    }
   }
   if (L.length < slots) return { loadout: L, ev: evaluateLoadout(L, opts, setBonuses) };
 
@@ -244,7 +253,7 @@ function runAnnealSegment(
     T0 += Math.abs(annealEnergy(ev, opts) - annealEnergy(state.curEv, opts));
     samples++;
   }
-  T0 = samples ? (T0 / samples) : Math.max(1, Math.abs(annealEnergy(state.curEv, opts)) * 0.05);
+  T0 = samples ? T0 / samples : Math.max(1, Math.abs(annealEnergy(state.curEv, opts)) * 0.05);
   if (!(T0 > 0)) T0 = 1;
   const Tmin = Math.max(T0 * 1e-3, 1e-9);
   const alpha = Math.exp(Math.log(Tmin / T0) / moves);
@@ -292,11 +301,13 @@ function neighbor(
   if (Math.random() < 0.78) {
     // Replace with a different Pokémon
     for (let a = 0; a < 6; a++) {
-      const c = Math.random() < 0.6
-        ? sortedPool[Math.floor(Math.random() * Math.min(120, sortedPool.length))]
-        : sortedPool[Math.floor(Math.random() * sortedPool.length)];
+      const c =
+        Math.random() < 0.6
+          ? sortedPool[Math.floor(Math.random() * Math.min(120, sortedPool.length))]
+          : sortedPool[Math.floor(Math.random() * sortedPool.length)];
       if (!c) continue;
-      if (c.pokemonName !== state.cur[slot].pokemonName && state.curNames.has(c.pokemonName)) continue;
+      if (c.pokemonName !== state.cur[slot].pokemonName && state.curNames.has(c.pokemonName))
+        continue;
       const trial = state.cur.slice();
       trial[slot] = c;
       return { trial, oldName: state.cur[slot].pokemonName, newName: c.pokemonName };
@@ -341,9 +352,7 @@ export async function runHeuristic(
   const t0 = Date.now();
   let tries = 0;
 
-  const useAnneal =
-    !opts.colorConstraints &&
-    new Set(pool.map((c) => c.pokemonName)).size >= slots;
+  const useAnneal = !opts.colorConstraints && new Set(pool.map((c) => c.pokemonName)).size >= slots;
 
   const sortedPool = useAnneal
     ? pool.slice().sort((a, b) => candidateGreedyValue(b, opts) - candidateGreedyValue(a, opts))
@@ -359,7 +368,12 @@ export async function runHeuristic(
 
   // Initial color-exact seed
   if (opts.colorConstraints) {
-    const seeded = colorExactSeed(shuffle(pool), opts.colorConstraints as Map<string, number>, opts, slots);
+    const seeded = colorExactSeed(
+      shuffle(pool),
+      opts.colorConstraints as Map<string, number>,
+      opts,
+      slots,
+    );
     if (seeded?.length === slots) {
       const ev = evaluateLoadout(seeded, opts, setBonuses);
       counter.n++;
@@ -376,7 +390,9 @@ export async function runHeuristic(
       // Mutate current best
       L = mutateSolution(globalBest.loadout, pool, opts, slots);
     } else if (opts.colorConstraints) {
-      L = colorExactSeed(shuffle(pool), opts.colorConstraints as Map<string, number>, opts, slots) ?? [];
+      L =
+        colorExactSeed(shuffle(pool), opts.colorConstraints as Map<string, number>, opts, slots) ??
+        [];
     } else {
       L = greedySeed(shuffle(pool), opts, slots, setBonuses);
     }
@@ -386,16 +402,19 @@ export async function runHeuristic(
         if (L.length >= slots) break;
         if (names.has(c.pokemonName)) continue;
         const trial = [...L, c];
-        if (evaluateLoadout(trial, opts, setBonuses).valid) { L = trial; names.add(c.pokemonName); }
+        if (evaluateLoadout(trial, opts, setBonuses).valid) {
+          L = trial;
+          names.add(c.pokemonName);
+        }
       }
     }
     return hillClimb(L, pool, opts, setBonuses, counter);
   }
 
   const budgetMs = preset.budgetMs ?? 5000;
-  while (Date.now() - t0 < budgetMs && !(shouldAbort?.())) {
+  while (Date.now() - t0 < budgetMs && !shouldAbort?.()) {
     const sliceEnd = Date.now() + 48;
-    while (Date.now() - t0 < budgetMs && Date.now() < sliceEnd && !(shouldAbort?.())) {
+    while (Date.now() - t0 < budgetMs && Date.now() < sliceEnd && !shouldAbort?.()) {
       const res = oneTry();
       if (isBetter(res.ev, globalBest.ev, opts)) globalBest = res;
       tries++;
@@ -410,7 +429,7 @@ export async function runHeuristic(
   // Emit a final 100% when the budget completes normally (in-loop progress is
   // capped at 99 so it never claims "done" early). Skipped on abort so a
   // cancelled search doesn't flash a full bar.
-  if (onProgress && !(shouldAbort?.())) {
+  if (onProgress && !shouldAbort?.()) {
     await onProgress(100, "Smart search…", counter.n);
   }
 
@@ -431,7 +450,14 @@ function mutateSolution(
     const names = new Set(trial.filter((_, i) => i !== slot).map((x) => x.pokemonName));
     const cands = shuffle(pool.filter((c) => !names.has(c.pokemonName))).slice(0, 40);
     for (const c of cands) {
-      if (wouldExceedTargets(trial.filter((_, i) => i !== slot), c, opts.colorConstraints!)) continue;
+      if (
+        wouldExceedTargets(
+          trial.filter((_, i) => i !== slot),
+          c,
+          opts.colorConstraints!,
+        )
+      )
+        continue;
       trial[slot] = c;
       break;
     }

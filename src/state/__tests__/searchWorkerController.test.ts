@@ -43,10 +43,12 @@ class FakeWorker implements WorkerLike {
   }
 
   lastRunId(): string | undefined {
-    const run = [...this.posted].reverse().find(
-      (m): m is { type: string; id: string } =>
-        typeof m === "object" && m !== null && (m as { type?: string }).type === "run",
-    );
+    const run = [...this.posted]
+      .reverse()
+      .find(
+        (m): m is { type: string; id: string } =>
+          typeof m === "object" && m !== null && (m as { type?: string }).type === "run",
+      );
     return run?.id;
   }
 }

@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { metaMobilityScore, pickBestVariant, type VariantResult } from "../../../../tools/meta-defaults/analyze";
+import {
+  metaMobilityScore,
+  pickBestVariant,
+  type VariantResult,
+} from "../../../../tools/meta-defaults/analyze";
 
 describe("metaMobilityScore", () => {
   it("penalises negative net move speed", () => {

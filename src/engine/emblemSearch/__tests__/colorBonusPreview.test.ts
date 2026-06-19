@@ -23,13 +23,13 @@ import type { EmblemSetBonus } from "../../../types";
 // ---------------------------------------------------------------------------
 
 const TEST_SET_BONUSES: EmblemSetBonus[] = [
-  { color: "brown", stat: "attack",   thresholds: { 2: 0.01, 4: 0.02, 6: 0.04 } },
+  { color: "brown", stat: "attack", thresholds: { 2: 0.01, 4: 0.02, 6: 0.04 } },
   { color: "green", stat: "spAttack", thresholds: { 2: 0.01, 4: 0.02, 6: 0.04 } },
-  { color: "blue",  stat: "defense",  thresholds: { 2: 0.02, 4: 0.04, 6: 0.08 } },
-  { color: "black", stat: "cdr",      thresholds: { 3: 0.01, 5: 0.02, 7: 0.04 } },
-  { color: "red",   stat: "attackSpeed", thresholds: { 3: 0.02, 5: 0.04, 7: 0.08 } },
+  { color: "blue", stat: "defense", thresholds: { 2: 0.02, 4: 0.04, 6: 0.08 } },
+  { color: "black", stat: "cdr", thresholds: { 3: 0.01, 5: 0.02, 7: 0.04 } },
+  { color: "red", stat: "attackSpeed", thresholds: { 3: 0.02, 5: 0.04, 7: 0.08 } },
   // pink has NEGATIVE bonus — should be filtered out
-  { color: "pink",  stat: "hp",       thresholds: { 3: -0.04, 5: -0.08, 7: -0.16 } },
+  { color: "pink", stat: "hp", thresholds: { 3: -0.04, 5: -0.08, 7: -0.16 } },
 ];
 
 // ---------------------------------------------------------------------------
@@ -98,7 +98,7 @@ describe("proposedColorBonuses", () => {
   it("[PREV-10] multiple active colors → one entry each", () => {
     const counts = new Map<import("../../../types").EmblemColor, number>([
       ["brown", 6],
-      ["blue",  4],
+      ["blue", 4],
       ["green", 2],
     ]);
     const result = proposedColorBonuses(counts, TEST_SET_BONUSES);

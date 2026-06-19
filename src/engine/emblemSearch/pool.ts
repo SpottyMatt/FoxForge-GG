@@ -138,7 +138,10 @@ export function countConstrainedBuilds(
     for (const [key, ways] of dp) {
       const bar = key.indexOf("|");
       const usedSlots = +key.slice(0, bar);
-      const colorCounts = key.slice(bar + 1).split(",").map(Number);
+      const colorCounts = key
+        .slice(bar + 1)
+        .split(",")
+        .map(Number);
 
       for (let x = 0; x <= count; x++) {
         const ns = usedSlots + x;
@@ -148,7 +151,10 @@ export function countConstrainedBuilds(
         const nc = colorCounts.slice();
         for (let j = 0; j < nc.length; j++) {
           nc[j] += x * vec[j];
-          if (nc[j] > targetVec[j]) { ok = false; break; }
+          if (nc[j] > targetVec[j]) {
+            ok = false;
+            break;
+          }
         }
         if (!ok) break;
 

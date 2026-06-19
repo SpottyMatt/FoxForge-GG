@@ -30,20 +30,13 @@ export function Segmented<T extends string>({
    */
   fluid?: boolean;
 }) {
-  const backdrop =
-    variant === "header"
-      ? "bg-white/15"
-      : "bg-raise";
+  const backdrop = variant === "header" ? "bg-white/15" : "bg-raise";
 
   const active =
-    variant === "header"
-      ? "bg-surface text-accent-ink shadow"
-      : "bg-surface text-ink shadow-sm";
+    variant === "header" ? "bg-surface text-accent-ink shadow" : "bg-surface text-ink shadow-sm";
 
   const inactive =
-    variant === "header"
-      ? "text-white/90 hover:bg-white/10"
-      : "text-muted hover:text-ink";
+    variant === "header" ? "text-white/90 hover:bg-white/10" : "text-muted hover:text-ink";
 
   return (
     <div

@@ -19,11 +19,7 @@
  * factory so it can be unit-tested with a fake Worker in a non-DOM env.
  */
 
-import type {
-  EmblemCandidate,
-  SearchOptions,
-  SearchResult,
-} from "../engine/emblemSearch/types";
+import type { EmblemCandidate, SearchOptions, SearchResult } from "../engine/emblemSearch/types";
 import type { EmblemSetBonus } from "../types";
 
 export interface WorkerRunPayload {
@@ -86,7 +82,10 @@ export class SearchWorkerController {
 
       if (!this.worker) {
         const created = this.createWorker();
-        if (!created) { reject(new Error("Worker unavailable")); return; }
+        if (!created) {
+          reject(new Error("Worker unavailable"));
+          return;
+        }
         this.worker = created;
       }
       this.attachHandlers(this.worker, onProgress);
@@ -105,7 +104,11 @@ export class SearchWorkerController {
    */
   terminate(): void {
     if (this.worker) {
-      try { this.worker.terminate(); } catch { /* already gone */ }
+      try {
+        this.worker.terminate();
+      } catch {
+        /* already gone */
+      }
     }
     this.worker = null;
     this.handlersAttached = false;
@@ -119,10 +122,7 @@ export class SearchWorkerController {
     pending.resolve(result);
   }
 
-  private attachHandlers(
-    worker: WorkerLike,
-    onProgress: (progress: WorkerProgress) => void,
-  ): void {
+  private attachHandlers(worker: WorkerLike, onProgress: (progress: WorkerProgress) => void): void {
     // Re-bind the progress callback for the latest run; handlers attach once
     // per worker instance.
     this.progressCallback = onProgress;
@@ -130,7 +130,14 @@ export class SearchWorkerController {
 
     worker.addEventListener("message", (ev: { data: unknown }) => {
       const msg = ev.data as
-        | { type: "progress"; id: string; pct: number; label: string; candidates?: number; totalCandidates?: number }
+        | {
+            type: "progress";
+            id: string;
+            pct: number;
+            label: string;
+            candidates?: number;
+            totalCandidates?: number;
+          }
         | { type: "done"; id: string; result: SearchResult | null }
         | { type: "error"; id: string; message: string };
       const pending = this.pending;

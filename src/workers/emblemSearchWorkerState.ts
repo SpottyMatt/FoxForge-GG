@@ -32,9 +32,7 @@ export function createWorkerJobState() {
     cancelledJobIds.delete(jobId);
 
     const shouldAbort = () =>
-      generation !== searchGeneration ||
-      jobId !== activeJobId ||
-      cancelledJobIds.has(jobId);
+      generation !== searchGeneration || jobId !== activeJobId || cancelledJobIds.has(jobId);
 
     return { jobId, generation, shouldAbort };
   }

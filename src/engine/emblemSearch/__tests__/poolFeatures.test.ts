@@ -25,7 +25,12 @@
 import { describe, it, expect } from "vitest";
 import { makeEmblem } from "../../__tests__/fixtures";
 import { buildCandidatePool } from "../adapt";
-import { countConstrainedBuilds, approximateBuildCount, distinctPokemonCount, buildPool } from "../pool";
+import {
+  countConstrainedBuilds,
+  approximateBuildCount,
+  distinctPokemonCount,
+  buildPool,
+} from "../pool";
 import { emblems as allEmblems } from "../../../data/gameData";
 import type { EmblemCandidate } from "../types";
 import type { Emblem } from "../../../types";
@@ -46,7 +51,9 @@ function singles(n: number, color: string, prefix = "S"): EmblemCandidate[] {
 
 /** Build N distinct Pokémon with two colors. */
 function duals(n: number, c1: string, c2: string, prefix = "D"): EmblemCandidate[] {
-  return Array.from({ length: n }, (_, i) => makeGoldCandidate(`${prefix}${c1}${c2}${i}`, [c1, c2]));
+  return Array.from({ length: n }, (_, i) =>
+    makeGoldCandidate(`${prefix}${c1}${c2}${i}`, [c1, c2]),
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -96,7 +103,10 @@ describe("countConstrainedBuilds — dual-color (sum > 10)", () => {
       ...singles(5, "green", "PG"),
       ...singles(5, "black", "PB"),
     ];
-    const targets = new Map<string, number>([["green", 6], ["black", 7]]);
+    const targets = new Map<string, number>([
+      ["green", 6],
+      ["black", 7],
+    ]);
     const count = countConstrainedBuilds(pool, targets as never);
     expect(count).not.toBeNull();
     expect(count! > 0n).toBe(true);
@@ -105,14 +115,20 @@ describe("countConstrainedBuilds — dual-color (sum > 10)", () => {
   it("[FU-1d] rejects sum > 20 (impossible for 10 dual-color slots)", () => {
     const pool = duals(10, "green", "black", "GB");
     // Sum = 11 + 11 = 22 > 20
-    const targets = new Map<string, number>([["green", 11], ["black", 11]]);
+    const targets = new Map<string, number>([
+      ["green", 11],
+      ["black", 11],
+    ]);
     expect(countConstrainedBuilds(pool, targets as never)).toBe(0n);
   });
 
   it("10 duals yields exactly 1 build matching 10 green + 10 black", () => {
     // Exactly one way to pick all 10 dual-color Pokémon
     const pool = duals(10, "green", "black", "GB");
-    const targets = new Map<string, number>([["green", 10], ["black", 10]]);
+    const targets = new Map<string, number>([
+      ["green", 10],
+      ["black", 10],
+    ]);
     expect(countConstrainedBuilds(pool, targets as never)).toBe(1n);
   });
 });
@@ -317,33 +333,69 @@ describe("grade-reactive pool candidate count", () => {
   const noOwned = new Set<string>();
 
   it("[GRADE-1] gold-only full dataset → 258 candidates (1 per Pokémon)", () => {
-    const pool = buildPool(allEmblems, { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold"]) }, noOwned);
+    const pool = buildPool(
+      allEmblems,
+      { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold"]) },
+      noOwned,
+    );
     expect(pool.length).toBe(258);
   });
 
   it("[GRADE-2] all grades full dataset → more than 258 candidates", () => {
-    const pool = buildPool(allEmblems, { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold", "silver", "bronze"]) }, noOwned);
+    const pool = buildPool(
+      allEmblems,
+      { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold", "silver", "bronze"]) },
+      noOwned,
+    );
     expect(pool.length).toBeGreaterThan(258);
   });
 
   it("[GRADE-3] approximateBuildCount is grade-INDEPENDENT (same C(258,10))", () => {
-    const goldPool = buildPool(allEmblems, { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold"]) }, noOwned);
-    const allPool  = buildPool(allEmblems, { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold", "silver", "bronze"]) }, noOwned);
+    const goldPool = buildPool(
+      allEmblems,
+      { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold"]) },
+      noOwned,
+    );
+    const allPool = buildPool(
+      allEmblems,
+      { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold", "silver", "bronze"]) },
+      noOwned,
+    );
     // Both return C(258, 10) because distinctPokemonCount is grade-independent
     expect(approximateBuildCount(goldPool)).toBe(approximateBuildCount(allPool));
   });
 
   it("[GRADE-4] distinctPokemonCount is grade-INDEPENDENT", () => {
-    const goldPool = buildPool(allEmblems, { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold"]) }, noOwned);
-    const allPool  = buildPool(allEmblems, { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold", "silver", "bronze"]) }, noOwned);
+    const goldPool = buildPool(
+      allEmblems,
+      { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold"]) },
+      noOwned,
+    );
+    const allPool = buildPool(
+      allEmblems,
+      { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold", "silver", "bronze"]) },
+      noOwned,
+    );
     expect(distinctPokemonCount(goldPool)).toBe(distinctPokemonCount(allPool));
     expect(distinctPokemonCount(goldPool)).toBe(258);
   });
 
   it("[GRADE-5] pool.length changes with grade selection → drives grade-reactive UI display", () => {
-    const gold   = buildPool(allEmblems, { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold"]) }, noOwned);
-    const goldSi = buildPool(allEmblems, { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold", "silver"]) }, noOwned);
-    const all    = buildPool(allEmblems, { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold", "silver", "bronze"]) }, noOwned);
+    const gold = buildPool(
+      allEmblems,
+      { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold"]) },
+      noOwned,
+    );
+    const goldSi = buildPool(
+      allEmblems,
+      { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold", "silver"]) },
+      noOwned,
+    );
+    const all = buildPool(
+      allEmblems,
+      { useOwned: false, mixedGrades: true, allowedGrades: new Set(["gold", "silver", "bronze"]) },
+      noOwned,
+    );
     // Each additional grade tier adds variants
     expect(gold.length).toBeLessThan(goldSi.length);
     expect(goldSi.length).toBeLessThanOrEqual(all.length);

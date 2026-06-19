@@ -142,7 +142,7 @@ function pokemonAwareColorBonus(
     const base = ctx.baseStats[stat] ?? 0;
     const norm = STAT_NORM[stat] ?? 1;
     // Absolute effective-stat gain from this set bonus, normalised and weighted
-    score += (base * bestPct / norm) * weight;
+    score += ((base * bestPct) / norm) * weight;
   }
   return score;
 }
@@ -200,7 +200,12 @@ export function evaluateLoadout(
       if (opts.scoringMode === "pokemon" && opts.pokemonContext) {
         // Pokémon-aware: scale % bonuses by actual base stats at the chosen level.
         // Already normalised — no extra 0.01 factor needed.
-        score += pokemonAwareColorBonus(colorCounts, setBonuses, opts.pokemonContext, opts.priorities);
+        score += pokemonAwareColorBonus(
+          colorCounts,
+          setBonuses,
+          opts.pokemonContext,
+          opts.priorities,
+        );
       } else {
         score += colorBonusIncentive(colorCounts, setBonuses) * 0.01;
       }
@@ -210,7 +215,7 @@ export function evaluateLoadout(
     for (const [stat, floor] of Object.entries(opts.protected) as [keyof StatBlock, number][]) {
       const v = totals[stat] ?? 0;
       if (v < floor - SCORE_EPS) {
-        score -= (floor - v) / (STAT_NORM[stat] ?? 1) * PROTECT_PENALTY_WEIGHT;
+        score -= ((floor - v) / (STAT_NORM[stat] ?? 1)) * PROTECT_PENALTY_WEIGHT;
       }
     }
 
@@ -225,14 +230,14 @@ export function evaluateLoadout(
     const actual = totals[stat] ?? 0;
     const diff = Math.abs(actual - target);
     const tol = targetTol(stat);
-    if (diff > tol) error += (diff / (STAT_NORM[stat] ?? 1));
+    if (diff > tol) error += diff / (STAT_NORM[stat] ?? 1);
   }
 
   // Protect floor penalty even in target mode
   for (const [stat, floor] of Object.entries(opts.protected) as [keyof StatBlock, number][]) {
     const v = totals[stat] ?? 0;
     if (v < floor - SCORE_EPS) {
-      error += (floor - v) / (STAT_NORM[stat] ?? 1) * PROTECT_PENALTY_WEIGHT;
+      error += ((floor - v) / (STAT_NORM[stat] ?? 1)) * PROTECT_PENALTY_WEIGHT;
     }
   }
 
@@ -249,18 +254,14 @@ export function candidateGreedyValue(c: EmblemCandidate, opts: SearchOptions): n
   for (const [stat, floor] of Object.entries(opts.protected) as [keyof StatBlock, number][]) {
     const raw = c.stats[stat] ?? 0;
     if (raw < floor - SCORE_EPS) {
-      v -= (floor - raw) / (STAT_NORM[stat] ?? 1) * PROTECT_PENALTY_WEIGHT;
+      v -= ((floor - raw) / (STAT_NORM[stat] ?? 1)) * PROTECT_PENALTY_WEIGHT;
     }
   }
   return v;
 }
 
 /** True if ev is strictly better than bestEv under the current opts. */
-export function isBetter(
-  ev: EvalResult,
-  bestEv: EvalResult | null,
-  opts: SearchOptions,
-): boolean {
+export function isBetter(ev: EvalResult, bestEv: EvalResult | null, opts: SearchOptions): boolean {
   if (!ev.valid) return false;
   if (!bestEv || !bestEv.valid) return true;
   if (opts.mode === "target") {

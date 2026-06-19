@@ -32,7 +32,7 @@ describe("resolveEmblemPreset — fallback chain", () => {
     const resolved = resolveEmblemPreset(lucario);
     expect(resolved).not.toBeNull();
     expect(resolved!.source).toBe("auto");
-    expect((resolved!.preset.confidence ?? 0)).toBeGreaterThanOrEqual(PRESET_CONFIDENCE_THRESHOLD);
+    expect(resolved!.preset.confidence ?? 0).toBeGreaterThanOrEqual(PRESET_CONFIDENCE_THRESHOLD);
   });
 
   it("[OPT-2] a manual override wins over the auto preset", () => {
@@ -50,7 +50,11 @@ describe("resolveEmblemPreset — fallback chain", () => {
   });
 
   it("[OPT-3] no preset + no override → null (caller uses generic)", () => {
-    const fake: Pokemon = { ...pokemonById.get("lucario")!, id: "__not_a_real_pokemon__", emblemPreset: undefined };
+    const fake: Pokemon = {
+      ...pokemonById.get("lucario")!,
+      id: "__not_a_real_pokemon__",
+      emblemPreset: undefined,
+    };
     expect(resolveEmblemPreset(fake)).toBeNull();
   });
 
@@ -165,7 +169,7 @@ describe("preset regressions vs generic", () => {
     const preset = resolveEmblemPreset(gardevoir)!.preset;
     // Set-bonus intent must surface Sp.Atk as a meaningful priority despite the
     // HP-heavy flat emblem shell (the bug the generator's set-bonus term fixes).
-    expect((preset.priorities.spAttack ?? 0)).toBeGreaterThan(0);
+    expect(preset.priorities.spAttack ?? 0).toBeGreaterThan(0);
   });
 
   it("[OPT-REG-COVER] the high-signal sample all have presets", () => {
@@ -179,6 +183,6 @@ describe("preset regressions vs generic", () => {
     const resolved = resolveEmblemPreset(skeledirge);
     expect(resolved).not.toBeNull();
     expect(resolved!.source).toBe("auto");
-    expect((resolved!.preset.priorities.spAttack ?? 0)).toBeGreaterThan(0);
+    expect(resolved!.preset.priorities.spAttack ?? 0).toBeGreaterThan(0);
   });
 });

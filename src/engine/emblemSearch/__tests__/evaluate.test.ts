@@ -96,7 +96,11 @@ describe("evaluate — maximize scoring", () => {
     const brownEmblems = emblems.filter((e) => e.colors.includes("brown"));
     const pool = buildCandidatePool(brownEmblems.slice(0, 10), { grades: ["gold"] });
     const seen = new Set<string>();
-    const distinct = pool.filter((c) => { if (seen.has(c.pokemonName)) return false; seen.add(c.pokemonName); return true; });
+    const distinct = pool.filter((c) => {
+      if (seen.has(c.pokemonName)) return false;
+      seen.add(c.pokemonName);
+      return true;
+    });
     if (distinct.length < 10) return; // not enough unique → skip
 
     const opts: SearchOptions = {
@@ -176,7 +180,13 @@ describe("evaluate — target mode", () => {
   it("error is 0 when totals exactly match targets", () => {
     const pool = buildCandidatePool(emblems, { grades: ["gold"] });
     const seen = new Set<string>();
-    const distinct = pool.filter((c) => { if (seen.has(c.pokemonName)) return false; seen.add(c.pokemonName); return true; }).slice(0, 10);
+    const distinct = pool
+      .filter((c) => {
+        if (seen.has(c.pokemonName)) return false;
+        seen.add(c.pokemonName);
+        return true;
+      })
+      .slice(0, 10);
     const totals = sumStats(distinct);
 
     const opts: SearchOptions = {

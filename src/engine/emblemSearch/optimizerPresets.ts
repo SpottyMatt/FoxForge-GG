@@ -90,10 +90,7 @@ export function presetColorTargets(preset: EmblemOptimizerPreset): Map<EmblemCol
  * most-protective (max) floor wins per stat, so a community floor stricter than
  * a guard is kept, and a guard stricter than the community floor is restored.
  */
-export function presetProtectFloors(
-  pokemon: Pokemon,
-  preset: EmblemOptimizerPreset,
-): StatFloors {
+export function presetProtectFloors(pokemon: Pokemon, preset: EmblemOptimizerPreset): StatFloors {
   const out: StatFloors = { ...preset.protectedFloors };
   const guards: StatFloors = {
     ...deriveDefenseSoftFloor(pokemon),

@@ -7,10 +7,24 @@
  * Advanced mode, which is pre-filled from these auto-derived values.
  */
 
-import type { Emblem, EmblemColor, EmblemGrade, EmblemOptimizerPreset, HeldItem, Pokemon } from "../../types";
+import type {
+  Emblem,
+  EmblemColor,
+  EmblemGrade,
+  EmblemOptimizerPreset,
+  HeldItem,
+  Pokemon,
+} from "../../types";
 import { colorTargetsFor, priorityWeights, scoreHeldItem, coreItemsFor } from "../recommend";
 import { buildPool } from "./pool";
-import type { EmblemCandidate, PokemonScoringContext, PoolConfig, SearchOptions, StatFloors, StatWeights } from "./types";
+import type {
+  EmblemCandidate,
+  PokemonScoringContext,
+  PoolConfig,
+  SearchOptions,
+  StatFloors,
+  StatWeights,
+} from "./types";
 import { deriveProtectFloors } from "./protectDefaults";
 import { presetColorTargets, presetPriorities, presetProtectFloors } from "./optimizerPresets";
 
@@ -154,9 +168,16 @@ export function basicSearchOptions(
 // ---------------------------------------------------------------------------
 
 const STAT_LABEL: Partial<Record<string, string>> = {
-  attack: "Attack", spAttack: "Sp. Atk", hp: "HP", defense: "Def",
-  spDefense: "Sp. Def", critRate: "Crit", cdr: "CDR",
-  attackSpeed: "Atk Spd", moveSpeed: "Spd", lifesteal: "Lifesteal",
+  attack: "Attack",
+  spAttack: "Sp. Atk",
+  hp: "HP",
+  defense: "Def",
+  spDefense: "Sp. Def",
+  critRate: "Crit",
+  cdr: "CDR",
+  attackSpeed: "Atk Spd",
+  moveSpeed: "Spd",
+  lifesteal: "Lifesteal",
 };
 
 /**

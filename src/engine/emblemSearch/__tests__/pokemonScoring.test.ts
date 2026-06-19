@@ -19,9 +19,17 @@ import type { EmblemSetBonus, StatBlock } from "../../../types";
 /** Build a minimal StatBlock with explicit values, rest zeroed. */
 function makeStats(partial: Partial<StatBlock>): StatBlock {
   return {
-    hp: 0, attack: 0, defense: 0, spAttack: 0, spDefense: 0,
-    critRate: 0, cdr: 0, lifesteal: 0, spLifesteal: 0,
-    attackSpeed: 0, moveSpeed: 0,
+    hp: 0,
+    attack: 0,
+    defense: 0,
+    spAttack: 0,
+    spDefense: 0,
+    critRate: 0,
+    cdr: 0,
+    lifesteal: 0,
+    spLifesteal: 0,
+    attackSpeed: 0,
+    moveSpeed: 0,
     ...partial,
   };
 }
@@ -95,12 +103,24 @@ describe("Pokemon-aware scoring — % bonus scales with base stats", () => {
 
   it("classic scoring: high-base and low-base Pokémon give same color-bonus score", () => {
     const opts = makeMaximizeOpts({ scoringMode: "classic" });
-    const highCtx: PokemonScoringContext = { pokemonId: "high", level: 15, baseStats: highBaseStats };
+    const highCtx: PokemonScoringContext = {
+      pokemonId: "high",
+      level: 15,
+      baseStats: highBaseStats,
+    };
     const lowCtx: PokemonScoringContext = { pokemonId: "low", level: 15, baseStats: lowBaseStats };
 
     // Classic mode: pokemonContext is ignored even if provided
-    const evHighClassic = evaluateLoadout(brownPool, { ...opts, pokemonContext: highCtx }, mockSetBonuses);
-    const evLowClassic = evaluateLoadout(brownPool, { ...opts, pokemonContext: lowCtx }, mockSetBonuses);
+    const evHighClassic = evaluateLoadout(
+      brownPool,
+      { ...opts, pokemonContext: highCtx },
+      mockSetBonuses,
+    );
+    const evLowClassic = evaluateLoadout(
+      brownPool,
+      { ...opts, pokemonContext: lowCtx },
+      mockSetBonuses,
+    );
 
     // Scores should be identical (context has no effect in classic mode)
     expect(evHighClassic.score).toBeCloseTo(evLowClassic.score, 6);
@@ -108,11 +128,23 @@ describe("Pokemon-aware scoring — % bonus scales with base stats", () => {
 
   it("pokemon-aware scoring: high-base Pokémon scores % attack bonus higher than low-base", () => {
     const optsBase = makeMaximizeOpts({ scoringMode: "pokemon", colorBonuses: true });
-    const highCtx: PokemonScoringContext = { pokemonId: "high", level: 15, baseStats: highBaseStats };
+    const highCtx: PokemonScoringContext = {
+      pokemonId: "high",
+      level: 15,
+      baseStats: highBaseStats,
+    };
     const lowCtx: PokemonScoringContext = { pokemonId: "low", level: 15, baseStats: lowBaseStats };
 
-    const evHigh = evaluateLoadout(brownPool, { ...optsBase, pokemonContext: highCtx }, mockSetBonuses);
-    const evLow = evaluateLoadout(brownPool, { ...optsBase, pokemonContext: lowCtx }, mockSetBonuses);
+    const evHigh = evaluateLoadout(
+      brownPool,
+      { ...optsBase, pokemonContext: highCtx },
+      mockSetBonuses,
+    );
+    const evLow = evaluateLoadout(
+      brownPool,
+      { ...optsBase, pokemonContext: lowCtx },
+      mockSetBonuses,
+    );
 
     // High-base Pokémon should get a strictly higher score for the attack set bonus
     expect(evHigh.score).toBeGreaterThan(evLow.score + SCORE_EPS);
@@ -123,7 +155,11 @@ describe("Pokemon-aware scoring — % bonus scales with base stats", () => {
     // for a Pokemon with equal attack and hp bases
     const equalBaseStats: StatBlock = makeStats({ hp: 200, attack: 200 });
     const ctx: PokemonScoringContext = { pokemonId: "eq", level: 15, baseStats: equalBaseStats };
-    const opts = makeMaximizeOpts({ scoringMode: "pokemon", priorities: { attack: 3, hp: 1 }, pokemonContext: ctx });
+    const opts = makeMaximizeOpts({
+      scoringMode: "pokemon",
+      priorities: { attack: 3, hp: 1 },
+      pokemonContext: ctx,
+    });
 
     const brownEv = evaluateLoadout(brownPool, opts, mockSetBonuses);
     const whiteEv = evaluateLoadout(whitePool, opts, mockSetBonuses);

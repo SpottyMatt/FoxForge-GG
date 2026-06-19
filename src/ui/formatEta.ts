@@ -49,12 +49,10 @@ export function computeSearchEta(
 
   if (elapsed < 0.4 || pct < 2) return "Estimating…";
 
-  const rawRemaining = elapsed * (100 - pct) / pct;
+  const rawRemaining = (elapsed * (100 - pct)) / pct;
 
   smoothedRef.current =
-    smoothedRef.current == null
-      ? rawRemaining
-      : 0.6 * smoothedRef.current + 0.4 * rawRemaining;
+    smoothedRef.current == null ? rawRemaining : 0.6 * smoothedRef.current + 0.4 * rawRemaining;
 
   return `~${formatEtaDuration(smoothedRef.current)} remaining`;
 }

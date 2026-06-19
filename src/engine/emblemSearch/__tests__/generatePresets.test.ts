@@ -24,13 +24,7 @@ import {
   round2,
 } from "../../../../tools/meta-defaults/generate-presets";
 import { makeEmblem } from "../../__tests__/fixtures";
-import type {
-  Emblem,
-  EmblemSetBonus,
-  Pokemon,
-  PokemonBuild,
-  StatBlock,
-} from "../../../types";
+import type { Emblem, EmblemSetBonus, Pokemon, PokemonBuild, StatBlock } from "../../../types";
 
 // ---------------------------------------------------------------------------
 // Fixtures
@@ -38,15 +32,36 @@ import type {
 
 function statBlock(overrides: Partial<StatBlock> = {}): StatBlock {
   return {
-    hp: 0, attack: 0, defense: 0, spAttack: 0, spDefense: 0,
-    critRate: 0, cdr: 0, lifesteal: 0, spLifesteal: 0, attackSpeed: 0, moveSpeed: 0,
+    hp: 0,
+    attack: 0,
+    defense: 0,
+    spAttack: 0,
+    spDefense: 0,
+    critRate: 0,
+    cdr: 0,
+    lifesteal: 0,
+    spLifesteal: 0,
+    attackSpeed: 0,
+    moveSpeed: 0,
     ...overrides,
   };
 }
 
-const GREEN_SB: EmblemSetBonus = { color: "green", stat: "spAttack", thresholds: { 2: 0.01, 4: 0.02, 6: 0.04 } };
-const WHITE_SB: EmblemSetBonus = { color: "white", stat: "hp", thresholds: { 2: 0.01, 4: 0.02, 6: 0.04 } };
-const BROWN_SB: EmblemSetBonus = { color: "brown", stat: "attack", thresholds: { 2: 0.01, 4: 0.02, 6: 0.04 } };
+const GREEN_SB: EmblemSetBonus = {
+  color: "green",
+  stat: "spAttack",
+  thresholds: { 2: 0.01, 4: 0.02, 6: 0.04 },
+};
+const WHITE_SB: EmblemSetBonus = {
+  color: "white",
+  stat: "hp",
+  thresholds: { 2: 0.01, 4: 0.02, 6: 0.04 },
+};
+const BROWN_SB: EmblemSetBonus = {
+  color: "brown",
+  stat: "attack",
+  thresholds: { 2: 0.01, 4: 0.02, 6: 0.04 },
+};
 const SET_BONUSES = [GREEN_SB, WHITE_SB, BROWN_SB];
 
 /** Build an emblem map + a 10-emblem build from a color list. */
@@ -108,7 +123,10 @@ describe("build totals + usability", () => {
     const short = { ...build, emblems: build.emblems.slice(0, 9) };
     expect(isUsableBuild(short, byId)).toBe(false);
 
-    const missing = { ...build, emblems: [...build.emblems.slice(0, 9), { emblemId: "nope", grade: "gold" as const }] };
+    const missing = {
+      ...build,
+      emblems: [...build.emblems.slice(0, 9), { emblemId: "nope", grade: "gold" as const }],
+    };
     expect(isUsableBuild(missing, byId)).toBe(false);
   });
 
@@ -117,7 +135,8 @@ describe("build totals + usability", () => {
     const e2 = makeEmblem("b", ["white"], { hp: 50 });
     const byId = new Map([e1, e2].map((e) => [e.id, e]));
     const build: PokemonBuild = {
-      name: "b", heldItemIds: [],
+      name: "b",
+      heldItemIds: [],
       emblems: [
         { emblemId: "a", grade: "gold" },
         { emblemId: "b", grade: "gold" },
@@ -135,7 +154,12 @@ describe("build totals + usability", () => {
 
 describe("derivePriorities", () => {
   it("[GEN-7] dominant stat is normalized to 1.0", () => {
-    const p = derivePriorities([{ attack: 14, hp: 100 }], { brown: 6 }, statBlock({ attack: 300, hp: 9000 }), SET_BONUSES);
+    const p = derivePriorities(
+      [{ attack: 14, hp: 100 }],
+      { brown: 6 },
+      statBlock({ attack: 300, hp: 9000 }),
+      SET_BONUSES,
+    );
     expect(Math.max(...Object.values(p))).toBe(1);
   });
 
@@ -186,8 +210,16 @@ describe("deriveProtectedFloors", () => {
 describe("deriveColorTargets", () => {
   it("[GEN-14] keeps colors with weighted count ≥ 2", () => {
     const { build, byId } = buildFromColors([
-      "green", "green", "green", "green", "green", "green",
-      "white", "white", "white", "white",
+      "green",
+      "green",
+      "green",
+      "green",
+      "green",
+      "green",
+      "white",
+      "white",
+      "white",
+      "white",
     ]);
     const targets = deriveColorTargets([{ build, weight: 1 }], byId);
     expect(targets.green).toBe(6);
@@ -196,7 +228,15 @@ describe("deriveColorTargets", () => {
 
   it("[GEN-15] drops a singleton color below the threshold", () => {
     const { build, byId } = buildFromColors([
-      "green", "green", "green", "green", "green", "green", "green", "green", "green",
+      "green",
+      "green",
+      "green",
+      "green",
+      "green",
+      "green",
+      "green",
+      "green",
+      "green",
       "white",
     ]);
     const targets = deriveColorTargets([{ build, weight: 1 }], byId);
@@ -209,7 +249,10 @@ describe("deriveColorTargets", () => {
     const creative = buildFromColors(Array(10).fill("white"));
     const byId = new Map([...rec.byId, ...creative.byId]);
     const targets = deriveColorTargets(
-      [{ build: rec.build, weight: 1 }, { build: creative.build, weight: 0.5 }],
+      [
+        { build: rec.build, weight: 1 },
+        { build: creative.build, weight: 0.5 },
+      ],
       byId,
     );
     // green: (1*10)/1.5 = 6.67 → 7 ; white: (0.5*10)/1.5 = 3.33 → 3
@@ -230,7 +273,12 @@ describe("computeConfidence", () => {
   });
 
   it("[GEN-18] a single outlier among consistent builds keeps confidence high", () => {
-    const totals = [{ hp: 150, attack: 13 }, { hp: 150, attack: 13 }, { hp: 150, attack: 13 }, { hp: -100, attack: -7 }];
+    const totals = [
+      { hp: 150, attack: 13 },
+      { hp: 150, attack: 13 },
+      { hp: 150, attack: 13 },
+      { hp: -100, attack: -7 },
+    ];
     expect(computeConfidence(4, totals)).toBeGreaterThanOrEqual(0.9);
   });
 
@@ -239,8 +287,14 @@ describe("computeConfidence", () => {
   });
 
   it("[GEN-20] genuinely divergent builds score lower", () => {
-    const consistent = computeConfidence(2, [{ hp: 300, attack: 14 }, { hp: 300, attack: 14 }]);
-    const divergent = computeConfidence(2, [{ hp: 600, attack: 0 }, { hp: 0, attack: 28 }]);
+    const consistent = computeConfidence(2, [
+      { hp: 300, attack: 14 },
+      { hp: 300, attack: 14 },
+    ]);
+    const divergent = computeConfidence(2, [
+      { hp: 600, attack: 0 },
+      { hp: 0, attack: 28 },
+    ]);
     expect(divergent).toBeLessThan(consistent);
   });
 
@@ -258,22 +312,36 @@ describe("computeConfidence", () => {
 
 function makePokemon(builds: PokemonBuild[], creativeBuilds: PokemonBuild[] = []): Pokemon {
   return {
-    id: "test", displayName: "Test", role: "Attacker", attackType: "special",
-    difficulty: 1, imageAsset: "", iconAsset: "", evolutions: [],
+    id: "test",
+    displayName: "Test",
+    role: "Attacker",
+    attackType: "special",
+    difficulty: 1,
+    imageAsset: "",
+    iconAsset: "",
+    evolutions: [],
     baseStatsByLevel: Array.from({ length: 15 }, () => statBlock({ spAttack: 280, hp: 8000 })),
-    moves: [], passiveAbility: { id: "p", name: "", description: "", effects: [] },
-    builds, creativeBuilds,
+    moves: [],
+    passiveAbility: { id: "p", name: "", description: "", effects: [] },
+    builds,
+    creativeBuilds,
   };
 }
 
 describe("generatePresetForPokemon", () => {
   function greenBuild(name: string): { build: PokemonBuild; emblems: Emblem[] } {
     const emblems = [
-      ...Array.from({ length: 6 }, (_, i) => makeEmblem(`g${name}${i}`, ["green"], { spAttack: 3, hp: -50 })),
+      ...Array.from({ length: 6 }, (_, i) =>
+        makeEmblem(`g${name}${i}`, ["green"], { spAttack: 3, hp: -50 }),
+      ),
       ...Array.from({ length: 4 }, (_, i) => makeEmblem(`w${name}${i}`, ["white"], { hp: 50 })),
     ];
     return {
-      build: { name, heldItemIds: [], emblems: emblems.map((e) => ({ emblemId: e.id, grade: "gold" as const })) },
+      build: {
+        name,
+        heldItemIds: [],
+        emblems: emblems.map((e) => ({ emblemId: e.id, grade: "gold" as const })),
+      },
       emblems,
     };
   }
@@ -292,7 +360,7 @@ describe("generatePresetForPokemon", () => {
     expect(preset!.colorTargets.white).toBe(4);
     // Set-bonus intent → spAttack is a real priority despite small flat values.
     expect(preset!.priorities.spAttack ?? 0).toBeGreaterThan(0);
-    expect((preset!.confidence ?? 0)).toBeGreaterThanOrEqual(0.4);
+    expect(preset!.confidence ?? 0).toBeGreaterThanOrEqual(0.4);
   });
 
   it("[GEN-22] no usable builds → null (falls back to generic)", () => {
@@ -303,8 +371,14 @@ describe("generatePresetForPokemon", () => {
   it("[GEN-23] low confidence (one divergent pair) → null", () => {
     // Two wildly different single builds → low confidence below threshold.
     const a = greenBuild("x");
-    const bEmblems = Array.from({ length: 10 }, (_, i) => makeEmblem(`brown${i}`, ["brown"], { attack: 8, hp: -50, moveSpeed: -35 }));
-    const bBuild: PokemonBuild = { name: "y", heldItemIds: [], emblems: bEmblems.map((e) => ({ emblemId: e.id, grade: "gold" as const })) };
+    const bEmblems = Array.from({ length: 10 }, (_, i) =>
+      makeEmblem(`brown${i}`, ["brown"], { attack: 8, hp: -50, moveSpeed: -35 }),
+    );
+    const bBuild: PokemonBuild = {
+      name: "y",
+      heldItemIds: [],
+      emblems: bEmblems.map((e) => ({ emblemId: e.id, grade: "gold" as const })),
+    };
     const byId = new Map([...a.emblems, ...bEmblems].map((e) => [e.id, e]));
     const pokemon = makePokemon([a.build, bBuild]);
     expect(generatePresetForPokemon(pokemon, byId, SET_BONUSES)).toBeNull();

@@ -55,7 +55,11 @@ const targetOpts: SearchOptions = { ...maximizeOpts, mode: "target" };
 describe("mergeHeuristicResults", () => {
   it("[HPAR-1] picks the highest score in maximize mode", () => {
     const merged = mergeHeuristicResults(
-      [res(ev({ score: 10 }), 100, 3), res(ev({ score: 25 }), 200, 5), res(ev({ score: 18 }), 150, 4)],
+      [
+        res(ev({ score: 10 }), 100, 3),
+        res(ev({ score: 25 }), 200, 5),
+        res(ev({ score: 18 }), 150, 4),
+      ],
       [100, 200, 150],
       maximizeOpts,
     );

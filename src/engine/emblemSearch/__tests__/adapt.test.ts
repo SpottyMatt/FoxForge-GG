@@ -1,11 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { emblems } from "../../../data/gameData";
-import {
-  buildCandidatePool,
-  distinctPokemonCount,
-  groupByPokemon,
-  GRADE_ORDER,
-} from "../adapt";
+import { buildCandidatePool, distinctPokemonCount, groupByPokemon, GRADE_ORDER } from "../adapt";
 import { approximateBuildCount } from "../pool";
 
 describe("adapt — candidate pool from real 258-emblem dataset", () => {

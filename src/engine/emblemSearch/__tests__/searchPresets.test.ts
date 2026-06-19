@@ -22,7 +22,13 @@
 import { describe, it, expect } from "vitest";
 import { makeEmblem } from "../../__tests__/fixtures";
 import { buildCandidatePool } from "../adapt";
-import { resolveColorSearchMode, buildPresetSearchOptions, deriveAdvancedColorUiDefaults, resolveBasicSearchParams, EXACT_FALLBACK_EFFORT } from "../searchPresets";
+import {
+  resolveColorSearchMode,
+  buildPresetSearchOptions,
+  deriveAdvancedColorUiDefaults,
+  resolveBasicSearchParams,
+  EXACT_FALLBACK_EFFORT,
+} from "../searchPresets";
 import { DEFAULT_EXACT_CAP, runSearch } from "../orchestrator";
 import { emblems, pokemonById } from "../../../data/gameData";
 import { buildPool } from "../pool";
@@ -39,8 +45,17 @@ const SLOTS = 10;
 
 function makeStats() {
   return {
-    hp: 5000, attack: 200, defense: 100, spAttack: 80, spDefense: 100,
-    critRate: 0, cdr: 0, lifesteal: 0, spLifesteal: 0, attackSpeed: 0.4, moveSpeed: 3700,
+    hp: 5000,
+    attack: 200,
+    defense: 100,
+    spAttack: 80,
+    spDefense: 100,
+    critRate: 0,
+    cdr: 0,
+    lifesteal: 0,
+    spLifesteal: 0,
+    attackSpeed: 0.4,
+    moveSpeed: 3700,
   };
 }
 
@@ -78,7 +93,10 @@ function nOf(
 // ---------------------------------------------------------------------------
 
 describe("resolveColorSearchMode", () => {
-  const physicalTargets = new Map<EmblemColor, number>([["brown", 6], ["white", 6]]);
+  const physicalTargets = new Map<EmblemColor, number>([
+    ["brown", 6],
+    ["white", 6],
+  ]);
 
   it("[PRE-1] sparse owned pool → weighted (null constraints)", () => {
     // Only 3 brown + 5 white owned — can't reach brown=6.
@@ -267,7 +285,10 @@ describe("buildPresetSearchOptions", () => {
     const feasiblePool = buildCandidatePool(feasibleEmblems, {});
     const feasibleResolution = resolveColorSearchMode(
       feasiblePool,
-      new Map<EmblemColor, number>([["brown", 6], ["white", 6]]),
+      new Map<EmblemColor, number>([
+        ["brown", 6],
+        ["white", 6],
+      ]),
       SLOTS,
     );
     expect(feasibleResolution.willRunExact).toBe(true);
@@ -322,7 +343,10 @@ describe("buildPresetSearchOptions", () => {
     const pool = buildCandidatePool(sparse, {});
     const sparseResolution = resolveColorSearchMode(
       pool,
-      new Map<EmblemColor, number>([["brown", 6], ["white", 6]]),
+      new Map<EmblemColor, number>([
+        ["brown", 6],
+        ["white", 6],
+      ]),
       SLOTS,
     );
     expect(sparseResolution.willRunExact).toBe(false);
@@ -357,7 +381,10 @@ describe("buildPresetSearchOptions", () => {
     const overCapPool = buildCandidatePool(overCapEmblems, {});
     const overCapResolution = resolveColorSearchMode(
       overCapPool,
-      new Map<EmblemColor, number>([["brown", 6], ["white", 6]]),
+      new Map<EmblemColor, number>([
+        ["brown", 6],
+        ["white", 6],
+      ]),
       SLOTS,
     );
     expect(overCapResolution.mode).toBe("exact");
@@ -394,10 +421,7 @@ describe("preset → runSearch integration", () => {
   it("[PRE-7] feasible meta targets run an exact search", async () => {
     const pokemon = makePokemon("lucario", "physical", "Attacker");
     // 6 dual brown+white + 4 green fill = brown6, white6 in a 10-pick build.
-    const emblems = [
-      ...nOf(8, ["brown", "white"], "bw"),
-      ...nOf(6, ["green"], "gr"),
-    ];
+    const emblems = [...nOf(8, ["brown", "white"], "bw"), ...nOf(6, ["green"], "gr")];
     const pool = buildCandidatePool(emblems, {});
     const { options, resolution } = buildPresetSearchOptions({
       pokemon,
@@ -419,10 +443,7 @@ describe("preset → runSearch integration", () => {
 
   it("[PRE-11] forceHeuristic skips exact and runs the heuristic path", async () => {
     const pokemon = makePokemon("lucario", "physical", "Attacker");
-    const emblems = [
-      ...nOf(8, ["brown", "white"], "bw"),
-      ...nOf(6, ["green"], "gr"),
-    ];
+    const emblems = [...nOf(8, ["brown", "white"], "bw"), ...nOf(6, ["green"], "gr")];
     const pool = buildCandidatePool(emblems, {});
     const { options, resolution } = buildPresetSearchOptions({
       pokemon,
@@ -447,10 +468,7 @@ describe("preset → runSearch integration", () => {
 
   it("[PRE-16] exactCap=0 keeps hard colors but runs the heuristic (Balanced + feasible)", async () => {
     const pokemon = makePokemon("lucario", "physical", "Attacker");
-    const emblems = [
-      ...nOf(8, ["brown", "white"], "bw"),
-      ...nOf(6, ["green"], "gr"),
-    ];
+    const emblems = [...nOf(8, ["brown", "white"], "bw"), ...nOf(6, ["green"], "gr")];
     const pool = buildCandidatePool(emblems, {});
     const { options, resolution } = buildPresetSearchOptions({
       pokemon,
@@ -517,14 +535,18 @@ describe("deriveAdvancedColorUiDefaults", () => {
 });
 
 describe("resolveBasicSearchParams", () => {
-  const physicalTargets = new Map<EmblemColor, number>([["brown", 6], ["white", 6]]);
+  const physicalTargets = new Map<EmblemColor, number>([
+    ["brown", 6],
+    ["white", 6],
+  ]);
 
-  const feasiblePool = () => buildCandidatePool([
-    ...nOf(8, ["brown", "white"], "bw"),
-    ...nOf(4, ["brown"], "br"),
-    ...nOf(4, ["white"], "wh"),
-  ], {});
-  const sparsePool = () => buildCandidatePool([...nOf(3, ["brown"], "br"), ...nOf(5, ["white"], "wh")], {});
+  const feasiblePool = () =>
+    buildCandidatePool(
+      [...nOf(8, ["brown", "white"], "bw"), ...nOf(4, ["brown"], "br"), ...nOf(4, ["white"], "wh")],
+      {},
+    );
+  const sparsePool = () =>
+    buildCandidatePool([...nOf(3, ["brown"], "br"), ...nOf(5, ["white"], "wh")], {});
 
   it("Exact selected + feasible → enumerate (Exact display, default cap)", () => {
     const resolution = resolveColorSearchMode(feasiblePool(), physicalTargets, SLOTS);

@@ -52,14 +52,10 @@ export function computePokemonScore(
   // We need to reconstruct approximate slot data from flat candidate stats.
   const slots = candidatesToEmblemSlots(candidates, setBonuses);
   const emblemLoadout = computeEmblemLoadout(slots, setBonuses);
-  const effectiveStats = computeEffectiveStats(
-    pokemon,
-    level,
-    emblemLoadout,
-    items,
-    itemGrades,
-    { inCombat: true, goalsScored: 0 },
-  );
+  const effectiveStats = computeEffectiveStats(pokemon, level, emblemLoadout, items, itemGrades, {
+    inCombat: true,
+    goalsScored: 0,
+  });
 
   // Weighted score over effective stats
   let score = 0;
@@ -132,14 +128,10 @@ export function baselineStats(
   setBonuses: EmblemSetBonus[],
 ): StatBlock {
   const emptyLoadout = computeEmblemLoadout([], setBonuses);
-  return computeEffectiveStats(
-    pokemon,
-    level,
-    emptyLoadout,
-    items,
-    itemGrades,
-    { inCombat: true, goalsScored: 0 },
-  );
+  return computeEffectiveStats(pokemon, level, emptyLoadout, items, itemGrades, {
+    inCombat: true,
+    goalsScored: 0,
+  });
 }
 
 export { setBonusStat };

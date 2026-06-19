@@ -72,8 +72,20 @@ describe("unrankCombination", () => {
 
   it("[PAR-2] ranks 0..C(5,2)-1 match lexicographic k-subsets of {0..4}", () => {
     // All 2-subsets of {0,1,2,3,4} in lex order:
-    const expected = [[0,1],[0,2],[0,3],[0,4],[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]];
-    const n = 5, k = 2;
+    const expected = [
+      [0, 1],
+      [0, 2],
+      [0, 3],
+      [0, 4],
+      [1, 2],
+      [1, 3],
+      [1, 4],
+      [2, 3],
+      [2, 4],
+      [3, 4],
+    ];
+    const n = 5,
+      k = 2;
     expect(binomNum(n, k)).toBe(expected.length);
     for (let r = 0; r < expected.length; r++) {
       expect(unrankCombination(n, k, r)).toEqual(expected[r]);
@@ -87,7 +99,8 @@ describe("unrankCombination", () => {
   });
 
   it("[PAR-2] unranking matches nextCombo sequence for n=6, k=2", () => {
-    const n = 6, k = 2;
+    const n = 6,
+      k = 2;
     const total = binomNum(n, k); // 15
     // Build expected list by iterating nextCombo
     const combos: number[][] = [];
@@ -118,7 +131,7 @@ describe("unrankLocalState", () => {
     const sizes = [30, 11];
     const k = [2, 8];
     const state = unrankLocalState(sizes, k, 0);
-    expect(state[0]).toEqual([0, 1]);           // first 2-combo of 30
+    expect(state[0]).toEqual([0, 1]); // first 2-combo of 30
     expect(state[1]).toEqual([0, 1, 2, 3, 4, 5, 6, 7]); // first 8-combo of 11
   });
 
@@ -141,12 +154,13 @@ describe("computeKPrefix", () => {
     // Pool: 30 brown + 11 green, target {brown:2, green:8}
     // k-vectors: only [2,8]; C(30,2)*C(11,8) = 435*165 = 71,775
     const pool = [...singles(30, "brown", "B"), ...singles(11, "green", "G")];
-    const targets = new Map<string, number>([["brown", 2], ["green", 8]]);
+    const targets = new Map<string, number>([
+      ["brown", 2],
+      ["green", 8],
+    ]);
     const groups = buildColorTargetGroups(pool, targets as Map<never, number>);
-    const sizes = groups.map(g => g.names.length);
-    const kVectors = enumerateColorKVectors(
-      groups, sizes, [2, 8], 10,
-    );
+    const sizes = groups.map((g) => g.names.length);
+    const kVectors = enumerateColorKVectors(groups, sizes, [2, 8], 10);
     expect(kVectors).not.toBeNull();
     expect(kVectors!.length).toBe(1); // only one valid k-vector [2,8]
 
@@ -169,85 +183,88 @@ describe("computeKPrefix", () => {
 describe("searchColorExactSlice — partition correctness", () => {
   const setBonuses: EmblemSetBonus[] = [];
 
-  it(
-    "[PAR-5,6] three partitions together match single-threaded result and cover all builds",
-    async () => {
-      const pool = [...singles(30, "brown", "B"), ...singles(11, "green", "G")];
-      const targets = new Map<string, number>([["brown", 2], ["green", 8]]);
-      const opts = minOpts(targets);
+  it("[PAR-5,6] three partitions together match single-threaded result and cover all builds", async () => {
+    const pool = [...singles(30, "brown", "B"), ...singles(11, "green", "G")];
+    const targets = new Map<string, number>([
+      ["brown", 2],
+      ["green", 8],
+    ]);
+    const opts = minOpts(targets);
 
-      // Prepare shared plan
-      const groups = buildColorTargetGroups(pool, targets as Map<never, number>);
-      const sizes = groups.map(g => g.names.length);
-      const kVectors = enumerateColorKVectors(groups, sizes, [2, 8], 10)!;
-      const kPrefix = computeKPrefix(sizes, kVectors);
-      const totalCombos = kPrefix[kPrefix.length - 1]; // 71,775
+    // Prepare shared plan
+    const groups = buildColorTargetGroups(pool, targets as Map<never, number>);
+    const sizes = groups.map((g) => g.names.length);
+    const kVectors = enumerateColorKVectors(groups, sizes, [2, 8], 10)!;
+    const kPrefix = computeKPrefix(sizes, kVectors);
+    const totalCombos = kPrefix[kPrefix.length - 1]; // 71,775
 
-      // Single-threaded reference
-      const singleResult = await searchColorExact(pool, opts, setBonuses);
-      expect(singleResult).not.toBeNull();
-      expect(singleResult!.evaluated).toBe(totalCombos);
+    // Single-threaded reference
+    const singleResult = await searchColorExact(pool, opts, setBonuses);
+    expect(singleResult).not.toBeNull();
+    expect(singleResult!.evaluated).toBe(totalCombos);
 
-      // Three balanced slices
-      const n = 3;
-      const base = Math.floor(totalCombos / n);
-      const ranges = [
-        { start: 0, size: base },
-        { start: base, size: base },
-        { start: 2 * base, size: totalCombos - 2 * base },
-      ];
+    // Three balanced slices
+    const n = 3;
+    const base = Math.floor(totalCombos / n);
+    const ranges = [
+      { start: 0, size: base },
+      { start: base, size: base },
+      { start: 2 * base, size: totalCombos - 2 * base },
+    ];
 
-      let totalEvaluated = 0;
-      let bestSlice = null;
+    let totalEvaluated = 0;
+    let bestSlice = null;
 
-      const { isBetter: ib } = await import("../evaluate");
+    const { isBetter: ib } = await import("../evaluate");
 
-      for (const { start, size } of ranges) {
-        const r = await searchColorExactSlice(
-          pool, opts, setBonuses,
-          groups, kVectors, kPrefix,
-          start, size,
-        );
-        if (r) {
-          totalEvaluated += r.evaluated;
-          if (!bestSlice || ib(r.ev, bestSlice.ev, opts)) bestSlice = r;
-        } else {
-          // An empty slice can return null — count its size
-          totalEvaluated += size;
-        }
+    for (const { start, size } of ranges) {
+      const r = await searchColorExactSlice(
+        pool,
+        opts,
+        setBonuses,
+        groups,
+        kVectors,
+        kPrefix,
+        start,
+        size,
+      );
+      if (r) {
+        totalEvaluated += r.evaluated;
+        if (!bestSlice || ib(r.ev, bestSlice.ev, opts)) bestSlice = r;
+      } else {
+        // An empty slice can return null — count its size
+        totalEvaluated += size;
       }
+    }
 
-      // [PAR-6] Total evaluated across all slices = global total
-      expect(totalEvaluated).toBe(totalCombos);
+    // [PAR-6] Total evaluated across all slices = global total
+    expect(totalEvaluated).toBe(totalCombos);
 
-      // [PAR-5] Best result from partitioned slices matches single-threaded
-      expect(bestSlice).not.toBeNull();
-      expect(bestSlice!.ev.score).toBeCloseTo(singleResult!.ev.score, 6);
-    },
-    60_000,
-  );
+    // [PAR-5] Best result from partitioned slices matches single-threaded
+    expect(bestSlice).not.toBeNull();
+    expect(bestSlice!.ev.score).toBeCloseTo(singleResult!.ev.score, 6);
+  }, 60_000);
 
-  it(
-    "[PAR-5] each slice evaluates only its own range (no overlaps, no gaps)",
-    async () => {
-      // Tiny pool: 5 brown + 5 green, target {brown:5, green:5} → 1 build
-      const pool = [...singles(5, "brown", "B"), ...singles(5, "green", "G")];
-      const targets = new Map<string, number>([["brown", 5], ["green", 5]]);
-      const opts = minOpts(targets);
-      const groups = buildColorTargetGroups(pool, targets as Map<never, number>);
-      const sizes = groups.map(g => g.names.length);
-      const kVectors = enumerateColorKVectors(groups, sizes, [5, 5], 10)!;
-      const kPrefix = computeKPrefix(sizes, kVectors);
+  it("[PAR-5] each slice evaluates only its own range (no overlaps, no gaps)", async () => {
+    // Tiny pool: 5 brown + 5 green, target {brown:5, green:5} → 1 build
+    const pool = [...singles(5, "brown", "B"), ...singles(5, "green", "G")];
+    const targets = new Map<string, number>([
+      ["brown", 5],
+      ["green", 5],
+    ]);
+    const opts = minOpts(targets);
+    const groups = buildColorTargetGroups(pool, targets as Map<never, number>);
+    const sizes = groups.map((g) => g.names.length);
+    const kVectors = enumerateColorKVectors(groups, sizes, [5, 5], 10)!;
+    const kPrefix = computeKPrefix(sizes, kVectors);
 
-      // Total = 1 build; slice [0,1) must find it; slice [1,0) returns null
-      const r0 = await searchColorExactSlice(pool, opts, [], groups, kVectors, kPrefix, 0, 1);
-      const r1 = await searchColorExactSlice(pool, opts, [], groups, kVectors, kPrefix, 0, 0);
-      expect(r0).not.toBeNull();
-      expect(r0!.evaluated).toBe(1);
-      expect(r1).toBeNull(); // sliceSize=0 → null
-    },
-    15_000,
-  );
+    // Total = 1 build; slice [0,1) must find it; slice [1,0) returns null
+    const r0 = await searchColorExactSlice(pool, opts, [], groups, kVectors, kPrefix, 0, 1);
+    const r1 = await searchColorExactSlice(pool, opts, [], groups, kVectors, kPrefix, 0, 0);
+    expect(r0).not.toBeNull();
+    expect(r0!.evaluated).toBe(1);
+    expect(r1).toBeNull(); // sliceSize=0 → null
+  }, 15_000);
 });
 
 // ---------------------------------------------------------------------------

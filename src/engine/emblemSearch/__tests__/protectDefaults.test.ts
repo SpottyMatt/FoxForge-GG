@@ -16,7 +16,13 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { deriveDefaultProtectedStats, deriveDefenseSoftFloor, deriveMobilityFloor, deriveProtectFloors, DEFENSE_SOFT_FLOOR } from "../protectDefaults";
+import {
+  deriveDefaultProtectedStats,
+  deriveDefenseSoftFloor,
+  deriveMobilityFloor,
+  deriveProtectFloors,
+  DEFENSE_SOFT_FLOOR,
+} from "../protectDefaults";
 import { deriveBasicObjective, basicSearchOptions } from "../basicObjective";
 import { evaluateLoadout, sumStats } from "../evaluate";
 import { makeEmblem } from "../../__tests__/fixtures";
@@ -33,9 +39,17 @@ import type { Pokemon, StatBlock } from "../../../types";
 
 function makeStats(overrides: Partial<StatBlock> = {}): StatBlock {
   return {
-    hp: 5000, attack: 200, defense: 100, spAttack: 80, spDefense: 100,
-    critRate: 0, cdr: 0, lifesteal: 0, spLifesteal: 0,
-    attackSpeed: 0.4, moveSpeed: 3700,
+    hp: 5000,
+    attack: 200,
+    defense: 100,
+    spAttack: 80,
+    spDefense: 100,
+    critRate: 0,
+    cdr: 0,
+    lifesteal: 0,
+    spLifesteal: 0,
+    attackSpeed: 0.4,
+    moveSpeed: 3700,
     ...overrides,
   };
 }
@@ -65,11 +79,13 @@ function makePokemon(
 // ---------------------------------------------------------------------------
 
 const BASELINE: Partial<StatBlock> = {
-  hp: 5000, attack: 200, spAttack: 80, defense: 100, spDefense: 100,
+  hp: 5000,
+  attack: 200,
+  spAttack: 80,
+  defense: 100,
+  spDefense: 100,
 };
-const POP_BASE = Array.from({ length: 10 }, (_, i) =>
-  makePokemon(`base${i}`, BASELINE),
-);
+const POP_BASE = Array.from({ length: 10 }, (_, i) => makePokemon(`base${i}`, BASELINE));
 
 // ---------------------------------------------------------------------------
 // deriveDefaultProtectedStats
@@ -100,7 +116,13 @@ describe("deriveDefaultProtectedStats", () => {
   });
 
   it("[PROT-4] at most 2 stats protected (MAX_PROTECT guard)", () => {
-    const omni = makePokemon("omni", { hp: 12000, attack: 500, spAttack: 400, defense: 300, spDefense: 300 });
+    const omni = makePokemon("omni", {
+      hp: 12000,
+      attack: 500,
+      spAttack: 400,
+      defense: 300,
+      spDefense: 300,
+    });
     const pop = [...POP_BASE, omni];
     const floors = deriveDefaultProtectedStats(omni, pop, 15);
     expect(Object.keys(floors).length).toBeLessThanOrEqual(2);
@@ -232,13 +254,19 @@ describe("deriveMobilityFloor", () => {
     const opts = {
       mode: "maximize" as const,
       priorities: { hp: 4.5 },
-      targets: {}, targetActive: {},
+      targets: {},
+      targetActive: {},
       protected: {},
-      colorConstraints: null, colorBonuses: false,
+      colorConstraints: null,
+      colorBonuses: false,
       slots: 10,
     };
     const noGuard = evaluateLoadout(candidates, opts, setBonuses);
-    const withGuard = evaluateLoadout(candidates, { ...opts, protected: { moveSpeed: 0 } }, setBonuses);
+    const withGuard = evaluateLoadout(
+      candidates,
+      { ...opts, protected: { moveSpeed: 0 } },
+      setBonuses,
+    );
     expect(withGuard.score).toBeLessThan(noGuard.score);
   });
 });
@@ -294,23 +322,37 @@ describe("deriveDefenseSoftFloor", () => {
     const opts = {
       mode: "maximize" as const,
       priorities: { spAttack: 4 },
-      targets: {}, targetActive: {},
+      targets: {},
+      targetActive: {},
       protected: {},
-      colorConstraints: null, colorBonuses: false,
+      colorConstraints: null,
+      colorBonuses: false,
       slots: 10,
     };
     const softFloor = { defense: DEFENSE_SOFT_FLOOR, spDefense: DEFENSE_SOFT_FLOOR };
 
     const deepNoGuard = evaluateLoadout(deepNegative, opts, setBonuses);
-    const deepWithGuard = evaluateLoadout(deepNegative, { ...opts, protected: softFloor }, setBonuses);
+    const deepWithGuard = evaluateLoadout(
+      deepNegative,
+      { ...opts, protected: softFloor },
+      setBonuses,
+    );
     expect(deepWithGuard.score).toBeLessThan(deepNoGuard.score);
 
     const metaAtFloorNoGuard = evaluateLoadout(metaTaxAtFloor, opts, setBonuses);
-    const metaAtFloorWithGuard = evaluateLoadout(metaTaxAtFloor, { ...opts, protected: softFloor }, setBonuses);
+    const metaAtFloorWithGuard = evaluateLoadout(
+      metaTaxAtFloor,
+      { ...opts, protected: softFloor },
+      setBonuses,
+    );
     expect(metaAtFloorWithGuard.score).toBeCloseTo(metaAtFloorNoGuard.score);
 
     const metaBelowNoGuard = evaluateLoadout(metaTaxBelowFloor, opts, setBonuses);
-    const metaBelowWithGuard = evaluateLoadout(metaTaxBelowFloor, { ...opts, protected: softFloor }, setBonuses);
+    const metaBelowWithGuard = evaluateLoadout(
+      metaTaxBelowFloor,
+      { ...opts, protected: softFloor },
+      setBonuses,
+    );
     expect(metaBelowWithGuard.score).toBeLessThan(metaBelowNoGuard.score);
   });
 });
@@ -375,7 +417,12 @@ describe("deriveDefaultProtectedStats — live roster cases", () => {
     const options = basicSearchOptions(objective);
     expect(options.protected.moveSpeed).toBe(0);
 
-    const result = await runSearch({ pool, options, setBonuses: bundle.setBonuses, effort: "quick" });
+    const result = await runSearch({
+      pool,
+      options,
+      setBonuses: bundle.setBonuses,
+      effort: "quick",
+    });
     expect(result).not.toBeNull();
     const totals = sumStats(
       result!.picks.map((slot) => emblemToCandidate(slot.emblem, slot.grade!)),
@@ -410,7 +457,12 @@ describe("deriveDefaultProtectedStats — live roster cases", () => {
     expect(options.protected.defense).toBe(DEFENSE_SOFT_FLOOR);
     expect(options.protected.spDefense).toBe(DEFENSE_SOFT_FLOOR);
 
-    const result = await runSearch({ pool, options, setBonuses: bundle.setBonuses, effort: "quick" });
+    const result = await runSearch({
+      pool,
+      options,
+      setBonuses: bundle.setBonuses,
+      effort: "quick",
+    });
     expect(result).not.toBeNull();
     const totals = sumStats(
       result!.picks.map((slot) => emblemToCandidate(slot.emblem, slot.grade!)),
@@ -457,9 +509,11 @@ describe("protect penalty influences evaluateLoadout", () => {
     const optsNoProtect = {
       mode: "maximize" as const,
       priorities: { attack: 1 },
-      targets: {}, targetActive: {},
+      targets: {},
+      targetActive: {},
       protected: {},
-      colorConstraints: null, colorBonuses: false,
+      colorConstraints: null,
+      colorBonuses: false,
       slots: 10,
     };
     const noProtect = evaluateLoadout(candidates, optsNoProtect, setBonuses);
@@ -483,9 +537,11 @@ describe("protect penalty influences evaluateLoadout", () => {
     const opts = {
       mode: "maximize" as const,
       priorities: { attack: 1 },
-      targets: {}, targetActive: {},
+      targets: {},
+      targetActive: {},
       protected: {},
-      colorConstraints: null, colorBonuses: false,
+      colorConstraints: null,
+      colorBonuses: false,
       slots: 10,
     };
     const noProtect = evaluateLoadout(candidates, opts, setBonuses);

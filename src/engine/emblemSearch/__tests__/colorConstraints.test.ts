@@ -24,35 +24,20 @@ import type { EmblemCandidate } from "../types";
 // Helpers
 // ---------------------------------------------------------------------------
 
-function makeCandidate(
-  name: string,
-  colors: string[],
-): EmblemCandidate {
+function makeCandidate(name: string, colors: string[]): EmblemCandidate {
   const emblem = makeEmblem(name, colors as never, { attack: 1 });
   const pool = buildCandidatePool([emblem], { grades: ["gold"] });
   return pool[0];
 }
 
 /** Build N dual-color candidates with distinct Pokémon names. */
-function makeDuals(
-  n: number,
-  colors: [string, string],
-  prefix = "Dual",
-): EmblemCandidate[] {
-  return Array.from({ length: n }, (_, i) =>
-    makeCandidate(`${prefix}${i}`, colors),
-  );
+function makeDuals(n: number, colors: [string, string], prefix = "Dual"): EmblemCandidate[] {
+  return Array.from({ length: n }, (_, i) => makeCandidate(`${prefix}${i}`, colors));
 }
 
 /** Build N single-color candidates with distinct Pokémon names. */
-function makeSingles(
-  n: number,
-  color: string,
-  prefix = "Single",
-): EmblemCandidate[] {
-  return Array.from({ length: n }, (_, i) =>
-    makeCandidate(`${prefix}${i}`, [color]),
-  );
+function makeSingles(n: number, color: string, prefix = "Single"): EmblemCandidate[] {
+  return Array.from({ length: n }, (_, i) => makeCandidate(`${prefix}${i}`, [color]));
 }
 
 // ---------------------------------------------------------------------------
@@ -71,15 +56,15 @@ describe("countColorsRaw — dual-color emblems", () => {
     // 6 pure-green + 1 green/black dual + 6 pure-black
     // but with only 10 Pokémon we do: 3 green/black duals + 3 green + 4 black
     // = 6 green, 7 black, 10 slots total
-    const duals = makeDuals(3, ["green", "black"], "GBDual");        // 3×dual
-    const pureGreen = makeSingles(3, "green", "PureGreen");           // 3×green
-    const pureBlack = makeSingles(4, "black", "PureBlack");           // 4×black
+    const duals = makeDuals(3, ["green", "black"], "GBDual"); // 3×dual
+    const pureGreen = makeSingles(3, "green", "PureGreen"); // 3×green
+    const pureBlack = makeSingles(4, "black", "PureBlack"); // 4×black
     const loadout = [...duals, ...pureGreen, ...pureBlack];
     expect(loadout).toHaveLength(10);
 
     const counts = countColorsRaw(loadout);
-    expect(counts.get("green")).toBe(6);   // 3 duals + 3 pure-green
-    expect(counts.get("black")).toBe(7);   // 3 duals + 4 pure-black
+    expect(counts.get("green")).toBe(6); // 3 duals + 3 pure-green
+    expect(counts.get("black")).toBe(7); // 3 duals + 4 pure-black
     // Total color-points = 13, not 10
     const total = [...counts.values()].reduce((a, b) => a + b, 0);
     expect(total).toBe(13);
@@ -108,13 +93,22 @@ describe("colorsMatchTargets — dual-heavy target vectors", () => {
     const loadout = [...duals, ...pureGreen, ...pureBlack];
     const counts = countColorsRaw(loadout);
 
-    const targets = new Map<string, number>([["green", 6], ["black", 7]]);
+    const targets = new Map<string, number>([
+      ["green", 6],
+      ["black", 7],
+    ]);
     expect(colorsMatchTargets(counts as never, targets as never)).toBe(true);
   });
 
   it("rejects when one color count is off by one", () => {
-    const counts = new Map<string, number>([["green", 5], ["black", 7]]);
-    const targets = new Map<string, number>([["green", 6], ["black", 7]]);
+    const counts = new Map<string, number>([
+      ["green", 5],
+      ["black", 7],
+    ]);
+    const targets = new Map<string, number>([
+      ["green", 6],
+      ["black", 7],
+    ]);
     expect(colorsMatchTargets(counts as never, targets as never)).toBe(false);
   });
 });
@@ -131,8 +125,8 @@ describe("colorGroupSizes", () => {
       makeCandidate("PureGreen", ["green"]),
     ];
     const sizes = colorGroupSizes(pool);
-    expect(sizes.get("green")).toBe(3);   // 3 distinct Pokémon have green
-    expect(sizes.get("black")).toBe(2);   // 2 distinct Pokémon have black
+    expect(sizes.get("green")).toBe(3); // 3 distinct Pokémon have green
+    expect(sizes.get("black")).toBe(2); // 2 distinct Pokémon have black
   });
 
   it("dual-color emblem is counted toward BOTH color groups", () => {
