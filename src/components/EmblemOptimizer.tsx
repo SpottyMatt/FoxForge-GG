@@ -125,6 +125,10 @@ const STAT_LABELS: Partial<Record<string, string>> = {
   attackSpeed: "Atk Speed", moveSpeed: "Move Speed",
 };
 
+/** Shared label column for stat rows — fits longest name ("Sp. Defense") without old w-24 gap. */
+const STAT_ROW_GRID =
+  "grid grid-cols-[5.25rem_minmax(0,1fr)_1.5rem] grid-rows-[auto_auto] items-center gap-x-2 gap-y-0.5";
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -1622,25 +1626,25 @@ export function EmblemOptimizer({ onNavigate }: { onNavigate?: (page: string) =>
                     const uiValue = Math.min(1, w / WEIGHT_UI_MAX);
                     const pred = flatStatPredictionByStat.get(stat as keyof StatBlock);
                     return (
-                      <div key={stat} className="flex flex-col gap-0">
-                        <div className="flex items-center gap-1 text-xs">
-                          <span className="w-24 shrink-0 text-muted">{label}</span>
-                          <input
-                            type="range" min={0} max={1} step={0.1}
-                            value={uiValue}
-                            onChange={(e) =>
-                              setCustomWeights((prev) => ({
-                                ...prev,
-                                [stat]: parseFloat(e.target.value) * WEIGHT_UI_MAX,
-                              }))
-                            }
-                            className="min-w-0 flex-1 accent-accent"
-                          />
-                          <span className="w-6 shrink-0 text-right font-mono text-ink tabular-nums">{uiValue.toFixed(1)}</span>
-                        </div>
-                        <span className="pl-24 text-xs leading-tight">
-                          <PriorityFlatEstimate stat={stat as keyof StatBlock} pred={pred} />
+                      <div key={stat} className={`${STAT_ROW_GRID} text-xs`}>
+                        <span className="text-muted">{label}</span>
+                        <input
+                          type="range" min={0} max={1} step={0.1}
+                          value={uiValue}
+                          onChange={(e) =>
+                            setCustomWeights((prev) => ({
+                              ...prev,
+                              [stat]: parseFloat(e.target.value) * WEIGHT_UI_MAX,
+                            }))
+                          }
+                          className="col-start-2 min-w-0 accent-accent"
+                        />
+                        <span className="col-start-3 text-right font-mono text-ink tabular-nums">
+                          {uiValue.toFixed(1)}
                         </span>
+                        <div className="col-start-2 row-start-2 leading-tight">
+                          <PriorityFlatEstimate stat={stat as keyof StatBlock} pred={pred} />
+                        </div>
                       </div>
                     );
                   })}
