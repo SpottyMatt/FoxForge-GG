@@ -54,6 +54,7 @@ const move = z.object({
   slot: z.enum(["move1", "move2", "uniteMove", "basicAttack"]),
   upgradeLevel: z.number().optional(),
   description: z.string(),
+  descriptionAdvanced: z.string().optional(),
   cooldownSeconds: z.number(),
   damageInstances: z.array(damageInstance),
   effects: z.array(moveEffect),
@@ -67,6 +68,7 @@ const ability = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string(),
+  descriptionAdvanced: z.string().optional(),
   effects: z.array(moveEffect),
   iconAsset: z.string().optional(),
 });

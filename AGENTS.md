@@ -23,7 +23,7 @@ Pokémon UNITE players ranging from casual newcomers to competitive optimizers w
 ### Key Benefits
 
 - Accuracy-first stat engine that mirrors in-game stacking order, rounding, mitigation, RSB damage, and attack-speed frame logic.
-- Rich visual presentation (portraits, item/emblem icons) with Basic vs Advanced modes to balance simplicity and depth.
+- Rich visual presentation (portraits, item/emblem icons) with Basic vs Advanced modes to balance simplicity and depth (optimizer controls, Compare tab, emblem stat precision, and move/passive tooltip text).
 - Patchable game data via versioned JSON bundles—no code changes required for balance updates.
 - Offline-capable distribution via PWA install.
 
@@ -49,7 +49,7 @@ FoxForge GG is a three-layer app: a **pure calculation engine**, a **versioned d
 
 User edits flow through `src/state/store.tsx` (reducer + context) into a `Loadout` model (`src/state/loadout.ts`, persisted in localStorage). Every stat display path calls `deriveBuild` / `deriveAtLevel` in `src/engine/derive.ts`, which is the single aggregation point: emblem flats and set bonuses → held items → active toggles → attack speed. UI components (`StatPanel`, `CompareView`, `LevelGraph`) consume `DerivedBuild` only—changing formulas happens in `src/engine/` without touching components.
 
-Game facts live in zod-validated JSON loaded via `src/data/loadBundle.ts`, with lookup maps exposed via `src/data/gameData.ts`. The build-time baseline is `src/data/patch-current.json` (stable filename; `patchVersion` is inside the JSON). The published runtime copy under `public/data/` is version-stamped (`patch-<version>.json` plus `manifest.json`) for cache-busting and is produced by the data refresh workflow. Numeric data is refreshed by Python tooling under `tools/community/`—hand-editing bundle JSON is discouraged; curated builds and label overrides belong in `curated_builds.json` (see below). UNITE-DB ships blank move descriptions for many Pokémon; `tools/community/move_descriptions.json` (Serebii-sourced, via `scrape_serebii.py`) is merged by `normalize.py` to fill only empty move `description` fields—existing UNITE-DB text always wins. Blank passive descriptions are backfilled from the raw passive skill's `rsb.true_desc` in `_raw/pokemon.json` (local UNITE-DB mirror, not Serebii). Art mirrors under `public/assets/` and resolves portably via `src/ui/asset.ts` (supports relative `base: "./"` for static hosts and GitHub Pages sub-paths).
+Game facts live in zod-validated JSON loaded via `src/data/loadBundle.ts`, with lookup maps exposed via `src/data/gameData.ts`. The build-time baseline is `src/data/patch-current.json` (stable filename; `patchVersion` is inside the JSON). The published runtime copy under `public/data/` is version-stamped (`patch-<version>.json` plus `manifest.json`) for cache-busting and is produced by the data refresh workflow. Numeric data is refreshed by Python tooling under `tools/community/`—hand-editing bundle JSON is discouraged; curated builds and label overrides belong in `curated_builds.json` (see below). `normalize.py` builds two description tiers per move and passive: Basic in `description` (UNITE-DB text, blank-filled from Serebii via `move_descriptions.json` when empty, plus upgrade bonus lines on Move 1/2 upgrades) and optional Advanced in `descriptionAdvanced` (UNITE-DB `rsb` detailed text via `advanced_desc()`). Blank passive Basic text is backfilled from `rsb.true_desc` when UNITE-DB's top-level `description` is empty. Source mirror: `tools/community/_raw/pokemon.json`. Art mirrors under `public/assets/` and resolves portably via `src/ui/asset.ts` (supports relative `base: "./"` for static hosts and GitHub Pages sub-paths).
 
 Recommendations (`src/engine/recommend.ts`) sit beside the engine but must respect the same stat model and owned-emblem inventory semantics as the editor.
 
@@ -75,7 +75,7 @@ Formatting for display: `src/ui/format.ts` (`STAT_ROWS`, `formatStat`, `formatDe
 
 `owned`, `toggleOwned`, `bulkSetOwned` — emblem inventory.
 
-`mode` (`"beginner" | "expert"`), `setMode`, `expert` — complexity toggle (UI labels **Basic** / **Advanced**; stored values unchanged).
+`mode` (`"beginner" | "expert"`), `setMode`, `expert` — global Basic/Advanced mode (UI labels **Basic** / **Advanced**; stored values unchanged). Drives optimizer depth, Compare tab visibility, emblem stat precision, and move/passive tooltip description tier (`pickDescription` in `tips.tsx`).
 
 `heldItemGrade(id)`, `setHeldItemGradeById(id, g)`, `heldSlotGrades`, `setHeldItemGradeForSlot(slot, g)` — held-item grades.
 
@@ -104,7 +104,7 @@ Curated Recommended/Creative builds and build-label overrides live in `tools/com
 
 Per-Pokémon emblem-optimizer presets live in `src/data/emblemOptimizerPresets.json`, generated from each Pokémon's community builds (UNITE-DB `builds[]` + `creativeBuilds[]`, 10-emblem sets) by `tools/meta-defaults/generate-presets.ts`. They supply community-derived stat priorities, protect floors, and a color shell that replace the role-generic derivation in `deriveBasicObjective` when confident enough (fallback chain: manual `curated_builds.json` `emblemPreset` overlay → auto preset ≥ confidence threshold → generic). Regenerate after `builds` change: `npm run generate:presets` (or `npm run data:post-normalize` to re-run `normalize.py` first). Preview without writing: `npm run generate:presets:dry`. The daily `data.yml` workflow runs `generate:presets` automatically after normalize; CI fails if `src/data/__tests__/presetsSync.test.ts` detects a stale file. The engine consumes the JSON via `src/engine/emblemSearch/optimizerPresets.ts`.
 
-Move descriptions use the overlay pattern above: `scrape_serebii.py` writes `move_descriptions.json`; `normalize.py` backfills blank move descriptions from it (Serebii slug map is explicit—do not derive slugs algorithmically). Passive descriptions fall back to `rsb.true_desc` when UNITE-DB's top-level `description` is blank. In `RecommendPanel.tsx`, the Builds card header shows `emblemName ?? name`, then optional ` · lane`; its Final Moves sub-block always resolves both slots via `resolveFinalMove` + `moveIdsFromNames` so partial or empty curated `moves` lists still show two icons matching the applied loadout.
+Move Basic descriptions use the Serebii overlay above: `scrape_serebii.py` writes `move_descriptions.json`; `normalize.py` backfills only empty move `description` fields from it (slug map is explicit—do not derive slugs algorithmically). Advanced text is not scraped—it is assembled locally by `advanced_desc()` from UNITE-DB `rsb` fields (`true_desc`, `add{N}_true_desc`, `notes`, `enhanced_true_desc` with `level2` for upgrade lines). Skills without `true_desc` omit `descriptionAdvanced` and the UI falls back to Basic. Tooltip tier follows the global `expert` flag via `pickDescription` in `src/components/tips.tsx`, wired in `MovesCard.tsx` (move rows, upgrade options, passive) and `RecommendPanel.tsx` (Final Moves). In `RecommendPanel.tsx`, the Builds card header shows `emblemName ?? name`, then optional ` · lane`; its Final Moves sub-block always resolves both slots via `resolveFinalMove` + `moveIdsFromNames` so partial or empty curated `moves` lists still show two icons matching the applied loadout.
 
 ### State and Persistence
 
@@ -205,7 +205,7 @@ Tests run in **Vitest** with `environment: "node"`, matching `src/**/*.test.ts` 
 | --- | --- |
 | `npm run lint` | oxlint — errors fail CI; `react/exhaustive-deps` is warn-only |
 | `npm run format:check` | oxfmt `--check` on `src/**/*.{ts,tsx}` and `vite.config.ts` |
-| `npm test` | Engine, emblem search, bundle, dataSource (`activeRaw` + `checkDataNow`), attack-speed, share, state, and UI pure-logic unit tests (e.g. `src/ui/__tests__/swipeDismiss.test.ts`, `src/engine/emblemSearch/__tests__/`) |
+| `npm test` | Engine, emblem search, bundle (including Basic/Advanced move description fields in `patchBundle.test.ts`), dataSource (`activeRaw` + `checkDataNow`), attack-speed, share, state, and UI pure-logic unit tests (e.g. `src/components/__tests__/tips.test.ts` for `pickDescription`, `src/ui/__tests__/swipeDismiss.test.ts`, `src/engine/emblemSearch/__tests__/`) |
 | `npm run validate` | Known-values gate from `docs/03-Calculation-Engine.md` |
 | `npx tsx src/data/verifyPatch.ts` | End-to-end validation of the live UNITE-DB bundle |
 | `npm run validate:art` | Validates mirrored images under `public/assets/` are real files (not corrupt/HTML) |
@@ -272,7 +272,7 @@ Mobile layout conventions: column spacing `gap-3`; `CollapsibleCard` headers `px
 | Pickers / settings | `PickerModal` (`BottomSheet fillHeight`; search does not auto-focus on open), `SettingsMenu` (content-fit `BottomSheet`; read-only patch version + app version) |
 | Grade input | `src/components/GradeField.tsx` — shared tap-to-type grade field (`HeldItemsInventory`, `LoadoutEditor` held-item slots) |
 | Item detail | `src/ui/heldItemDetail.tsx` (`HeldItemDetailModal`) |
-| Tooltips | `src/components/Tooltip.tsx` (hover + touch long-press popup), `src/components/tips.tsx` |
+| Tooltips | `src/components/Tooltip.tsx` (hover + touch long-press popup), `src/components/tips.tsx` (`pickDescription`, `moveTip`; move/passive tier follows `expert`) |
 | State | `src/state/store.tsx`, `src/state/loadout.ts`, `src/state/heldItemGrades.ts` |
 | Engine | `src/engine/derive.ts` |
 | Data | `src/data/gameData.ts`, `src/data/loadBundle.ts`, `src/data/dataSource.ts` |

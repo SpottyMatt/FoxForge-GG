@@ -9,7 +9,17 @@ export function statsAtGrade(item: HeldItem, grade: number): Partial<StatBlock> 
   return g[grade] ?? g[String(grade)] ?? {};
 }
 
-export function moveTip(move: Move) {
+/** The description to show for the current mode: Advanced text when in Advanced
+ *  mode and present, otherwise the Basic description. */
+export function pickDescription(
+  d: { description: string; descriptionAdvanced?: string },
+  advanced: boolean,
+): string {
+  return advanced && d.descriptionAdvanced ? d.descriptionAdvanced : d.description;
+}
+
+export function moveTip(move: Move, advanced: boolean) {
+  const desc = pickDescription(move, advanced);
   return (
     <span>
       <span className="font-semibold">{move.name}</span>
@@ -18,7 +28,7 @@ export function moveTip(move: Move) {
       {move.cooldownSeconds > 0 && (
         <span className="ml-1 text-faint">· {move.cooldownSeconds}s CD</span>
       )}
-      {move.description && <span className="mt-0.5 block text-faint">{move.description}</span>}
+      {desc && <span className="mt-0.5 block text-faint">{desc}</span>}
     </span>
   );
 }

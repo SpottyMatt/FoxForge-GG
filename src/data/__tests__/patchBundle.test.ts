@@ -111,6 +111,32 @@ describe("community data bundle", () => {
     expect(dc.effect).toEqual({ label: "Lifesteal", tiers: ["9%", "12%", "15%"] });
   });
 
+  describe("Basic/Advanced move descriptions", () => {
+    it("Talonflame Fly upgrade has tiered descriptions", () => {
+      const talonflame = bundle.pokemon.find((p) => p.id === "talonflame")!;
+      const fly = talonflame.moves.find((m) => m.id === "fly")!;
+      expect(fly.descriptionAdvanced).toContain("flies up into the sky for up to 3s");
+      expect(fly.descriptionAdvanced).toContain(
+        "Upgrade (Level 13): Throws opposing Pokémon hit for 0.4s",
+      );
+      expect(fly.description).toContain(
+        "Upgrade (Level 13): Also throws enemies when this move hits",
+      );
+    });
+
+    it("Talonflame Gale Wings passive has Advanced text", () => {
+      const talonflame = bundle.pokemon.find((p) => p.id === "talonflame")!;
+      expect(talonflame.passiveAbility.descriptionAdvanced).toContain("85% max HP");
+    });
+
+    it("Tyranitar Guts passive omits Advanced and keeps Basic", () => {
+      const tyranitar = bundle.pokemon.find((p) => p.id === "tyranitar")!;
+      expect(tyranitar.passiveAbility.id).toBe("guts");
+      expect(tyranitar.passiveAbility.descriptionAdvanced).toBeUndefined();
+      expect(tyranitar.passiveAbility.description.length).toBeGreaterThan(0);
+    });
+  });
+
   // Curated-merge regression guard: normalize.py must keep hand-curated emblemName labels.
   it("preserves curated build emblemName from curated_builds.json", () => {
     const skeledirge = bundle.pokemon.find((p) => p.id === "skeledirge")!;

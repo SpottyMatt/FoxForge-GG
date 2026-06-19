@@ -276,7 +276,7 @@ export function RecommendPanel() {
                 <p className="mb-1 text-xs font-medium text-faint">Final Moves</p>
                 <div className="flex gap-2">
                   {finalMoveDisplays.map((mv) => (
-                    <Tooltip key={mv.id} content={moveTip(mv)}>
+                    <Tooltip key={mv.id} content={moveTip(mv, expert)}>
                       <span className="flex w-16 flex-col items-center">
                         <MoveIcon src={mv.iconAsset} alt={mv.name} />
                         <span className="mt-0.5 text-center text-[10px] leading-tight text-muted">

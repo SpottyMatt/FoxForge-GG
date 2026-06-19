@@ -140,6 +140,32 @@ def damage_instances(rsb: dict) -> list:
     return out
 
 
+def advanced_desc(rsb: dict, upgrade_level=None) -> str:
+    """UNITE-DB's detailed move text (Advanced mode): true_desc, then any
+    secondary-effect true_descs, then notes, then the level-up bonus line.
+    Mirrors what unite-db.com shows. Returns "" when there is no true_desc
+    (e.g. some non-combat passives) so the UI falls back to the basic text.
+    Paragraphs are joined with a blank line; the tooltip renders newlines."""
+    rsb = rsb or {}
+    main = (rsb.get("true_desc") or "").strip()
+    if not main:
+        return ""
+    parts = [main]
+    for i in range(1, 6):
+        add = (rsb.get(f"add{i}_true_desc") or "").strip()
+        if add:
+            parts.append(add)
+    notes = (rsb.get("notes") or "").strip()
+    if notes:
+        parts.append(notes)
+    enhanced = (rsb.get("enhanced_true_desc") or "").strip()
+    if enhanced:
+        lvl = str(upgrade_level or "").strip()
+        prefix = f"Upgrade (Level {lvl}): " if lvl else "Upgrade: "
+        parts.append(prefix + enhanced)
+    return "\n\n".join(parts)
+
+
 def plus(s: str) -> str:
     """Space -> '+' for CDN art names (skills/<Pokemon>/<Move>.png)."""
     return (s or "").replace(" ", "+")
@@ -168,6 +194,9 @@ def build_move(skill: dict, slot: str, folder: str) -> dict:
     # Every slot has CDN art except the basic attack ("Attack" has no icon).
     if slot != "basicAttack":
         move["iconAsset"] = skill_icon(folder, name)
+    adv = advanced_desc(rsb, skill.get("level2"))
+    if adv:
+        move["descriptionAdvanced"] = adv
     return move
 
 
@@ -176,11 +205,17 @@ def build_upgrade_move(up: dict, slot: str, folder: str) -> dict:
     rsb = up.get("rsb") or {}
     mtype = up.get("type")
     name = up.get("name", "")
+    basic = up.get("description1", "") or ""
+    d2 = (up.get("description2") or "").strip()
+    if d2:
+        lvl = str(up.get("level2") or "").strip()
+        prefix = f"Upgrade (Level {lvl}): " if lvl else "Upgrade: "
+        basic = (basic.rstrip() + "\n\n" + prefix + d2) if basic.strip() else (prefix + d2)
     move = {
         "id": slugify(name or slot),
         "name": name,
         "slot": slot,
-        "description": up.get("description1", "") or "",
+        "description": basic,
         "cooldownSeconds": num(up.get("cd1")),
         "damageInstances": damage_instances(rsb),
         "effects": [],
@@ -196,6 +231,9 @@ def build_upgrade_move(up: dict, slot: str, folder: str) -> dict:
             move["upgradeLevel"] = int(float(lvl))
         except (TypeError, ValueError):
             pass
+    adv = advanced_desc(rsb, up.get("level2"))
+    if adv:
+        move["descriptionAdvanced"] = adv
     return move
 
 
@@ -299,6 +337,7 @@ def build_pokemon(pokemon_rows, stats_rows, pokedex_to_id: dict, descs: dict | N
         passive_desc = (passive or {}).get("description", "") or ""
         if passive and not passive_desc.strip():
             passive_desc = ((passive.get("rsb") or {}).get("true_desc") or "").strip()
+        passive_adv = advanced_desc((passive or {}).get("rsb")) if passive else ""
         out.append({
             "id": pid,
             "displayName": p.get("display_name", name),
@@ -315,6 +354,7 @@ def build_pokemon(pokemon_rows, stats_rows, pokedex_to_id: dict, descs: dict | N
                 "name": passive.get("name", "Passive") if passive else "Passive",
                 "description": passive_desc,
                 "effects": [],
+                **({"descriptionAdvanced": passive_adv} if passive_adv else {}),
                 **({"iconAsset": skill_icon(name, passive["name"])} if passive and passive.get("name") else {}),
             },
             **({"builds": builds} if builds else {}),

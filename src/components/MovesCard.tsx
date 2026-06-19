@@ -4,13 +4,13 @@ import { baseMove, upgradeOptions, resolveFinalMove, type FinalSlot } from "../e
 import { CollapsibleCard } from "./CollapsibleCard";
 import { Tooltip } from "./Tooltip";
 import { MoveIcon } from "./MoveIcon";
-import { moveTip } from "./tips";
+import { moveTip, pickDescription } from "./tips";
 import type { Move, Pokemon } from "../types";
 
 /** A read-only move row (base skill, Unite move) — icon + name + tooltip. */
-function MoveRow({ move, dimLabel }: { move: Move; dimLabel?: string }) {
+function MoveRow({ move, dimLabel, advanced }: { move: Move; dimLabel?: string; advanced: boolean }) {
   return (
-    <Tooltip content={moveTip(move)}>
+    <Tooltip content={moveTip(move, advanced)}>
       <span className="flex items-center gap-2">
         <MoveIcon src={move.iconAsset} alt={move.name} size="h-8 w-8" />
         <span className="min-w-0">
@@ -40,7 +40,7 @@ function ChoosableMoveSlot({
   pokemon: Pokemon;
   slot: FinalSlot;
 }) {
-  const { loadout, dispatch } = useStore();
+  const { loadout, dispatch, expert } = useStore();
   const base = baseMove(pokemon, slot);
   const options = upgradeOptions(pokemon, slot);
   const chosenId = slot === "move1" ? loadout.move1Id : loadout.move2Id;
@@ -50,13 +50,13 @@ function ChoosableMoveSlot({
   return (
     <div>
       <p className="mb-1 text-xs font-medium text-faint">{label}</p>
-      {base && <MoveRow move={base} dimLabel="Base" />}
+      {base && <MoveRow move={base} dimLabel="Base" advanced={expert} />}
       {options.length > 0 && (
         <div className="mt-2 flex flex-col gap-1.5">
           {options.map((u) => {
             const isSel = selected?.id === u.id;
             return (
-              <Tooltip key={u.id} content={moveTip(u)} className="w-full">
+              <Tooltip key={u.id} content={moveTip(u, expert)} className="w-full">
                 <button
                   type="button"
                   onClick={() => dispatch({ type: "setMove", slot, moveId: u.id })}
@@ -88,12 +88,13 @@ function ChoosableMoveSlot({
 /** The selected Pokémon's move kit — Move 1 / Move 2 are choosable; the two
  *  selected upgrades are the "final moves" shown in the Builds card. */
 export function MovesCard() {
-  const { loadout } = useStore();
+  const { loadout, expert } = useStore();
   const pokemon = loadout.pokemonId ? pokemonById.get(loadout.pokemonId) : null;
   if (!pokemon) return null;
 
   const unite = pokemon.moves.find((m) => m.slot === "uniteMove");
   const passive = pokemon.passiveAbility;
+  const passiveDesc = pickDescription(passive, expert);
 
   return (
     <CollapsibleCard title="Moves" persistKey="moves" tone="sky" defaultOpen={false}>
@@ -107,7 +108,7 @@ export function MovesCard() {
         {unite && (
           <div>
             <p className="mb-1 text-xs font-medium text-faint">Unite Move</p>
-            <MoveRow move={unite} />
+            <MoveRow move={unite} advanced={expert} />
           </div>
         )}
         <div>
@@ -116,8 +117,8 @@ export function MovesCard() {
             content={
               <span>
                 <span className="font-semibold">{passive.name}</span>
-                {passive.description && (
-                  <span className="mt-0.5 block text-faint">{passive.description}</span>
+                {passiveDesc && (
+                  <span className="mt-0.5 block text-faint">{passiveDesc}</span>
                 )}
               </span>
             }

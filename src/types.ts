@@ -134,6 +134,8 @@ export interface Move {
   slot: MoveSlot;
   upgradeLevel?: number; // level the move becomes available / upgrades
   description: string;
+  /** UNITE-DB detailed effect text (Advanced mode). Falls back to `description` when absent. */
+  descriptionAdvanced?: string;
   cooldownSeconds: number;
   damageInstances: DamageInstance[]; // a move may deal damage multiple times
   effects: MoveEffect[]; // CC, shields, heals, buffs
@@ -147,6 +149,8 @@ export interface Ability {
   id: string;
   name: string;
   description: string;
+  /** UNITE-DB detailed effect text (Advanced mode). Falls back to `description` when absent. */
+  descriptionAdvanced?: string;
   effects: MoveEffect[];
   iconAsset?: string; // skills/<Pokemon>/<Passive>.png
 }
