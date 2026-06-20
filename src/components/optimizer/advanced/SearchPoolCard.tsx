@@ -11,6 +11,7 @@ export interface SearchPoolCardProps {
   setUseOwned: (owned: boolean) => void;
   mixedGrades: boolean;
   setMixedGrades: (mixed: boolean) => void;
+  enumerateGradeVariants: boolean;
   allowedGrades: Set<EmblemGrade>;
   setAllowedGrades: (grades: Set<EmblemGrade>) => void;
   buildCount: bigint;
@@ -30,6 +31,7 @@ export function SearchPoolCard({
   setUseOwned,
   mixedGrades,
   setMixedGrades,
+  enumerateGradeVariants,
   allowedGrades,
   setAllowedGrades,
   buildCount,
@@ -60,22 +62,21 @@ export function SearchPoolCard({
           labels={{ owned: "Owned only", all: "Full dataset" }}
           onChange={(v) => setUseOwned(v === "owned")}
         />
-        {useOwned && (
-          <label className="flex cursor-pointer items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={mixedGrades}
-              onChange={(e) => setMixedGrades(e.target.checked)}
-              className="accent-accent"
-            />
-            <span>
-              Mixed grades{" "}
-              <span className="text-xs text-faint">
-                — Bronze, Silver, and Gold can differ across the 10 slots (recommended)
-              </span>
+        <label className="flex cursor-pointer items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={mixedGrades}
+            onChange={(e) => setMixedGrades(e.target.checked)}
+            className="accent-accent"
+          />
+          <span>
+            Mixed grades{" "}
+            <span className="text-xs text-faint">
+              — Bronze, Silver, and Gold can differ across the 10 slots (recommended). Otherwise,
+              use the highest grade for all emblems.
             </span>
-          </label>
-        )}
+          </span>
+        </label>
         {!useOwned && (
           <div className="flex flex-wrap items-center gap-2 text-xs">
             <span className="text-muted">Grades:</span>
@@ -104,7 +105,11 @@ export function SearchPoolCard({
         {(() => {
           const colorExact = colorMode === "exact" && colorConstraints && colorConstraintValid;
           const matchingBuildCount = colorExact
-            ? matchingBuildDisplayCount(exactEnumerationCount, constrainedBuildCount)
+            ? matchingBuildDisplayCount(
+                exactEnumerationCount,
+                constrainedBuildCount,
+                enumerateGradeVariants,
+              )
             : constrainedBuildCount;
           const matchesZero = colorExact && matchingBuildCount === 0n;
           return (
@@ -151,7 +156,9 @@ export function SearchPoolCard({
                     }`}
                     title={
                       willRunExact
-                        ? `Checks all ${formatBuildCount(matchingBuildCount)} Pokémon combinations — guaranteed best`
+                        ? enumerateGradeVariants
+                          ? `Checks all ${formatBuildCount(matchingBuildCount)} grade-aware builds — guaranteed best`
+                          : `Checks all ${formatBuildCount(matchingBuildCount)} Pokémon combinations — guaranteed best`
                         : `${formatBuildCount(matchingBuildCount)} combinations exceeds the cap — Smart search finds a strong result`
                     }
                   >

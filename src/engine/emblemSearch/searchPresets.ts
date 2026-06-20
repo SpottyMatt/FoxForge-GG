@@ -162,6 +162,7 @@ export function resolveColorSearchMode(
   pool: EmblemCandidate[],
   targets: Map<EmblemColor, number>,
   slots: number = SLOTS,
+  enumerateGradeVariants = false,
 ): ColorSearchResolution {
   const weighted = (constrainedBuildCount: bigint | null): ColorSearchResolution => ({
     mode: "weighted",
@@ -182,7 +183,12 @@ export function resolveColorSearchMode(
   if (sum > 2 * slots || !capacityOk) return weighted(null);
 
   const constrainedBuildCount = countConstrainedBuilds(pool, targets, slots);
-  const exactEnumerationCount = countExactEnumerationSpace(pool, targets, slots);
+  const exactEnumerationCount = countExactEnumerationSpace(
+    pool,
+    targets,
+    slots,
+    enumerateGradeVariants,
+  );
 
   // 0n → no build can satisfy the exact counts → soft steering only.
   if (constrainedBuildCount === 0n) return weighted(0n);
@@ -267,6 +273,8 @@ export interface BuildPresetParams {
    * to {@link DEFAULT_EXACT_CAP}.
    */
   exactCap?: number;
+  /** When true, exact search enumerates all grade combos per name set. */
+  enumerateGradeVariants?: boolean;
 }
 
 export interface PresetSearchBuild {
@@ -295,6 +303,7 @@ export function buildPresetSearchOptions(params: BuildPresetParams): PresetSearc
     pokemonList = [],
     forceHeuristic = false,
     exactCap = DEFAULT_EXACT_CAP,
+    enumerateGradeVariants = false,
   } = params;
   const resolved = resolveEmblemPreset(pokemon);
   const objective = deriveBasicObjective(
@@ -305,7 +314,7 @@ export function buildPresetSearchOptions(params: BuildPresetParams): PresetSearc
     resolved?.preset ?? null,
   );
   const targets = objective.colorTargets as Map<EmblemColor, number>;
-  const resolution = resolveColorSearchMode(pool, targets, SLOTS);
+  const resolution = resolveColorSearchMode(pool, targets, SLOTS, enumerateGradeVariants);
 
   // forceHeuristic drops hard constraints only when the caller signals the user
   // deliberately skipped exact while enumeration was feasible; colorBonuses
@@ -324,6 +333,7 @@ export function buildPresetSearchOptions(params: BuildPresetParams): PresetSearc
     pokemonContext: objective.pokemonContext,
     slots: SLOTS,
     exactCap,
+    enumerateGradeVariants,
   };
 
   return { options, resolution, objective };

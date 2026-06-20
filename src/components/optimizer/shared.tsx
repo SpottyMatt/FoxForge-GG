@@ -124,6 +124,8 @@ export interface OptimizerAdvancedProps {
   setUseOwned: (owned: boolean) => void;
   mixedGrades: boolean;
   setMixedGrades: (mixed: boolean) => void;
+  /** Derived from mixedGrades — exact grade enumeration; owned pool variants follow mixedGrades. */
+  enumerateGradeVariants: boolean;
   mode: SearchMode;
   setMode: (mode: SearchMode) => void;
   effort: Effort;

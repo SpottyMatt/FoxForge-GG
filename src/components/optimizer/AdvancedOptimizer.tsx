@@ -50,6 +50,7 @@ export function AdvancedOptimizer({
     setUseOwned,
     mixedGrades,
     setMixedGrades,
+    enumerateGradeVariants,
     mode,
     setMode,
     effort,
@@ -143,6 +144,7 @@ export function AdvancedOptimizer({
         setUseOwned={setUseOwned}
         mixedGrades={mixedGrades}
         setMixedGrades={setMixedGrades}
+        enumerateGradeVariants={enumerateGradeVariants}
         allowedGrades={allowedGrades}
         setAllowedGrades={setAllowedGrades}
         buildCount={buildCount}

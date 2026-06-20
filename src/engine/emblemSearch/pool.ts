@@ -13,7 +13,8 @@ export { distinctPokemonCount };
  * - useOwned=true: only owned emblems; mixedGrades controls whether all owned
  *   grade variants are included (true) or only the best-owned grade (false).
  *   allowedGrades is ignored for owned pools.
- * - useOwned=false: all emblems at the specified allowedGrades.
+ * - useOwned=false: all emblems at the specified allowedGrades; mixedGrades=false
+ *   includes only the highest allowed grade per Pokémon (gold first).
  */
 export function buildPool(
   emblems: Emblem[],
@@ -26,7 +27,10 @@ export function buildPool(
       mixedGrades: config.mixedGrades ?? true,
     });
   }
-  return buildCandidatePool(emblems, { grades: [...config.allowedGrades] });
+  return buildCandidatePool(emblems, {
+    grades: [...config.allowedGrades],
+    mixedGrades: config.mixedGrades ?? true,
+  });
 }
 
 /**
@@ -219,28 +223,37 @@ export function countConstrainedBuilds(
 }
 
 /**
- * Count Pokémon-name combinations satisfying color constraints — the space
- * enumerated by exactColor (k-vector × C(n_g,k) per group, one grade via
- * bestVariantForMode). Does NOT multiply by grade variants.
+ * Count exact enumeration space for color-constrained search.
  *
- * Use for exact gating (shouldRunExact) and parallel shard coordination.
+ * When gradeAware is false (default): Pokémon-name combos only — k-vector ×
+ * C(n_g,k) per group, one grade via bestVariantForMode.
+ *
+ * When gradeAware is true: every grade assignment per name combo (matches
+ * enumerateGradeVariants in exactColor).
+ *
+ * Use for exact gating (shouldRunExact) and progress-bar alignment.
  */
 export function countExactEnumerationSpace(
   pool: EmblemCandidate[],
   colorConstraints: Map<EmblemColor, number>,
   slots = 10,
+  gradeAware = false,
 ): bigint | null {
-  return countConstrainedBuildsInternal(pool, colorConstraints, slots, false);
+  return countConstrainedBuildsInternal(pool, colorConstraints, slots, gradeAware);
 }
 
 /**
- * Numerator for "Matching builds" in exact color mode — Pokémon-name combos
- * enumerated by exactColor (matches progress bar). Falls back to grade-aware
- * count when enumeration space could not be computed.
+ * Numerator for "Matching builds" in exact color mode — aligned with what
+ * exactColor enumerates (matches progress bar). Falls back to the other count
+ * when the primary could not be computed.
  */
 export function matchingBuildDisplayCount(
   exactEnumerationCount: bigint | null,
   constrainedBuildCount: bigint | null,
+  enumerateGradeVariants = false,
 ): bigint | null {
+  if (enumerateGradeVariants) {
+    return exactEnumerationCount ?? constrainedBuildCount;
+  }
   return exactEnumerationCount ?? constrainedBuildCount;
 }

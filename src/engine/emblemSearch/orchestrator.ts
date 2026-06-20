@@ -121,7 +121,13 @@ export async function runSearch(
   let willRunExact = false;
 
   if (hasColorConstraints) {
-    constrainedCount = countExactEnumerationSpace(pool, options.colorConstraints!, slots);
+    const enumerateGrades = options.enumerateGradeVariants ?? false;
+    constrainedCount = countExactEnumerationSpace(
+      pool,
+      options.colorConstraints!,
+      slots,
+      enumerateGrades,
+    );
     willRunExact = shouldRunExact(constrainedCount, capValue);
   }
 

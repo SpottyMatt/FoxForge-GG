@@ -156,7 +156,7 @@ describe("countExactEnumerationSpace vs countConstrainedBuilds", () => {
     );
   });
 
-  it("[ENUM-2] mixed-grade pool: grade-aware count exceeds cap while enum space does not", () => {
+  it("[ENUM-2] mixed-grade pool: grade-aware count exceeds cap while name-only enum space does not", () => {
     const emblems: Emblem[] = Array.from({ length: 30 }, (_, i) =>
       makeEmblem(`Mon${i}`, ["brown"] as never, { attack: 1 }),
     );
@@ -168,15 +168,19 @@ describe("countExactEnumerationSpace vs countConstrainedBuilds", () => {
     const targets = new Map<string, number>([["brown", 10]]);
 
     const display = countConstrainedBuilds(pool, targets as never);
-    const enumSpace = countExactEnumerationSpace(pool, targets as never);
+    const enumSpace = countExactEnumerationSpace(pool, targets as never, 10, false);
+    const gradeAwareEnum = countExactEnumerationSpace(pool, targets as never, 10, true);
 
     expect(enumSpace).not.toBeNull();
     expect(display).not.toBeNull();
+    expect(gradeAwareEnum).not.toBeNull();
     expect(display! > enumSpace!).toBe(true);
+    expect(gradeAwareEnum).toBe(display);
     expect(enumSpace! <= BigInt(DEFAULT_EXACT_CAP)).toBe(true);
     expect(display! > BigInt(DEFAULT_EXACT_CAP)).toBe(true);
     expect(shouldRunExact(display, DEFAULT_EXACT_CAP)).toBe(false);
     expect(shouldRunExact(enumSpace, DEFAULT_EXACT_CAP)).toBe(true);
+    expect(shouldRunExact(gradeAwareEnum, DEFAULT_EXACT_CAP)).toBe(false);
   });
 });
 
