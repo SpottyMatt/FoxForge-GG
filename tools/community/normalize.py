@@ -32,6 +32,9 @@ CDN = "https://d275t8dp8rxb42.cloudfront.net"
 ASSETS = "/assets"  # local mirror under public/assets (see fetch_art.py)
 PATCH_VERSION = os.environ.get("PATCH_VERSION") or "1.23.2.5"
 
+# Unite-move unlock levels missing from UNITE-DB raw (slug -> level).
+MANUAL_LEVEL = {"psykaboom": 9}
+
 # ---- helpers ---------------------------------------------------------------
 
 ROLE_MAP = {
@@ -185,6 +188,21 @@ def skill_icon(folder: str, move_name: str) -> str:
     return f"{ASSETS}/skills/{plus(folder)}/{plus(move_name)}.png"
 
 
+ACTIVATION_NOTE = re.compile(r"[.!?]?\s+Activates at Level \d+\s*$")
+
+
+def strip_activation_note(text: str) -> str:
+    """Remove a trailing stale 'Activates at Level N' sentence from a Serebii
+    basic description and ensure the result ends in sentence punctuation.
+    The real unlock level is carried by the move's upgradeLevel, not this text."""
+    if not text:
+        return text
+    cleaned = ACTIVATION_NOTE.sub("", text).rstrip()
+    if cleaned and cleaned[-1] not in ".!?":
+        cleaned += "."
+    return cleaned
+
+
 def build_move(skill: dict, slot: str, folder: str) -> dict:
     rsb = skill.get("rsb") or {}
     mtype = skill.get("type")
@@ -207,6 +225,17 @@ def build_move(skill: dict, slot: str, folder: str) -> dict:
     adv = advanced_desc(rsb, skill.get("level2"))
     if adv:
         move["descriptionAdvanced"] = paragraphize_upgrade(adv)
+    # Unite moves carry their unlock level on the raw skill ("level"); regular
+    # moves don't (their level lives inside "upgrades"). Surface it as
+    # upgradeLevel so the tooltip header renders "· Lv N".
+    raw_level = skill.get("level")
+    slug = move["id"]
+    lvl = MANUAL_LEVEL.get(slug, raw_level)
+    if lvl not in (None, ""):
+        try:
+            move["upgradeLevel"] = int(float(lvl))
+        except (TypeError, ValueError):
+            pass
     return move
 
 
@@ -354,7 +383,9 @@ def build_pokemon(pokemon_rows, stats_rows, pokedex_to_id: dict, descs: dict | N
         if over:
             for m in moves:
                 if not (m.get("description") or "").strip():
-                    m["description"] = over.get(_norm_move_name(m["name"]), m.get("description", ""))
+                    m["description"] = strip_activation_note(
+                        over.get(_norm_move_name(m["name"]), m.get("description", ""))
+                    )
         passive_desc = paragraphize_upgrade((passive or {}).get("description", "") or "")
         if passive and not passive_desc.strip():
             passive_desc = paragraphize_upgrade(

@@ -238,4 +238,40 @@ describe("community data bundle", () => {
       }
     });
   });
+
+  describe("Unite-move levels and activation-note cleanup", () => {
+    it("gives every Unite move a numeric upgradeLevel", () => {
+      for (const p of bundle.pokemon) {
+        for (const m of p.moves) {
+          if (m.slot !== "uniteMove") continue;
+          expect(typeof m.upgradeLevel, `${p.id}/${m.name}`).toBe("number");
+        }
+      }
+    });
+
+    it("leaves no 'Activates at Level' note in any description", () => {
+      for (const p of bundle.pokemon) {
+        for (const m of p.moves) {
+          expect(m.description ?? "", `${p.id}/${m.name}`).not.toContain("Activates at Level");
+          expect(m.descriptionAdvanced ?? "", `${p.id}/${m.name}`).not.toContain("Activates at Level");
+        }
+      }
+    });
+
+    it("Quaquaval Carnival Splash is Lv 9", () => {
+      const q = bundle.pokemon.find((p) => p.id === "quaquaval")!;
+      const cs = q.moves.find((m) => m.name === "Carnival Splash")!;
+      expect(cs.upgradeLevel).toBe(9);
+    });
+
+    it("Blaziken Spinning Flame Kick has its Basic text and Spinning Flame Fist is space-fixed", () => {
+      const b = bundle.pokemon.find((p) => p.id === "blaziken")!;
+      const kick = b.moves.find((m) => m.name === "Spinning Flame Kick")!;
+      const fist = b.moves.find((m) => m.name === "Spinning Flame Fist")!;
+      expect(kick.description).toContain("switches to kick style");
+      expect(kick.upgradeLevel).toBe(8);
+      expect(fist.description).toContain("for a short time. After using this move");
+      expect(fist.description).not.toContain("time.After");
+    });
+  });
 });
