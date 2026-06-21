@@ -1,11 +1,11 @@
 {
   "patchVersion": "1.23.2.5",
-  "lastUpdated": "2026-06-20",
+  "lastUpdated": "2026-06-21",
   "dataSource": {
     "provider": "UNITE-DB",
     "url": "https://unite-db.com",
     "note": "Community-sourced (APK bundles encrypted; see tools/extract/ENCRYPTION-FINDINGS.md). Held-item values span grades 1–40 (in-game max 40). Percentages stored as decimals.",
-    "fetched": "2026-06-20"
+    "fetched": "2026-06-21"
   },
   "pokemon": [
     {
@@ -58055,6 +58055,517 @@
           "moves": [
             "Night Slash",
             "Cut"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "quaquaval",
+      "displayName": "Quaquaval",
+      "role": "AllRounder",
+      "attackType": "physical",
+      "difficulty": 2,
+      "imageAsset": "/assets/pokemon/portrait/Quaquaval.png",
+      "iconAsset": "/assets/pokemon/thumbnail/Quaquaval.png",
+      "evolutions": [
+        {
+          "level": 1,
+          "formName": "Quaquaval"
+        }
+      ],
+      "baseStatsByLevel": [
+        {
+          "hp": 3460.0,
+          "attack": 160.0,
+          "defense": 94.0,
+          "spAttack": 20.0,
+          "spDefense": 92.0,
+          "critRate": 0.0,
+          "cdr": 0.0,
+          "lifesteal": 0.0,
+          "spLifesteal": 0.0,
+          "attackSpeed": 0.1,
+          "moveSpeed": 3700.0
+        },
+        {
+          "hp": 3528.0,
+          "attack": 165.0,
+          "defense": 100.0,
+          "spAttack": 21.0,
+          "spDefense": 97.0,
+          "critRate": 0.0,
+          "cdr": 0.0,
+          "lifesteal": 0.0,
+          "spLifesteal": 0.0,
+          "attackSpeed": 0.10289999999999999,
+          "moveSpeed": 3700.0
+        },
+        {
+          "hp": 3610.0,
+          "attack": 172.0,
+          "defense": 106.0,
+          "spAttack": 23.0,
+          "spDefense": 104.0,
+          "critRate": 0.0,
+          "cdr": 0.0,
+          "lifesteal": 0.0,
+          "spLifesteal": 0.0,
+          "attackSpeed": 0.1063,
+          "moveSpeed": 3700.0
+        },
+        {
+          "hp": 3708.0,
+          "attack": 179.0,
+          "defense": 114.0,
+          "spAttack": 25.0,
+          "spDefense": 112.0,
+          "critRate": 0.0,
+          "cdr": 0.0,
+          "lifesteal": 0.0,
+          "spLifesteal": 0.0,
+          "attackSpeed": 0.1105,
+          "moveSpeed": 3700.0
+        },
+        {
+          "hp": 4062.0,
+          "attack": 207.0,
+          "defense": 143.0,
+          "spAttack": 32.0,
+          "spDefense": 140.0,
+          "critRate": 0.1,
+          "cdr": 0.0,
+          "lifesteal": 0.05,
+          "spLifesteal": 0.0,
+          "attackSpeed": 0.12539999999999998,
+          "moveSpeed": 3850.0
+        },
+        {
+          "hp": 4203.0,
+          "attack": 218.0,
+          "defense": 155.0,
+          "spAttack": 35.0,
+          "spDefense": 151.0,
+          "critRate": 0.1,
+          "cdr": 0.0,
+          "lifesteal": 0.05,
+          "spLifesteal": 0.0,
+          "attackSpeed": 0.13140000000000002,
+          "moveSpeed": 3850.0
+        },
+        {
+          "hp": 4847.0,
+          "attack": 268.0,
+          "defense": 207.0,
+          "spAttack": 48.0,
+          "spDefense": 203.0,
+          "critRate": 0.1,
+          "cdr": 0.0,
+          "lifesteal": 0.05,
+          "spLifesteal": 0.0,
+          "attackSpeed": 0.1585,
+          "moveSpeed": 4000.0
+        },
+        {
+          "hp": 5050.0,
+          "attack": 284.0,
+          "defense": 223.0,
+          "spAttack": 52.0,
+          "spDefense": 219.0,
+          "critRate": 0.1,
+          "cdr": 0.0,
+          "lifesteal": 0.05,
+          "spLifesteal": 0.0,
+          "attackSpeed": 0.1671,
+          "moveSpeed": 4000.0
+        },
+        {
+          "hp": 5294.0,
+          "attack": 303.0,
+          "defense": 243.0,
+          "spAttack": 57.0,
+          "spDefense": 238.0,
+          "critRate": 0.2,
+          "cdr": 0.0,
+          "lifesteal": 0.1,
+          "spLifesteal": 0.0,
+          "attackSpeed": 0.17739999999999997,
+          "moveSpeed": 4150.0
+        },
+        {
+          "hp": 5587.0,
+          "attack": 326.0,
+          "defense": 267.0,
+          "spAttack": 63.0,
+          "spDefense": 262.0,
+          "critRate": 0.2,
+          "cdr": 0.0,
+          "lifesteal": 0.1,
+          "spLifesteal": 0.0,
+          "attackSpeed": 0.18969999999999998,
+          "moveSpeed": 4150.0
+        },
+        {
+          "hp": 5938.0,
+          "attack": 353.0,
+          "defense": 296.0,
+          "spAttack": 70.0,
+          "spDefense": 290.0,
+          "critRate": 0.2,
+          "cdr": 0.0,
+          "lifesteal": 0.1,
+          "spLifesteal": 0.0,
+          "attackSpeed": 0.2045,
+          "moveSpeed": 4300.0
+        },
+        {
+          "hp": 6359.0,
+          "attack": 386.0,
+          "defense": 330.0,
+          "spAttack": 79.0,
+          "spDefense": 323.0,
+          "critRate": 0.2,
+          "cdr": 0.0,
+          "lifesteal": 0.1,
+          "spLifesteal": 0.0,
+          "attackSpeed": 0.2223,
+          "moveSpeed": 4300.0
+        },
+        {
+          "hp": 6865.0,
+          "attack": 426.0,
+          "defense": 371.0,
+          "spAttack": 89.0,
+          "spDefense": 364.0,
+          "critRate": 0.2,
+          "cdr": 0.0,
+          "lifesteal": 0.15,
+          "spLifesteal": 0.0,
+          "attackSpeed": 0.2437,
+          "moveSpeed": 4300.0
+        },
+        {
+          "hp": 7472.0,
+          "attack": 473.0,
+          "defense": 421.0,
+          "spAttack": 101.0,
+          "spDefense": 412.0,
+          "critRate": 0.2,
+          "cdr": 0.0,
+          "lifesteal": 0.15,
+          "spLifesteal": 0.0,
+          "attackSpeed": 0.2693,
+          "moveSpeed": 4300.0
+        },
+        {
+          "hp": 8200.0,
+          "attack": 530.0,
+          "defense": 480.0,
+          "spAttack": 116.0,
+          "spDefense": 470.0,
+          "critRate": 0.2,
+          "cdr": 0.0,
+          "lifesteal": 0.15,
+          "spLifesteal": 0.0,
+          "attackSpeed": 0.3,
+          "moveSpeed": 4300.0
+        }
+      ],
+      "moves": [
+        {
+          "id": "attack",
+          "name": "Attack",
+          "slot": "basicAttack",
+          "description": "",
+          "cooldownSeconds": 0.0,
+          "damageInstances": [
+            {
+              "ratio": 1.0,
+              "scalingStat": "attack",
+              "slider": 0.0,
+              "base": 0.0,
+              "damageType": "physical"
+            },
+            {
+              "ratio": 1.3,
+              "scalingStat": "attack",
+              "slider": 0.0,
+              "base": 0.0,
+              "damageType": "physical"
+            },
+            {
+              "ratio": 0.5,
+              "scalingStat": "attack",
+              "slider": 0.0,
+              "base": 150.0,
+              "damageType": "physical"
+            }
+          ],
+          "effects": [],
+          "tags": [],
+          "descriptionAdvanced": "The user kicks at opposing Pokémon dealing damage. Becomes a boosted attack every third attack, with the user stepping in for a kick with increased damage.\n\nSpinning Edge deals damage 3 times in an area around the user over time, before rapidly dealing damage 3 more times. If Low Sweep was used preceding Spinning Edge, then it will do increased damage. If Liquidation was used preceding Spinning Edge, then it will grant a shield on use. If Carnival Splash was used preceding Spinning Edge, it will gain both effects."
+        },
+        {
+          "id": "pound",
+          "name": "Pound",
+          "slot": "move1",
+          "description": "Has the user deal damage and decrease opposing Pokémon's movement speed.",
+          "cooldownSeconds": 6.0,
+          "damageInstances": [
+            {
+              "ratio": 1.45,
+              "scalingStat": "attack",
+              "slider": 0.0,
+              "base": 435.0,
+              "damageType": "physical"
+            }
+          ],
+          "effects": [],
+          "tags": [
+            "melee"
+          ],
+          "moveType": "Melee",
+          "iconAsset": "/assets/skills/Quaquaval/Pound.png",
+          "descriptionAdvanced": "The user pounds the area, dealing damage and slowing opposing Pokémon by 30% for 2s."
+        },
+        {
+          "id": "low-sweep",
+          "name": "Low Sweep",
+          "slot": "move1",
+          "description": "Has the user unleash three swift kicks in the designated direction, dealing damage and decreasing opposing Pokémon's movement speed.\n\nWhen this move causes vibes to reach max, Spinning Edge deals increased damage.\n\nUpgrade: Increases the damage dealt by this move and further increases the damage dealt by Spinning Edge when boosted.",
+          "cooldownSeconds": 7.0,
+          "damageInstances": [
+            {
+              "ratio": 1.0,
+              "scalingStat": "attack",
+              "slider": 0.0,
+              "base": 300.0,
+              "damageType": "physical"
+            }
+          ],
+          "effects": [],
+          "tags": [
+            "melee"
+          ],
+          "iconAsset": "/assets/skills/Quaquaval/Low+Sweep.png",
+          "isUpgrade": true,
+          "moveType": "Melee",
+          "upgradeLevel": 5,
+          "descriptionAdvanced": "The user unleashes three swift kicks in the designated direction, dealing damage and slowing opposing Pokémon by 60% for 1s, decaying by 15% every 0.25s. The third kick can be aimed, launching the user in that direction before unleashing the kick.\n\nUpgrade (Level 11): Increases the damage of this move, and Spinning Edge when this move precedes it."
+        },
+        {
+          "id": "wing-attack",
+          "name": "Wing Attack",
+          "slot": "move2",
+          "description": "Has the user lunge in the designated direction, dealing damage to opposing Pokémon in the area of effect.\n\nWhen this move deals damage to opposing Pokémon, the user receives a shield effect.",
+          "cooldownSeconds": 6.0,
+          "damageInstances": [
+            {
+              "ratio": 1.05,
+              "scalingStat": "attack",
+              "slider": 0.0,
+              "base": 315.0,
+              "damageType": "physical"
+            },
+            {
+              "ratio": 1.25,
+              "scalingStat": "attack",
+              "slider": 0.0,
+              "base": 375.0,
+              "damageType": "physical"
+            }
+          ],
+          "effects": [],
+          "tags": [
+            "dash"
+          ],
+          "moveType": "Dash",
+          "iconAsset": "/assets/skills/Quaquaval/Wing+Attack.png",
+          "descriptionAdvanced": "The user lunges in the designated direction dealing damage, and gaining a shield for 3s on hit."
+        },
+        {
+          "id": "liquidation",
+          "name": "Liquidation",
+          "slot": "move2",
+          "description": "Has the user charge in the designated direction, dealing damage and decreasing the Defense of opposing Pokémon it hits, and restoring the user's HP.\n\nA maximum of 2 uses can be kept in reserve for this move.\n\nWhen this move causes vibes to reach max, Spinning Edge grants the user a shield effect.\n\nUpgrade: Increases the amount of HP restored by this move and strengthens the shield effect granted by Spinning Edge when boosted.",
+          "cooldownSeconds": 7.0,
+          "damageInstances": [
+            {
+              "ratio": 1.9,
+              "scalingStat": "attack",
+              "slider": 0.0,
+              "base": 570.0,
+              "damageType": "physical"
+            }
+          ],
+          "effects": [],
+          "tags": [
+            "dash"
+          ],
+          "iconAsset": "/assets/skills/Quaquaval/Liquidation.png",
+          "isUpgrade": true,
+          "moveType": "Dash",
+          "upgradeLevel": 7,
+          "descriptionAdvanced": "The user charges in the designated direction, dealing damage, lowering the defense of opposing Pokémon by 30% for 3s, and restoring the user's HP.\n\n8% of Max HP\n\nTwo uses can be kept in reserve, with a 0.5s cooldown between uses.\n\nUpgrade (Level 13): Increases the amount of health this move restores, and increases Spinning Edge's shield when this move precedes it."
+        },
+        {
+          "id": "carnival-splash",
+          "name": "Carnival Splash",
+          "slot": "uniteMove",
+          "description": "Has the user dance in place, pulling in opposing Pokémon, dealing damage, and leaving them unable to act.\n\nThis move grants the user a shield effect. With each opposing Pokémon this move hits, vibes and this shield effect will increase.\n\nWhen this move causes vibes to reach max, Spinning Edge deals increased damage and grants the user a shield effect.",
+          "cooldownSeconds": 100.0,
+          "damageInstances": [
+            {
+              "ratio": 1.3,
+              "scalingStat": "attack",
+              "slider": 0.0,
+              "base": 390.0,
+              "damageType": "physical"
+            },
+            {
+              "ratio": 1.2,
+              "scalingStat": "attack",
+              "slider": 0.0,
+              "base": 360.0,
+              "damageType": "physical"
+            },
+            {
+              "ratio": 0.39990000000000003,
+              "scalingStat": "attack",
+              "slider": 0.0,
+              "base": 119.0,
+              "damageType": "physical"
+            }
+          ],
+          "effects": [],
+          "tags": [
+            "buff"
+          ],
+          "moveType": "Buff",
+          "iconAsset": "/assets/skills/Quaquaval/Carnival+Splash.png",
+          "descriptionAdvanced": "The user becomes Unstoppable while dancing in place, gaining a shield and dealing damage to opposing Pokémon up to 3 times. The third hit will pull in opposing Pokémon towards the user, stunning them for 1s. Each opposing Pokémon pulled in grants the user a shield, up to 3 times.\n\nThe third hit of this move will not affect wild Pokémon."
+        }
+      ],
+      "passiveAbility": {
+        "id": "moxie",
+        "name": "Moxie",
+        "description": "When the user's basic attacks and moves hit opposing Pokémon, vibes increase, which increases Attack.\n\nVibes can increase to a maximum of 3, and they lower over time.\n\nWhen vibes reach max, the next basic attack becomes Spinning Edge. Each time Spinning Edge hits opposing Pokémon, the user's movement speed increases.",
+        "effects": [],
+        "descriptionAdvanced": "When the user deals damage with auto attacks or moves, vibes increase, which increase Attack by 5% per stack up to 3. If no vibes are gained within 3s, they are lost, along with the user's boosted gauge.\n\nAfter evolving into Quaquaval, the next auto attack when vibes are maxed becomes Spinning Edge. Each time Spinning Edge hits opposing Pokémon, the user's movement speed is increased by 15% for 3s, stacking up to 3 times.",
+        "iconAsset": "/assets/skills/Quaquaval/Moxie.png"
+      },
+      "builds": [
+        {
+          "name": "Serving Looks",
+          "emblemName": "Serving Looks",
+          "lane": "Anywhere Damage",
+          "heldItemIds": [
+            "attack-weight",
+            "drain-crown",
+            "razor-claw"
+          ],
+          "battleItemId": "full-heal",
+          "emblems": [
+            {
+              "emblemId": "250-ho-oh",
+              "grade": "gold"
+            },
+            {
+              "emblemId": "197-umbreon",
+              "grade": "gold"
+            },
+            {
+              "emblemId": "169-crobat",
+              "grade": "gold"
+            },
+            {
+              "emblemId": "211-qwilfish",
+              "grade": "gold"
+            },
+            {
+              "emblemId": "168-ariados",
+              "grade": "gold"
+            },
+            {
+              "emblemId": "142-aerodactyl",
+              "grade": "bronze"
+            },
+            {
+              "emblemId": "089-muk",
+              "grade": "gold"
+            },
+            {
+              "emblemId": "057-primeape",
+              "grade": "gold"
+            },
+            {
+              "emblemId": "248-tyranitar",
+              "grade": "gold"
+            },
+            {
+              "emblemId": "024-arbok",
+              "grade": "silver"
+            }
+          ],
+          "moves": [
+            "Low Sweep",
+            "Liquidation"
+          ]
+        },
+        {
+          "name": "Carnival King",
+          "emblemName": "Carnival King",
+          "lane": "Anywhere Damage",
+          "heldItemIds": [
+            "attack-weight",
+            "weakness-policy",
+            "razor-claw"
+          ],
+          "battleItemId": "full-heal",
+          "emblems": [
+            {
+              "emblemId": "250-ho-oh",
+              "grade": "gold"
+            },
+            {
+              "emblemId": "022-fearow",
+              "grade": "gold"
+            },
+            {
+              "emblemId": "128-tauros",
+              "grade": "gold"
+            },
+            {
+              "emblemId": "130-gyarados",
+              "grade": "gold"
+            },
+            {
+              "emblemId": "018-pidgeot",
+              "grade": "gold"
+            },
+            {
+              "emblemId": "142-aerodactyl",
+              "grade": "bronze"
+            },
+            {
+              "emblemId": "031-nidoqueen",
+              "grade": "gold"
+            },
+            {
+              "emblemId": "057-primeape",
+              "grade": "gold"
+            },
+            {
+              "emblemId": "068-machamp",
+              "grade": "gold"
+            },
+            {
+              "emblemId": "105-marowak",
+              "grade": "gold"
+            }
+          ],
+          "moves": [
+            "Low Sweep",
+            "Liquidation"
           ]
         }
       ]

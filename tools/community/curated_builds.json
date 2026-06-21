@@ -394,5 +394,49 @@
         "moves": ["Future Sight", "Teleport"]
       }
     ]
+  },
+  "quaquaval": {
+    "builds": [
+      {
+        "name": "Serving Looks",
+        "emblemName": "Serving Looks",
+        "lane": "Anywhere Damage",
+        "heldItemIds": ["attack-weight", "drain-crown", "razor-claw"],
+        "battleItemId": "full-heal",
+        "emblems": [
+          {"emblemId": "250-ho-oh", "grade": "gold"},
+          {"emblemId": "197-umbreon", "grade": "gold"},
+          {"emblemId": "169-crobat", "grade": "gold"},
+          {"emblemId": "211-qwilfish", "grade": "gold"},
+          {"emblemId": "168-ariados", "grade": "gold"},
+          {"emblemId": "142-aerodactyl", "grade": "bronze"},
+          {"emblemId": "089-muk", "grade": "gold"},
+          {"emblemId": "057-primeape", "grade": "gold"},
+          {"emblemId": "248-tyranitar", "grade": "gold"},
+          {"emblemId": "024-arbok", "grade": "silver"}
+        ],
+        "moves": ["Low Sweep", "Liquidation"]
+      },
+      {
+        "name": "Carnival King",
+        "emblemName": "Carnival King",
+        "lane": "Anywhere Damage",
+        "heldItemIds": ["attack-weight", "weakness-policy", "razor-claw"],
+        "battleItemId": "full-heal",
+        "emblems": [
+          {"emblemId": "250-ho-oh", "grade": "gold"},
+          {"emblemId": "022-fearow", "grade": "gold"},
+          {"emblemId": "128-tauros", "grade": "gold"},
+          {"emblemId": "130-gyarados", "grade": "gold"},
+          {"emblemId": "018-pidgeot", "grade": "gold"},
+          {"emblemId": "142-aerodactyl", "grade": "bronze"},
+          {"emblemId": "031-nidoqueen", "grade": "gold"},
+          {"emblemId": "057-primeape", "grade": "gold"},
+          {"emblemId": "068-machamp", "grade": "gold"},
+          {"emblemId": "105-marowak", "grade": "gold"}
+        ],
+        "moves": ["Low Sweep", "Liquidation"]
+      }
+    ]
   }
 }
