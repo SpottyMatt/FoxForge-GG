@@ -85,7 +85,7 @@ Live stats: `deriveBuild(loadout, true, heldSlotGrades)` returns `{ pokemon, eff
 
 Emblem search (`useEmblemSearch` in `src/state/emblemSearch.ts`): `state` (`status`, `progress`, `eta`, `result`, `history`, `historyIndex`), `run`, `cancel`, `reset`, `clearResult`, `goHistory`. Reads `owned` from `useStore`; applying a pick calls `dispatch({ type: "applyBuild", emblems })`. Session cache is in-memory for the current page load (survives tab switches, not a full reload).
 
-Emblem optimizer UI (`useEmblemOptimizer` in `src/state/useEmblemOptimizer.ts`): `useOwned` / `mixedGrades` / `allowedGrades` pool config, priority/color/effort/`exactCap` controls, search handlers, apply/toast, and optimize level. Composes `useEmblemSearch` for runs. Returns `shared` / `basic` / `advanced` prop bundles consumed by `BasicOptimizer` and `AdvancedOptimizer`. Result effective stats are computed inside `ResultCards.tsx` via `deriveEmblemLoadoutImpact` (not returned from the hook). Advanced **Search Pool** shows live build counts and an **⚡ Exact** vs **Smart search** badge when exact color constraints are active (`willRunExact`). Optimizer control state is session-only (not localStorage); one hook instance keeps results, history, level, and apply state when flipping Basic↔Advanced.
+Emblem optimizer UI (`useEmblemOptimizer` in `src/state/useEmblemOptimizer.ts`): `useOwned` / `mixedGrades` / `allowedGrades` pool config, priority/color/effort/`exactCap` controls, search handlers, apply/toast, and optimize level. Composes `useEmblemSearch` for runs. Returns `shared` / `basic` / `advanced` prop bundles consumed by `BasicOptimizer` and `AdvancedOptimizer`. Result effective stats are computed inside `ResultCards.tsx` via `deriveEmblemLoadoutImpact` (not returned from the hook). Advanced **Search Pool** shows live build counts and an **⚡ Exact** vs **Smart search** badge when exact color constraints are active (`willRunExact`). Optimizer control state is session-only (not localStorage); one hook instance keeps results, history, level, and apply state when flipping Basic↔Advanced. In Advanced mode, color constraints, protect floors, and stat priorities reset only on Pokémon change or explicit Reset to defaults — owned/full pool switches, mixed-grades toggles, grade filters, and inventory updates do not wipe those controls.
 
 ### Data Bundle Versioning
 
@@ -197,7 +197,7 @@ Clone, `npm install`, and you're ready to develop. The `prepare` script installs
 
 Key scripts (from `package.json`): `npm run dev`, `npm run build`, `npm run build:pages`, `npm run typecheck`, `npm run lint`, `npm run lint:fix`, `npm run format`, `npm run format:check`, `npm run verify`.
 
-App version shown in Settings → Updates comes from the `"version"` field in `package.json` (currently `1.3.0`), injected at build time via `vite.config.ts` (`define.__APP_VERSION__`) into `src/ui/version.ts` (`APP_VERSION`). Bump with `npm version <semver> --no-git-tag-version` (or edit `package.json` and sync `package-lock.json`).
+App version shown in Settings → Updates comes from the `"version"` field in `package.json` (currently `1.3.1`), injected at build time via `vite.config.ts` (`define.__APP_VERSION__`) into `src/ui/version.ts` (`APP_VERSION`). Bump with `npm version <semver> --no-git-tag-version` (or edit `package.json` and sync `package-lock.json`).
 
 ### Testing Process
 
