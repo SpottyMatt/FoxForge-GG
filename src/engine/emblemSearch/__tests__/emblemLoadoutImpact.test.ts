@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { emblems, emblemById, setBonuses, pokemonById } from "../../../data/gameData";
+import { emblems, emblemById, heldItemById, setBonuses, pokemonById } from "../../../data/gameData";
 import { buildCandidatePool } from "../adapt";
 import { candidatesToEmblemSlots } from "../pokemonScore";
 import { deriveEmblemLoadoutImpact, picksToEmblemSlots } from "../pokemonScore";
 import { computeEmblemLoadout, sumEmblemFlats } from "../../emblems";
-import { roundEmblemTotals } from "../../formulas";
+import { computeEffectiveStats, outOfCombatMoveSpeed, roundEmblemTotals } from "../../formulas";
 
 const lucario = pokemonById.get("lucario")!;
 
@@ -17,7 +17,7 @@ describe("deriveEmblemLoadoutImpact", () => {
     expect(browns).toHaveLength(6);
 
     const picks = browns.map((c) => ({ emblemId: c.id, grade: c.grade }));
-    const impact = deriveEmblemLoadoutImpact(lucario, 15, picks, [], [], setBonuses);
+    const impact = deriveEmblemLoadoutImpact(lucario, 15, picks, setBonuses);
     expect(impact).not.toBeNull();
 
     const slots = picksToEmblemSlots(picks);
@@ -37,7 +37,7 @@ describe("deriveEmblemLoadoutImpact", () => {
       .slice(0, 6);
     const picks = browns.map((c) => ({ emblemId: c.id, grade: c.grade }));
 
-    const fromPicks = deriveEmblemLoadoutImpact(lucario, 15, picks, [], [], setBonuses);
+    const fromPicks = deriveEmblemLoadoutImpact(lucario, 15, picks, setBonuses);
     const syntheticSlots = candidatesToEmblemSlots(browns, setBonuses);
     const syntheticLoadout = computeEmblemLoadout(syntheticSlots, setBonuses);
 
@@ -46,5 +46,28 @@ describe("deriveEmblemLoadoutImpact", () => {
       5,
     );
     expect(picks.every((p) => emblemById.has(p.emblemId))).toBe(true);
+  });
+
+  it("excludes held items such as Float Stone from OOC move speed", () => {
+    const pool = buildCandidatePool(emblems, { grades: ["gold"] });
+    const yellows = pool.filter((c) => c.colors.includes("yellow")).slice(0, 6);
+    expect(yellows.length).toBeGreaterThanOrEqual(6);
+    const picks = yellows.slice(0, 6).map((c) => ({ emblemId: c.id, grade: c.grade }));
+
+    const impact = deriveEmblemLoadoutImpact(lucario, 15, picks, setBonuses);
+    expect(impact).not.toBeNull();
+
+    const floatStone = heldItemById.get("float-stone")!;
+    const oocWithFloatStone = outOfCombatMoveSpeed(
+      computeEffectiveStats(lucario, 15, impact!.emblemLoadout, [floatStone], [40], {
+        inCombat: false,
+        goalsScored: 0,
+      }).moveSpeed,
+      [floatStone],
+      [40],
+    );
+
+    expect(impact!.oocMoveSpeed).toBeGreaterThan(impact!.effective.moveSpeed);
+    expect(impact!.oocMoveSpeed).toBeLessThan(oocWithFloatStone);
   });
 });

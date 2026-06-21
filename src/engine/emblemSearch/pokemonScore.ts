@@ -149,15 +149,13 @@ export interface EmblemLoadoutImpact {
 }
 
 /**
- * Compute effective stats for an optimizer result using the same stacking order
- * as the Build tab (formulas.computeEffectiveStats).
+ * Compute effective stats for an optimizer result — emblem effects only (no held items).
+ * Uses the same stacking order as the Build tab (formulas.computeEffectiveStats).
  */
 export function deriveEmblemLoadoutImpact(
   pokemon: Pokemon,
   level: number,
   picks: { emblemId: string; grade: EmblemGrade }[],
-  items: HeldItem[],
-  itemGrades: number[],
   setBonuses: EmblemSetBonus[],
   ctx: CalcContext = { inCombat: true, goalsScored: 0 },
 ): EmblemLoadoutImpact | null {
@@ -166,20 +164,13 @@ export function deriveEmblemLoadoutImpact(
 
   const emblemLoadout = computeEmblemLoadout(slots, setBonuses);
   const emptyLoadout = computeEmblemLoadout([], setBonuses);
-  const withoutEmblems = computeEffectiveStats(
-    pokemon,
-    level,
-    emptyLoadout,
-    items,
-    itemGrades,
-    ctx,
-  );
-  const effective = computeEffectiveStats(pokemon, level, emblemLoadout, items, itemGrades, ctx);
-  const oocEffective = computeEffectiveStats(pokemon, level, emblemLoadout, items, itemGrades, {
+  const withoutEmblems = computeEffectiveStats(pokemon, level, emptyLoadout, [], [], ctx);
+  const effective = computeEffectiveStats(pokemon, level, emblemLoadout, [], [], ctx);
+  const oocEffective = computeEffectiveStats(pokemon, level, emblemLoadout, [], [], {
     inCombat: false,
     goalsScored: 0,
   });
-  const oocMoveSpeed = outOfCombatMoveSpeed(oocEffective.moveSpeed, items, itemGrades);
+  const oocMoveSpeed = outOfCombatMoveSpeed(oocEffective.moveSpeed, [], []);
 
   return {
     effective,

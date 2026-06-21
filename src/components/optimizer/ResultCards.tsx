@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { emblemById, heldItemById, setBonuses } from "../../data/gameData";
+import { emblemById, setBonuses } from "../../data/gameData";
 import { deriveEmblemLoadoutImpact } from "../../engine/emblemSearch/pokemonScore";
-import type { EmblemGrade, HeldItem } from "../../types";
-import { useStore } from "../../state/store";
+import type { EmblemGrade } from "../../types";
 import { STAT_ROWS, formatExactDelta, formatStat } from "../../ui/format";
 import { CollapsibleCard } from "../CollapsibleCard";
 import { EmblemSetSummary } from "../EmblemSetSummary";
@@ -31,23 +30,6 @@ function picksKey(picks: { emblemId: string; grade: EmblemGrade }[]): string {
   return picks.map((p) => `${p.emblemId}:${p.grade}`).join(",");
 }
 
-function resolveHeldItems(
-  heldItemIds: (string | null)[],
-  heldSlotGrades: [number, number, number],
-): { items: HeldItem[]; itemGrades: number[] } {
-  const items: HeldItem[] = [];
-  const itemGrades: number[] = [];
-  for (let i = 0; i < 3; i++) {
-    const id = heldItemIds[i];
-    if (!id) continue;
-    const item = heldItemById.get(id);
-    if (!item) continue;
-    items.push(item);
-    itemGrades.push(heldSlotGrades[i] ?? 40);
-  }
-  return { items, itemGrades };
-}
-
 export function ResultCards({
   picks,
   searchResult,
@@ -60,7 +42,6 @@ export function ResultCards({
   onClearResults,
   onApplyEmblems,
 }: ResultPanelProps) {
-  const { loadout, heldSlotGrades } = useStore();
   const [previewLevel, setPreviewLevel] = useState(searchLevel);
   const buildKey = useMemo(() => picksKey(picks), [picks]);
 
@@ -70,16 +51,8 @@ export function ResultCards({
 
   const effectiveDelta = useMemo((): EffectiveDelta | null => {
     if (!picks.length || !pokemon) return null;
-    const { items, itemGrades } = resolveHeldItems(loadout.heldItemIds, heldSlotGrades);
     try {
-      const impact = deriveEmblemLoadoutImpact(
-        pokemon,
-        previewLevel,
-        picks,
-        items,
-        itemGrades,
-        setBonuses,
-      );
+      const impact = deriveEmblemLoadoutImpact(pokemon, previewLevel, picks, setBonuses);
       if (!impact || Object.keys(impact.emblemDelta).length === 0) return null;
       return {
         effective: impact.effective,
@@ -90,7 +63,7 @@ export function ResultCards({
     } catch {
       return null;
     }
-  }, [picks, pokemon, previewLevel, loadout.heldItemIds, heldSlotGrades]);
+  }, [picks, pokemon, previewLevel]);
 
   const previewingOtherLevel = previewLevel !== searchLevel;
 
