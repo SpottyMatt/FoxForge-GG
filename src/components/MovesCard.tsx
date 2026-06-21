@@ -1,6 +1,6 @@
 import { useStore } from "../state/store";
 import { pokemonById } from "../data/gameData";
-import { baseMove, upgradeOptions, resolveFinalMove, type FinalSlot } from "../engine/moves";
+import { baseMove, upgradeOptions, resolveFinalMove, uniteMoves, type FinalSlot } from "../engine/moves";
 import { CollapsibleCard } from "./CollapsibleCard";
 import { Tooltip } from "./Tooltip";
 import { MoveIcon } from "./MoveIcon";
@@ -101,7 +101,7 @@ export function MovesCard() {
   const pokemon = loadout.pokemonId ? pokemonById.get(loadout.pokemonId) : null;
   if (!pokemon) return null;
 
-  const unite = pokemon.moves.find((m) => m.slot === "uniteMove");
+  const uniteList = uniteMoves(pokemon);
   const passive = pokemon.passiveAbility;
   const passiveDesc = pickDescription(passive, expert);
 
@@ -114,10 +114,16 @@ export function MovesCard() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <ChoosableMoveSlot label="Move 1" pokemon={pokemon} slot="move1" />
         <ChoosableMoveSlot label="Move 2" pokemon={pokemon} slot="move2" />
-        {unite && (
+        {uniteList.length > 0 && (
           <div>
-            <p className="mb-1 text-xs font-medium text-faint">Unite Move</p>
-            <MoveRow move={unite} advanced={expert} />
+            <p className="mb-1 text-xs font-medium text-faint">
+              {uniteList.length > 1 ? "Unite Moves" : "Unite Move"}
+            </p>
+            <div className="flex flex-col gap-1.5">
+              {uniteList.map((u) => (
+                <MoveRow key={u.id} move={u} advanced={expert} />
+              ))}
+            </div>
           </div>
         )}
         <div>

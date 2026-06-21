@@ -5,10 +5,12 @@ import {
   resolveFinalMove,
   defaultFinalMoveIds,
   moveIdsFromNames,
+  uniteMoves,
 } from "../moves";
 import { pokemonList } from "../../data/gameData";
 
 const lucario = pokemonList.find((p) => p.id === "lucario")!;
+const urshifu = pokemonList.find((p) => p.id === "urshifu")!;
 const noBuilds = pokemonList.find((p) => !p.builds || p.builds.length === 0);
 
 describe("move-selection helpers", () => {
@@ -46,6 +48,16 @@ describe("move-selection helpers", () => {
     const ids = moveIdsFromNames(lucario, [ups1[1].name, ups2[1].name]);
     expect(ids.move1Id).toBe(ups1[1].id);
     expect(ids.move2Id).toBe(ups2[1].id);
+  });
+
+  it("returns every Unite Move, including dual-unite Pokémon", () => {
+    // Single-unite baseline.
+    expect(uniteMoves(lucario).length).toBe(1);
+    // Urshifu has two Unite Moves gated on his final-move path — both must surface.
+    const names = uniteMoves(urshifu).map((m) => m.name);
+    expect(names).toContain("Ebon Fist");
+    expect(names).toContain("Flowing Fists");
+    expect(uniteMoves(urshifu).length).toBe(2);
   });
 
   it("produces non-null defaults for every Pokémon (incl. those without builds)", () => {

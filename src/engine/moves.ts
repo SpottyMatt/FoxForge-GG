@@ -18,6 +18,12 @@ export function upgradeOptions(pokemon: Pokemon, slot: FinalSlot): Move[] {
   return pokemon.moves.filter((m) => m.slot === slot && m.isUpgrade);
 }
 
+/** Every Unite Move on a Pokémon. Most have one; a few (Urshifu, Blaziken)
+ *  have two, gated on their final-move path — both should be shown. */
+export function uniteMoves(pokemon: Pokemon): Move[] {
+  return pokemon.moves.filter((m) => m.slot === "uniteMove");
+}
+
 /** The move name the top Recommended build picks for a slot, if it maps to an upgrade. */
 function recommendedMoveName(pokemon: Pokemon, slot: FinalSlot): string | undefined {
   const names = pokemon.builds?.find((b) => b.moves && b.moves.length > 0)?.moves;
