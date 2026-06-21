@@ -1,6 +1,12 @@
 import { useStore } from "../state/store";
 import { pokemonById } from "../data/gameData";
-import { baseMove, upgradeOptions, resolveFinalMove, uniteMoves, type FinalSlot } from "../engine/moves";
+import {
+  baseMove,
+  upgradeOptions,
+  resolveFinalMove,
+  uniteMoves,
+  type FinalSlot,
+} from "../engine/moves";
 import { CollapsibleCard } from "./CollapsibleCard";
 import { Tooltip } from "./Tooltip";
 import { MoveIcon } from "./MoveIcon";
