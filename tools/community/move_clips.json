@@ -127,6 +127,42 @@
       "low-sweep": "/assets/skills/Cinderace/Low+Sweep.mp4",
       "pyro-ball": "/assets/skills/Cinderace/Pyro+Ball.mp4"
     },
+    "clefable": {
+      "disarming-voice": "/assets/skills/Clefable/Disarming+Voice.mp4",
+      "draining-kiss": "/assets/skills/Clefable/Draining+Kiss.mp4",
+      "follow-me": "/assets/skills/Clefable/Follow+Me.mp4",
+      "gravity": "/assets/skills/Clefable/Gravity.mp4",
+      "heal-pulse": "/assets/skills/Clefable/Heal+Pulse.mp4",
+      "moonlight": "/assets/skills/Clefable/Moonlight.mp4",
+      "wonder-wish": "/assets/skills/Clefable/Wonder+Wish.mp4"
+    },
+    "comfey": {
+      "floral-healing": "/assets/skills/Comfey/Floral+Healing.mp4",
+      "flowery-fields-forever": "/assets/skills/Comfey/Flowery+Fields+Forever.mp4",
+      "grass-knot": "/assets/skills/Comfey/Grass+Knot.mp4",
+      "magical-leaf": "/assets/skills/Comfey/Magical+Leaf.mp4",
+      "sweet-kiss": "/assets/skills/Comfey/Sweet+Kiss.mp4",
+      "synthesis": "/assets/skills/Comfey/Synthesis.mp4",
+      "vine-whip": "/assets/skills/Comfey/Vine+Whip.mp4"
+    },
+    "cramorant": {
+      "air-slash": "/assets/skills/Cramorant/Air+Slash.mp4",
+      "dive": "/assets/skills/Cramorant/Dive.mp4",
+      "feather-dance": "/assets/skills/Cramorant/Feather+Dance.mp4",
+      "gatling-gulp-missile": "/assets/skills/Cramorant/Gatling+Gulp+Missile.mp4",
+      "hurricane": "/assets/skills/Cramorant/Hurricane.mp4",
+      "surf": "/assets/skills/Cramorant/Surf.mp4",
+      "whirlpool": "/assets/skills/Cramorant/Whirlpool.mp4"
+    },
+    "crustle": {
+      "fury-cutter": "/assets/skills/Crustle/Fury+Cutter.mp4",
+      "rock-slide": "/assets/skills/Crustle/Rock+Slide.mp4",
+      "rock-tomb": "/assets/skills/Crustle/Rock+Tomb.mp4",
+      "rubble-rouser": "/assets/skills/Crustle/Rubble+Rouser.mp4",
+      "shell-smash": "/assets/skills/Crustle/Shell+Smash.mp4",
+      "stealth-rock": "/assets/skills/Crustle/Stealth+Rock.mp4",
+      "x-scissor": "/assets/skills/Crustle/X-Scissor.mp4"
+    },
     "lucario": {
       "aura-cannon": "/assets/skills/Lucario/Aura+Cannon.mp4",
       "bone-rush": "/assets/skills/Lucario/Bone+Rush.mp4",
@@ -174,6 +210,13 @@
       "thunderbolt": "/assets/skills/Pikachu/Thunderbolt.mp4",
       "thunderstorm": "/assets/skills/Pikachu/Thunderstorm.mp4",
       "volt-tackle": "/assets/skills/Pikachu/Volt+Tackle.mp4"
+    },
+    "quaquaval": {
+      "carnival-splash": "/assets/skills/Quaquaval/Carnival+Splash.mp4",
+      "liquidation": "/assets/skills/Quaquaval/Liquidation.mp4",
+      "low-sweep": "/assets/skills/Quaquaval/Low+Sweep.mp4",
+      "pound": "/assets/skills/Quaquaval/Pound.mp4",
+      "wing-attack": "/assets/skills/Quaquaval/Wing+Attack.mp4"
     },
     "skeledirge": {
       "disarming-voice": "/assets/skills/Skeledirge/Disarming+Voice.mp4",

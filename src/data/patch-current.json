@@ -10115,7 +10115,8 @@
           ],
           "moveType": "Recovery",
           "iconAsset": "/assets/skills/Clefable/Heal+Pulse.png",
-          "descriptionAdvanced": "Immediately restores HP to itself and nearby allies."
+          "descriptionAdvanced": "Immediately restores HP to itself and nearby allies.",
+          "videoAsset": "/assets/skills/Clefable/Heal+Pulse.mp4"
         },
         {
           "id": "moonlight",
@@ -10140,7 +10141,8 @@
           "isUpgrade": true,
           "moveType": "Recovery",
           "upgradeLevel": 4,
-          "descriptionAdvanced": "Continually restores HP to Clefable and nearby allies for 3s at one tick per half second excluding activation at 0s. Clefable’s movement speed is increased by 20% while this move is active.\n\nUpgrade (Level 10): Widens this move’s area-of-effect and increases the duration of its effects by 1s."
+          "descriptionAdvanced": "Continually restores HP to Clefable and nearby allies for 3s at one tick per half second excluding activation at 0s. Clefable’s movement speed is increased by 20% while this move is active.\n\nUpgrade (Level 10): Widens this move’s area-of-effect and increases the duration of its effects by 1s.",
+          "videoAsset": "/assets/skills/Clefable/Moonlight.mp4"
         },
         {
           "id": "draining-kiss",
@@ -10165,7 +10167,8 @@
           "isUpgrade": true,
           "moveType": "Recovery",
           "upgradeLevel": 4,
-          "descriptionAdvanced": "Attacks nearby enemies with an energy-draining kiss. Each enemy hit by the kiss receives damage and releases an air kiss. These air kisses will travel to a nearby ally with the lowest HP and restore their HP. If no allies are near, the air kisses will return to Clefable and restore its HP for 180% of the damage dealt.\n\nUpgrade (Level 10): Widens this move’s area-of-effect and increases the amount of HP restored to 200% of the damage dealt."
+          "descriptionAdvanced": "Attacks nearby enemies with an energy-draining kiss. Each enemy hit by the kiss receives damage and releases an air kiss. These air kisses will travel to a nearby ally with the lowest HP and restore their HP. If no allies are near, the air kisses will return to Clefable and restore its HP for 180% of the damage dealt.\n\nUpgrade (Level 10): Widens this move’s area-of-effect and increases the amount of HP restored to 200% of the damage dealt.",
+          "videoAsset": "/assets/skills/Clefable/Draining+Kiss.mp4"
         },
         {
           "id": "disarming-voice",
@@ -10188,7 +10191,8 @@
           ],
           "moveType": "Area",
           "iconAsset": "/assets/skills/Clefable/Disarming+Voice.png",
-          "descriptionAdvanced": "Let out a charming cry, dealing damage to nearby enemies and decreasing their movement speed by 40% for 2s."
+          "descriptionAdvanced": "Let out a charming cry, dealing damage to nearby enemies and decreasing their movement speed by 40% for 2s.",
+          "videoAsset": "/assets/skills/Clefable/Disarming+Voice.mp4"
         },
         {
           "id": "gravity",
@@ -10213,7 +10217,8 @@
           "isUpgrade": true,
           "moveType": "Hindrance",
           "upgradeLevel": 6,
-          "descriptionAdvanced": "Create a gravity zone centered on Clefable that persists for 3s. Inside the gravity zone, auto attacks change and deal increased damage. Enemies in the gravity zone have their movement speed decreased by 15% stacking up to 3 times gaining a stack whenever a set amount of time passes. These enemies are also unable to use Dash moves. If an enemy attempts to enter the gravity zone with a dash move, the dash move is stopped and that enemy is left unable to act for 1s.\n\nUpgrade (Level 12): Widens this move’s area-of-effect and increases the duration of its effects to 4s."
+          "descriptionAdvanced": "Create a gravity zone centered on Clefable that persists for 3s. Inside the gravity zone, auto attacks change and deal increased damage. Enemies in the gravity zone have their movement speed decreased by 15% stacking up to 3 times gaining a stack whenever a set amount of time passes. These enemies are also unable to use Dash moves. If an enemy attempts to enter the gravity zone with a dash move, the dash move is stopped and that enemy is left unable to act for 1s.\n\nUpgrade (Level 12): Widens this move’s area-of-effect and increases the duration of its effects to 4s.",
+          "videoAsset": "/assets/skills/Clefable/Gravity.mp4"
         },
         {
           "id": "follow-me",
@@ -10238,7 +10243,8 @@
           "isUpgrade": true,
           "moveType": "Hindrance",
           "upgradeLevel": 6,
-          "descriptionAdvanced": "Clefable moves to the designated location while waving its finger receiving a 3s shield. Attention of enemies hit and enemies near the designated location are drawn. These drawn enemies are forced to approach the user and attack Clefable with their auto attacks for 2s.\n\nUpgrade (Level 12): Increases Clefable's Defense by 150 for 3s and Sp. Def by 100 for 3s when this move is used."
+          "descriptionAdvanced": "Clefable moves to the designated location while waving its finger receiving a 3s shield. Attention of enemies hit and enemies near the designated location are drawn. These drawn enemies are forced to approach the user and attack Clefable with their auto attacks for 2s.\n\nUpgrade (Level 12): Increases Clefable's Defense by 150 for 3s and Sp. Def by 100 for 3s when this move is used.",
+          "videoAsset": "/assets/skills/Clefable/Follow+Me.mp4"
         },
         {
           "id": "wonder-wish",
@@ -10254,7 +10260,8 @@
           "moveType": "Recovery",
           "iconAsset": "/assets/skills/Clefable/Wonder+Wish.png",
           "descriptionAdvanced": "Clefable waggles their finger, restoring HP to allies in the area-of-effect. The lower an ally's HP is, the more HP this move restores to that ally. Afterward, Clefable gets a random move that can be performed by using the Unite Move again within 10s.\n\n30% missing HP\n\nNote: Some random moves will activate immediately.",
-          "upgradeLevel": 8
+          "upgradeLevel": 8,
+          "videoAsset": "/assets/skills/Clefable/Wonder+Wish.mp4"
         }
       ],
       "passiveAbility": {
@@ -10642,7 +10649,8 @@
           ],
           "moveType": "Recovery",
           "iconAsset": "/assets/skills/Comfey/Synthesis.png",
-          "descriptionAdvanced": "If detached attaches to the designated ally Pokémon and grants them a Triage shield effect.\n\nIf attached to an ally Pokémon: restores the HP of the ally. Restores additional HP with for each flower that is consumed (up to 8 flowers)."
+          "descriptionAdvanced": "If detached attaches to the designated ally Pokémon and grants them a Triage shield effect.\n\nIf attached to an ally Pokémon: restores the HP of the ally. Restores additional HP with for each flower that is consumed (up to 8 flowers).",
+          "videoAsset": "/assets/skills/Comfey/Synthesis.mp4"
         },
         {
           "id": "floral-healing",
@@ -10688,7 +10696,8 @@
           "isUpgrade": true,
           "moveType": "Recovery",
           "upgradeLevel": 4,
-          "descriptionAdvanced": "If detached: attaches to the designated ally Pokémon and grants them a Triage shield effect.\n\nIf attached to an ally Pokémon: restores the HP of the ally; restores additional HP for each flower that is consumed (up to 8 flowers). Converts any HP restored in excess of the ally Pokémon’s max HP into an overheal shield effect for 5s when this move is used (up to 4 times, refreshing duration with additional uses); adds additional value to the overheal shield effect for each additional flower that is consumed.\n\nUpgrade (Level 10): While attached: increases the movement speed of the ally Pokémon by 30% for 2s."
+          "descriptionAdvanced": "If detached: attaches to the designated ally Pokémon and grants them a Triage shield effect.\n\nIf attached to an ally Pokémon: restores the HP of the ally; restores additional HP for each flower that is consumed (up to 8 flowers). Converts any HP restored in excess of the ally Pokémon’s max HP into an overheal shield effect for 5s when this move is used (up to 4 times, refreshing duration with additional uses); adds additional value to the overheal shield effect for each additional flower that is consumed.\n\nUpgrade (Level 10): While attached: increases the movement speed of the ally Pokémon by 30% for 2s.",
+          "videoAsset": "/assets/skills/Comfey/Floral+Healing.mp4"
         },
         {
           "id": "sweet-kiss",
@@ -10713,7 +10722,8 @@
           "isUpgrade": true,
           "moveType": "Hindrance",
           "upgradeLevel": 4,
-          "descriptionAdvanced": "If detached: attaches to the designated ally Pokémon and grants them a Triage shield effect; adds additional shield value to the Triage shield effect with Sweet Kiss.\n\n0.6s + 0.1s per flower\n\nIf attached to an ally Pokémon: charges power for up to 2.5s, reaching maximum charge after 1.5s; then infatuates opposing Pokémon in the area of effect when released for a minimum of 0.6s. Increases the range of this move with charging. Infatuated Pokémon are unable to act and approach the user against their will. Infatuates opposing Pokémon hit for an additional 0.1s for each flower that is consumed (up to an additional 0.8s with 8 flowers; maximum 1.4s). (Note: it is impossible to use Sweet Kiss with fewer than 2 flowers due to the rate of gaining flowers and the cooldown reduction cap.)\n\nUpgrade (Level 10): While attached: increases the movement speed of the ally Pokémon by 50% for 2s while charging power."
+          "descriptionAdvanced": "If detached: attaches to the designated ally Pokémon and grants them a Triage shield effect; adds additional shield value to the Triage shield effect with Sweet Kiss.\n\n0.6s + 0.1s per flower\n\nIf attached to an ally Pokémon: charges power for up to 2.5s, reaching maximum charge after 1.5s; then infatuates opposing Pokémon in the area of effect when released for a minimum of 0.6s. Increases the range of this move with charging. Infatuated Pokémon are unable to act and approach the user against their will. Infatuates opposing Pokémon hit for an additional 0.1s for each flower that is consumed (up to an additional 0.8s with 8 flowers; maximum 1.4s). (Note: it is impossible to use Sweet Kiss with fewer than 2 flowers due to the rate of gaining flowers and the cooldown reduction cap.)\n\nUpgrade (Level 10): While attached: increases the movement speed of the ally Pokémon by 50% for 2s while charging power.",
+          "videoAsset": "/assets/skills/Comfey/Sweet+Kiss.mp4"
         },
         {
           "id": "vine-whip",
@@ -10736,7 +10746,8 @@
           ],
           "moveType": "Ranged",
           "iconAsset": "/assets/skills/Comfey/Vine+Whip.png",
-          "descriptionAdvanced": "Strikes out with whiplike vines in the designated direction, damaging opposing Pokémon in the line area of effect and decreasing their movement speed by 40% for 2s when it hits.\n\nWhile attached to an ally: increases this move's range."
+          "descriptionAdvanced": "Strikes out with whiplike vines in the designated direction, damaging opposing Pokémon in the line area of effect and decreasing their movement speed by 40% for 2s when it hits.\n\nWhile attached to an ally: increases this move's range.",
+          "videoAsset": "/assets/skills/Comfey/Vine+Whip.mp4"
         },
         {
           "id": "magical-leaf",
@@ -10761,7 +10772,8 @@
           "isUpgrade": true,
           "moveType": "Area",
           "upgradeLevel": 6,
-          "descriptionAdvanced": "Launches 3 curious, scattering leaves every 1s for 5s (up to 18 leaves) at random opposing Pokémon in the area of effect (even when in tall grass or in stealth), prioritizing Pokémon from the opposing team; damaging opposing Pokémon and applying a mark to them for 4s when hit by a leaf. When a marked target is damaged by 6 leaves, stuns them for 0.5s.\n\nWhile attached to an ally: increases this move's range of targeting.\n\nUpgrade (Level 12): Increases the number of leaves launched to 4 leaves every 1s (maximum 24 leaves)."
+          "descriptionAdvanced": "Launches 3 curious, scattering leaves every 1s for 5s (up to 18 leaves) at random opposing Pokémon in the area of effect (even when in tall grass or in stealth), prioritizing Pokémon from the opposing team; damaging opposing Pokémon and applying a mark to them for 4s when hit by a leaf. When a marked target is damaged by 6 leaves, stuns them for 0.5s.\n\nWhile attached to an ally: increases this move's range of targeting.\n\nUpgrade (Level 12): Increases the number of leaves launched to 4 leaves every 1s (maximum 24 leaves).",
+          "videoAsset": "/assets/skills/Comfey/Magical+Leaf.mp4"
         },
         {
           "id": "grass-knot",
@@ -10794,7 +10806,8 @@
           "moveType": "Hindrance",
           "upgradeLevel": 6,
           "descriptionAdvanced": "Unleashes vines in the designated direction, damaging up to two opposing Pokémon hit and immobilizing them. If this move hits two opposing Pokémon (within 75% of this move's max range from each other), pull the second target to the first target's location and deal additional damage to both.\n\nWhile attached to an ally: increases this move's range.\n\nUpgrade (Level 12): Increases this move’s area of effect.",
-          "gifAsset": "/assets/skills/Comfey/Grass+Knot.webp"
+          "gifAsset": "/assets/skills/Comfey/Grass+Knot.webp",
+          "videoAsset": "/assets/skills/Comfey/Grass+Knot.mp4"
         },
         {
           "id": "flowery-fields-forever",
@@ -10846,7 +10859,8 @@
           "moveType": "Area",
           "iconAsset": "/assets/skills/Comfey/Flowery+Fields+Forever.png",
           "descriptionAdvanced": "Briefly becomes unstoppable and creates a large area of tall grass around their location for 6s. Pokémon in this tall grass cannot be seen, just as with other tall grass on the map. Restores the HP of teammates in this Unite Move's tall grass every 0.5s.\n\nIncreases infatuation base duration by 1.3s\n\nGains special flowers from this tall grass, which grant access to an empowered use of Floral Healing or Sweet Kiss.",
-          "upgradeLevel": 8
+          "upgradeLevel": 8,
+          "videoAsset": "/assets/skills/Comfey/Flowery+Fields+Forever.mp4"
         }
       ],
       "passiveAbility": {
@@ -11358,7 +11372,8 @@
           ],
           "moveType": "Area",
           "iconAsset": "/assets/skills/Cramorant/Whirlpool.png",
-          "descriptionAdvanced": "The user creates a whirlpool at a designated location, damaging opposing Pokémon in the area of effect over 1.8s (up to 10 times). The area of effect shrinks in size over the duration; opposing Pokémon standing at the outer edge of the whirlpool are hit only up to 3 times. The movement speed of opposing Pokémon in the area of effect is decreased by 50% for 0.2s when hit.\n\nThe user can enter the whirlpool to catch prey for Gulp Missile (up to 2 times)."
+          "descriptionAdvanced": "The user creates a whirlpool at a designated location, damaging opposing Pokémon in the area of effect over 1.8s (up to 10 times). The area of effect shrinks in size over the duration; opposing Pokémon standing at the outer edge of the whirlpool are hit only up to 3 times. The movement speed of opposing Pokémon in the area of effect is decreased by 50% for 0.2s when hit.\n\nThe user can enter the whirlpool to catch prey for Gulp Missile (up to 2 times).",
+          "videoAsset": "/assets/skills/Cramorant/Whirlpool.mp4"
         },
         {
           "id": "surf",
@@ -11390,7 +11405,8 @@
           "isUpgrade": true,
           "moveType": "Ranged",
           "upgradeLevel": 6,
-          "descriptionAdvanced": "The user sends a wave in the designated direction, damaging opposing Pokémon in the wave. The wave reaches its maximum distance after 0.8s, then returns to its starting point at the same speed, damaging opposing Pokémon and pulling them with the returning wave, stunning them for 0.4s during the pull.\n\nThe user catches prey with the first wave, and can enter the returning wave to catch more prey for Gulp Missile.\n\nUpgrade (Level 13): The first wave decreases the movement speed of opposing Pokémon hit by 40% for 3s."
+          "descriptionAdvanced": "The user sends a wave in the designated direction, damaging opposing Pokémon in the wave. The wave reaches its maximum distance after 0.8s, then returns to its starting point at the same speed, damaging opposing Pokémon and pulling them with the returning wave, stunning them for 0.4s during the pull.\n\nThe user catches prey with the first wave, and can enter the returning wave to catch more prey for Gulp Missile.\n\nUpgrade (Level 13): The first wave decreases the movement speed of opposing Pokémon hit by 40% for 3s.",
+          "videoAsset": "/assets/skills/Cramorant/Surf.mp4"
         },
         {
           "id": "dive",
@@ -11422,7 +11438,8 @@
           "isUpgrade": true,
           "moveType": "Dash",
           "upgradeLevel": 6,
-          "descriptionAdvanced": "The user becomes unstoppable for 0.5s as they change the designated location into a puddle then dive to the puddle, damaging opposing Pokémon and shoving them for 0.5s when the user emerges from the puddle. The next boosted attack within 5s deals additional damage; boosted attacks after 5s have passed become regular boosted attacks. A maximum of 3 uses can be kept in reserve for this move, and there is a 2s cooldown between uses.\n\nThe user catches prey for Gulp Missile as they emerge from the puddle.\n\nUpgrade (Level 13): Increases the damage of the dive."
+          "descriptionAdvanced": "The user becomes unstoppable for 0.5s as they change the designated location into a puddle then dive to the puddle, damaging opposing Pokémon and shoving them for 0.5s when the user emerges from the puddle. The next boosted attack within 5s deals additional damage; boosted attacks after 5s have passed become regular boosted attacks. A maximum of 3 uses can be kept in reserve for this move, and there is a 2s cooldown between uses.\n\nThe user catches prey for Gulp Missile as they emerge from the puddle.\n\nUpgrade (Level 13): Increases the damage of the dive.",
+          "videoAsset": "/assets/skills/Cramorant/Dive.mp4"
         },
         {
           "id": "feather-dance",
@@ -11437,7 +11454,8 @@
           ],
           "moveType": "Debuff",
           "iconAsset": "/assets/skills/Cramorant/Feather+Dance.png",
-          "descriptionAdvanced": "The user throws a circle of feathers at the designated area, decreasing the Attack of opposing Pokémon in the area of effect by 30% and their movement speed by 20% for 4s."
+          "descriptionAdvanced": "The user throws a circle of feathers at the designated area, decreasing the Attack of opposing Pokémon in the area of effect by 30% and their movement speed by 20% for 4s.",
+          "videoAsset": "/assets/skills/Cramorant/Feather+Dance.mp4"
         },
         {
           "id": "hurricane",
@@ -11462,7 +11480,8 @@
           "isUpgrade": true,
           "moveType": "Hindrance",
           "upgradeLevel": 4,
-          "descriptionAdvanced": "The user creates a fierce wind at the designated location. After 0.5s, a hurricane catches opposing Pokémon in the area of effect, damaging them and throwing them for 1s. Afterwards the user's attack speed increases by 40% for 3s.\n\nUpgrade (Level 11): Increases the user's movement speed by 20% for 3s."
+          "descriptionAdvanced": "The user creates a fierce wind at the designated location. After 0.5s, a hurricane catches opposing Pokémon in the area of effect, damaging them and throwing them for 1s. Afterwards the user's attack speed increases by 40% for 3s.\n\nUpgrade (Level 11): Increases the user's movement speed by 20% for 3s.",
+          "videoAsset": "/assets/skills/Cramorant/Hurricane.mp4"
         },
         {
           "id": "air-slash",
@@ -11487,7 +11506,8 @@
           "isUpgrade": true,
           "moveType": "Ranged",
           "upgradeLevel": 4,
-          "descriptionAdvanced": "The user shoots out 5 blades of air in a cone in the designated direction, damaging the first opposing Pokémon hit with each blade. The user also hops backward to create distance. This move's cooldown is reduced by 0.8s for each blade that hits (up to 4s).\n\nUpgrade (Level 11): Restores the user's HP for each blade of air that hits an opposing Pokémon."
+          "descriptionAdvanced": "The user shoots out 5 blades of air in a cone in the designated direction, damaging the first opposing Pokémon hit with each blade. The user also hops backward to create distance. This move's cooldown is reduced by 0.8s for each blade that hits (up to 4s).\n\nUpgrade (Level 11): Restores the user's HP for each blade of air that hits an opposing Pokémon.",
+          "videoAsset": "/assets/skills/Cramorant/Air+Slash.mp4"
         },
         {
           "id": "gatling-gulp-missile",
@@ -11511,7 +11531,8 @@
           "moveType": "Area",
           "iconAsset": "/assets/skills/Cramorant/Gatling+Gulp+Missile.png",
           "descriptionAdvanced": "The user becomes unstoppable for up to 6.5s and catches a series of prey to spit at the nearest Pokémon from the opposing team or wild Pokémon up to 10 times. The user cannot move or use moves while using Gatling Gulp Missile. The user can use this Unite Move again to cancel it early. The prey caught for each Gatling Gulp Missile attack depends on the user's current HP.\n\nIf a boosted attack is readied when this Unite Move is used, the user spits this prey out first as a regular boosted attack before catching and spitting out up to 10 Gatling Gulp Missile prey.",
-          "upgradeLevel": 9
+          "upgradeLevel": 9,
+          "videoAsset": "/assets/skills/Cramorant/Gatling+Gulp+Missile.mp4"
         }
       ],
       "passiveAbility": {
@@ -11951,7 +11972,8 @@
           ],
           "moveType": "Hindrance",
           "iconAsset": "/assets/skills/Crustle/Rock+Slide.png",
-          "descriptionAdvanced": "The user drops large rocks at the designated location, damaging opposing Pokémon in the area of effect and stunning them for 1s."
+          "descriptionAdvanced": "The user drops large rocks at the designated location, damaging opposing Pokémon in the area of effect and stunning them for 1s.",
+          "videoAsset": "/assets/skills/Crustle/Rock+Slide.mp4"
         },
         {
           "id": "rock-tomb",
@@ -11990,7 +12012,8 @@
           "isUpgrade": true,
           "moveType": "Hindrance",
           "upgradeLevel": 4,
-          "descriptionAdvanced": "The user splits open the ground in a line towards the designated location, damaging opposing Pokémon in the path and decreasing their movement speed by 60% for 2s. A curved wall of rock is then created at the designated location that remains for up to 3s. When the wall of rock is created or destroyed, opposing Pokémon near the wall are damaged and their movement speed is decreased by 60% for 2s.\n\nThe user can use this move again to destroy the wall of rock early.\n\nUpgrade (Level 11): Strengthens the movement speed decrease from this move to 80%."
+          "descriptionAdvanced": "The user splits open the ground in a line towards the designated location, damaging opposing Pokémon in the path and decreasing their movement speed by 60% for 2s. A curved wall of rock is then created at the designated location that remains for up to 3s. When the wall of rock is created or destroyed, opposing Pokémon near the wall are damaged and their movement speed is decreased by 60% for 2s.\n\nThe user can use this move again to destroy the wall of rock early.\n\nUpgrade (Level 11): Strengthens the movement speed decrease from this move to 80%.",
+          "videoAsset": "/assets/skills/Crustle/Rock+Tomb.mp4"
         },
         {
           "id": "shell-smash",
@@ -12007,7 +12030,8 @@
           "isUpgrade": true,
           "moveType": "Buff",
           "upgradeLevel": 4,
-          "descriptionAdvanced": "The user becomes unstoppable as they smash their shell over 0.8s, reducing their base Defense and Sp. Def stats to 0 and converting 40% of the value lost to bonus Attack and Sp. Atk respectively for 4.5s. The user's movement speed is increased by 75% for the duration of the buff (decaying by 5% every 1s; minimum 55% increased movement speed before the buff ends).\n\nAll modifiers (except emblem color bonuses) work with 0 base Defense and Sp. Def for the duration of this buff.\n\nUpgrade (Level 11): Strengthens the conversion rate from lost Defense and Sp. Def to bonus Attack and Sp. Atk to 50%."
+          "descriptionAdvanced": "The user becomes unstoppable as they smash their shell over 0.8s, reducing their base Defense and Sp. Def stats to 0 and converting 40% of the value lost to bonus Attack and Sp. Atk respectively for 4.5s. The user's movement speed is increased by 75% for the duration of the buff (decaying by 5% every 1s; minimum 55% increased movement speed before the buff ends).\n\nAll modifiers (except emblem color bonuses) work with 0 base Defense and Sp. Def for the duration of this buff.\n\nUpgrade (Level 11): Strengthens the conversion rate from lost Defense and Sp. Def to bonus Attack and Sp. Atk to 50%.",
+          "videoAsset": "/assets/skills/Crustle/Shell+Smash.mp4"
         },
         {
           "id": "fury-cutter",
@@ -12030,7 +12054,8 @@
           ],
           "moveType": "Melee",
           "iconAsset": "/assets/skills/Crustle/Fury+Cutter.png",
-          "descriptionAdvanced": "The user slashes once with their claw while dashing slightly in the designated direction, damaging opposing Pokémon hit. Targets hit by Fury Cutter receive a mark for 9s that stacks with subsequent Fury Cutter hits (up to 3 times). Subsequent hits of this move on marked targets have 20% increased damage (maximum 40% increased damage on the third and subsequent hits from this move).\n\nAdditional stacking damage from this move is always rounded up."
+          "descriptionAdvanced": "The user slashes once with their claw while dashing slightly in the designated direction, damaging opposing Pokémon hit. Targets hit by Fury Cutter receive a mark for 9s that stacks with subsequent Fury Cutter hits (up to 3 times). Subsequent hits of this move on marked targets have 20% increased damage (maximum 40% increased damage on the third and subsequent hits from this move).\n\nAdditional stacking damage from this move is always rounded up.",
+          "videoAsset": "/assets/skills/Crustle/Fury+Cutter.mp4"
         },
         {
           "id": "stealth-rock",
@@ -12055,7 +12080,8 @@
           "isUpgrade": true,
           "moveType": "Area",
           "upgradeLevel": 6,
-          "descriptionAdvanced": "The user launches a cluster of rocks in the designated direction which expands into a trap of levitating rocks on the first opposing Pokémon or wall hit, or after traveling their max distance. This trap deals damage to opposing Pokémon in the area of effect every 0.5s over 4s (up to 8 times). Subsequent hits on targets hit by the trap within 1.5s have 15% increased damage; this damage increase stacks with subsequent hits from that trap (maximum 105% increased damage on the eighth hit).\n\nAdditional stacking damage from subsequent hits for each trap is always rounded up.\n\nUpgrade (Level 13): The trap of levitating rocks remains for 1s longer; this move can hit up to 10 times (maximum 135% increased damage on the tenth hit). Also decreases the movement speed of opposing Pokémon hit by 35% for 1s."
+          "descriptionAdvanced": "The user launches a cluster of rocks in the designated direction which expands into a trap of levitating rocks on the first opposing Pokémon or wall hit, or after traveling their max distance. This trap deals damage to opposing Pokémon in the area of effect every 0.5s over 4s (up to 8 times). Subsequent hits on targets hit by the trap within 1.5s have 15% increased damage; this damage increase stacks with subsequent hits from that trap (maximum 105% increased damage on the eighth hit).\n\nAdditional stacking damage from subsequent hits for each trap is always rounded up.\n\nUpgrade (Level 13): The trap of levitating rocks remains for 1s longer; this move can hit up to 10 times (maximum 135% increased damage on the tenth hit). Also decreases the movement speed of opposing Pokémon hit by 35% for 1s.",
+          "videoAsset": "/assets/skills/Crustle/Stealth+Rock.mp4"
         },
         {
           "id": "x-scissor",
@@ -12094,7 +12120,8 @@
           "isUpgrade": true,
           "moveType": "Melee",
           "upgradeLevel": 6,
-          "descriptionAdvanced": "The user dashes and attacks with crossed claws three times in the designated direction, damaging opposing Pokémon and shoving them for 0.2s with each attack. The third hit stuns opposing Pokémon for 1.5s if they are shoved into a wall.\n\nUpgrade (Level 13): Reduces this move's cooldown by 1s."
+          "descriptionAdvanced": "The user dashes and attacks with crossed claws three times in the designated direction, damaging opposing Pokémon and shoving them for 0.2s with each attack. The third hit stuns opposing Pokémon for 1.5s if they are shoved into a wall.\n\nUpgrade (Level 13): Reduces this move's cooldown by 1s.",
+          "videoAsset": "/assets/skills/Crustle/X-Scissor.mp4"
         },
         {
           "id": "rubble-rouser",
@@ -12125,7 +12152,8 @@
           "moveType": "Buff",
           "iconAsset": "/assets/skills/Crustle/Rubble+Rouser.png",
           "descriptionAdvanced": "The user becomes unstoppable as they summon a whirlwind of rocks around them, gaining a shield, and stunning nearby enemies for 1s. For 10s after, the whirlwind of rocks damage nearby opposing Pokémon every 1s. If the user receives damage during Rubble Rouser, the user deals additional revenge damage to nearby opposing Pokémon (2s CD).\n\nThe value of the shield gained from Rubble Rouser is equal to 40% max HP + 600.",
-          "upgradeLevel": 9
+          "upgradeLevel": 9,
+          "videoAsset": "/assets/skills/Crustle/Rubble+Rouser.mp4"
         }
       ],
       "passiveAbility": {
@@ -58423,7 +58451,8 @@
           ],
           "moveType": "Melee",
           "iconAsset": "/assets/skills/Quaquaval/Pound.png",
-          "descriptionAdvanced": "The user pounds the area, dealing damage and slowing opposing Pokémon by 30% for 2s."
+          "descriptionAdvanced": "The user pounds the area, dealing damage and slowing opposing Pokémon by 30% for 2s.",
+          "videoAsset": "/assets/skills/Quaquaval/Pound.mp4"
         },
         {
           "id": "low-sweep",
@@ -58448,7 +58477,8 @@
           "isUpgrade": true,
           "moveType": "Melee",
           "upgradeLevel": 5,
-          "descriptionAdvanced": "The user unleashes three swift kicks in the designated direction, dealing damage and slowing opposing Pokémon by 60% for 1s, decaying by 15% every 0.25s. The third kick can be aimed, launching the user in that direction before unleashing the kick.\n\nUpgrade (Level 11): Increases the damage of this move, and Spinning Edge when this move precedes it."
+          "descriptionAdvanced": "The user unleashes three swift kicks in the designated direction, dealing damage and slowing opposing Pokémon by 60% for 1s, decaying by 15% every 0.25s. The third kick can be aimed, launching the user in that direction before unleashing the kick.\n\nUpgrade (Level 11): Increases the damage of this move, and Spinning Edge when this move precedes it.",
+          "videoAsset": "/assets/skills/Quaquaval/Low+Sweep.mp4"
         },
         {
           "id": "wing-attack",
@@ -58478,7 +58508,8 @@
           ],
           "moveType": "Dash",
           "iconAsset": "/assets/skills/Quaquaval/Wing+Attack.png",
-          "descriptionAdvanced": "The user lunges in the designated direction dealing damage, and gaining a shield for 3s on hit."
+          "descriptionAdvanced": "The user lunges in the designated direction dealing damage, and gaining a shield for 3s on hit.",
+          "videoAsset": "/assets/skills/Quaquaval/Wing+Attack.mp4"
         },
         {
           "id": "liquidation",
@@ -58503,7 +58534,8 @@
           "isUpgrade": true,
           "moveType": "Dash",
           "upgradeLevel": 7,
-          "descriptionAdvanced": "The user charges in the designated direction, dealing damage, lowering the defense of opposing Pokémon by 30% for 3s, and restoring the user's HP.\n\n8% of Max HP\n\nTwo uses can be kept in reserve, with a 0.5s cooldown between uses.\n\nUpgrade (Level 13): Increases the amount of health this move restores, and increases Spinning Edge's shield when this move precedes it."
+          "descriptionAdvanced": "The user charges in the designated direction, dealing damage, lowering the defense of opposing Pokémon by 30% for 3s, and restoring the user's HP.\n\n8% of Max HP\n\nTwo uses can be kept in reserve, with a 0.5s cooldown between uses.\n\nUpgrade (Level 13): Increases the amount of health this move restores, and increases Spinning Edge's shield when this move precedes it.",
+          "videoAsset": "/assets/skills/Quaquaval/Liquidation.mp4"
         },
         {
           "id": "carnival-splash",
@@ -58541,7 +58573,8 @@
           "moveType": "Buff",
           "iconAsset": "/assets/skills/Quaquaval/Carnival+Splash.png",
           "descriptionAdvanced": "The user becomes Unstoppable while dancing in place, gaining a shield and dealing damage to opposing Pokémon up to 3 times. The third hit will pull in opposing Pokémon towards the user, stunning them for 1s. Each opposing Pokémon pulled in grants the user a shield, up to 3 times.\n\nThe third hit of this move will not affect wild Pokémon.",
-          "upgradeLevel": 9
+          "upgradeLevel": 9,
+          "videoAsset": "/assets/skills/Quaquaval/Carnival+Splash.mp4"
         }
       ],
       "passiveAbility": {
