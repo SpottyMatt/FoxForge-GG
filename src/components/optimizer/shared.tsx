@@ -136,6 +136,8 @@ export interface OptimizerAdvancedProps {
   setExactCap: (cap: number) => void;
   colorMode: ColorMode;
   setColorMode: (mode: ColorMode) => void;
+  /** Hard exact color constraints achievable on the current pool + targets. */
+  exactColorModeFeasible: boolean;
   activeColors: Set<EmblemColor>;
   setActiveColors: (colors: Set<EmblemColor>) => void;
   colorCounts: Record<EmblemColor, number>;

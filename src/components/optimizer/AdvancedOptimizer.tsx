@@ -58,6 +58,7 @@ export function AdvancedOptimizer({
     setExactCap,
     colorMode,
     setColorMode,
+    exactColorModeFeasible,
     activeColors,
     setActiveColors,
     colorCounts,
@@ -181,6 +182,8 @@ export function AdvancedOptimizer({
       <ColorCard
         colorMode={colorMode}
         setColorMode={setColorMode}
+        exactColorModeFeasible={exactColorModeFeasible}
+        useOwned={useOwned}
         activeColors={activeColors}
         setActiveColors={setActiveColors}
         colorCounts={colorCounts}

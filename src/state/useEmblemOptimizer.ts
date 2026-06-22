@@ -246,6 +246,19 @@ export function useEmblemOptimizer(): {
     return proposedColorBonuses(counts, setBonuses);
   }, [colorMode, activeColors, colorCounts]);
 
+  /** Whether hard exact color constraints are achievable on the current pool. */
+  const exactColorModeFeasible = useMemo(() => {
+    let targets = colorTargetsFromUi(activeColors, colorCounts);
+    if (targets.size === 0 && pokemon) {
+      const defaults = deriveAdvancedColorUiDefaults(pokemon, pool, allEmblems);
+      targets = new Map(
+        defaults.activeColors.map((c) => [c, defaults.colorCounts.get(c) ?? 0] as const),
+      );
+    }
+    if (targets.size === 0) return false;
+    return isExactColorModeFeasible(pool, targets, SLOTS, enumerateGradeVariants);
+  }, [activeColors, colorCounts, pokemon, pool, enumerateGradeVariants]);
+
   const advancedSearchOptions: SearchOptions = useMemo(
     () => ({
       mode,
@@ -404,6 +417,7 @@ export function useEmblemOptimizer(): {
   enumerateGradeVariantsRef.current = enumerateGradeVariants;
   /** User chose Weighted while Exact was available — blocks pool-driven auto-upgrade. */
   const userPinnedWeightedRef = useRef(false);
+  const exactColorModeFeasibleRef = useRef(false);
   /** Previous pool exact-feasibility for the current color targets (pool effect only). */
   const prevExactFeasibleRef = useRef<boolean | null>(null);
   // Refs so pokemon-change reset uses the latest pool/level without re-binding when
@@ -414,6 +428,7 @@ export function useEmblemOptimizer(): {
   poolConfigRef.current = poolConfig;
   ownedRef.current = owned;
   optimizeLevelRef.current = optimizeLevel;
+  exactColorModeFeasibleRef.current = exactColorModeFeasible;
 
   const applyAdvancedColorDefaults = useCallback((targetPool: typeof pool) => {
     const p = loadoutPokemonIdRef.current
@@ -467,6 +482,7 @@ export function useEmblemOptimizer(): {
 
   const handleSetColorMode = useCallback(
     (mode: ColorMode) => {
+      if (mode === "exact" && !exactColorModeFeasibleRef.current) return;
       if (mode === "weighted" && colorModeRef.current === "exact") {
         userPinnedWeightedRef.current = true;
       } else if (mode === "exact" || mode === "off") {
@@ -553,7 +569,7 @@ export function useEmblemOptimizer(): {
     if (expertJustEnabled || pokemonChanged) resetAdvancedForNewPokemon();
   }, [expert, loadout.pokemonId, pokemon, resetAdvancedForNewPokemon]);
 
-  // Re-evaluate Exact vs Weighted when the pool changes — adjust mode only, never targets.
+  // Pool change: auto-upgrade Weighted → Exact when feasible; downgrade Exact when not.
   useLayoutEffect(() => {
     if (!expert || colorMode === "off" || activeColorsRef.current.size === 0) {
       prevExactFeasibleRef.current = null;
@@ -698,6 +714,7 @@ export function useEmblemOptimizer(): {
     setExactCap,
     colorMode,
     setColorMode: handleSetColorMode,
+    exactColorModeFeasible,
     activeColors,
     setActiveColors,
     colorCounts,

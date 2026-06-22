@@ -21,6 +21,8 @@ import {
 export interface ColorCardProps {
   colorMode: ColorMode;
   setColorMode: (mode: ColorMode) => void;
+  exactColorModeFeasible: boolean;
+  useOwned: boolean;
   activeColors: Set<EmblemColor>;
   setActiveColors: (colors: Set<EmblemColor>) => void;
   colorCounts: Record<EmblemColor, number>;
@@ -45,6 +47,8 @@ export interface ColorCardProps {
 export function ColorCard({
   colorMode,
   setColorMode,
+  exactColorModeFeasible,
+  useOwned,
   activeColors,
   setActiveColors,
   colorCounts,
@@ -72,7 +76,24 @@ export function ColorCard({
             options={["off", "weighted", "exact"]}
             onChange={setColorMode}
             labels={{ off: "Off", weighted: "Weighted", exact: "Exact" }}
+            disabledOptions={exactColorModeFeasible ? undefined : (["exact"] as const)}
+            optionTitles={
+              exactColorModeFeasible
+                ? undefined
+                : {
+                    exact: useOwned
+                      ? "This pool can't hit these exact color counts — try All emblems or use Weighted."
+                      : "This pool can't hit these exact color counts — expand grades or use Weighted.",
+                  }
+            }
           />
+          {!exactColorModeFeasible && colorMode !== "off" && (
+            <p className="text-xs text-muted">
+              Exact is unavailable on this pool for the current color targets. Use{" "}
+              <strong>Weighted</strong>
+              {useOwned ? " or switch to All emblems" : " or enable more grades"}.
+            </p>
+          )}
         </div>
 
         {colorMode === "weighted" && (
