@@ -45,19 +45,7 @@ jobs:
         working-directory: tools/community
         run: python3 fetch_art.py
       - name: Publish bundle + manifest to public/data
-        run: |
-          mkdir -p public/data
-          rm -f public/data/patch-*.json
-          PATCH=$(python3 -c "import json;print(json.load(open('src/data/patch-current.json'))['patchVersion'])")
-          VER=$(python3 -c "import json;print(json.load(open('src/data/patch-current.json'))['lastUpdated'])")
-          cp src/data/patch-current.json "public/data/patch-${PATCH}.json"
-          python3 - "$PATCH" "$VER" <<'PY'
-          import json, sys
-          patch, ver = sys.argv[1], sys.argv[2]
-          base = "https://aerokita.github.io/FoxForge-GG/data"
-          json.dump({"version": ver, "patchVersion": patch, "url": f"{base}/patch-{patch}.json"},
-                    open("public/data/manifest.json", "w"), indent=2)
-          PY
+        run: python3 tools/community/publish_bundle.py
       - name: Validate regenerated bundle
         run: |
           npm run lint
