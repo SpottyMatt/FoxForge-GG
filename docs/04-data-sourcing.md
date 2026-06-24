@@ -5,9 +5,12 @@ patch. Treat it as first-class.
   
 ## Current source (v1): UNITE-DB  
   
-The shipping bundle `src/data/patch-1.23.1.1.json` is sourced from  
+The build-time baseline bundle `src/data/patch-current.json` (stable filename;  
+`patchVersion` lives inside the JSON) is sourced from  
 [UNITE-DB](https://unite-db.com) via `tools/community/` (`fetch.py` →  
-`normalize.py`; art via `fetch_art.py`). This is the documented community  
+`normalize.py`; art via `fetch_art.py`). The version-stamped published copy  
+under `public/data/` (`patch-<patchVersion>.json` + `manifest.json`) is produced  
+by the data-refresh tooling, not hand-named. This is the documented community  
 fallback: first-party APK datamining is **blocked** because v1.23.1.1 encrypts  
 its asset bundles with a rotated XOR key absent from any public tool (full  
 analysis in `tools/extract/ENCRYPTION-FINDINGS.md`). The bundle's `dataSource`  
@@ -58,11 +61,17 @@ After `normalize.py`, run `npm run generate:presets` (or `npm run data:post-norm
 ## Recommended Workflow per Patch  
   
 1. Pull the patch notes; identify changed stats/items/emblems/moves.  
-2. Update the affected entries in a NEW bundle file (`patch-x.y.z.json`).  
-3. Bump `patchVersion` / `lastUpdated`.  
-4. Run the validation suite (schema + known-value checks from the calc-engine  
+2. Regenerate the bundle — data is **never hand-edited**. Re-run the  
+   `tools/community/` pipeline (which rewrites `src/data/patch-current.json` in  
+   place). Set the patch id via the `PATCH_VERSION` env on `normalize.py` (or the  
+   `patch_version` input on the GitHub **Refresh game data** workflow).  
+   `lastUpdated` is set automatically by `normalize.py` to today's date.  
+3. Run the validation suite (schema + known-value checks from the calc-engine  
    doc).  
-5. Spot-check a few builds against in-game numbers.  
+4. Spot-check a few builds against in-game numbers.  
+
+See [`docs/11-adding-content.md`](11-adding-content.md) for the full step-by-step  
+runbook (local refresh, curation, publish, and verify).  
   
 ## Update Checklist  
   

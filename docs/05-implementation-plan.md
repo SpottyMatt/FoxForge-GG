@@ -1,5 +1,7 @@
 # Implementation Plan: Pokémon UNITE Build Optimizer
 
+*Historical milestone plan; the bundle filename is now the stable `src/data/patch-current.json` (see [docs/04-data-sourcing.md](04-data-sourcing.md)).*
+
 > Saved planning artifact (not yet executed). Engine-first build, with first-party
 > datamining of the game APK as the primary data source.
 

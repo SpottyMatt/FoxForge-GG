@@ -46,6 +46,7 @@ Licensed under [AGPL-3.0-only](LICENSE).
 - [Architecture](docs/02-architecture.md) — tech stack and structure
 - [Calculation Engine](docs/03-Calculation-Engine.md) — the stat/damage math
 - [Data Sourcing](docs/04-data-sourcing.md) — where game data comes from and how to update it
+- [Adding Content](docs/11-adding-content.md) — runbook for adding a Pokémon, item, build, or clip
 - [Implementation Plan](docs/05-implementation-plan.md) — milestones and datamining pipeline
 - [Theme Plan](docs/06-theme-plan.md) — semantic tokens and the light/dark theming approach
 - [Distribution & Updates](docs/07-distribution.md) — Pages web app, PWA install, game-data auto-update
@@ -63,7 +64,7 @@ Licensed under [AGPL-3.0-only](LICENSE).
 - [`src/engine/derive.ts`](src/engine/derive.ts) — Loadout → effective stats + attack speed (one path)
 
 **Data (versioned, update-able)**
-- [`src/data/patch-current.json`](src/data/patch-current.json) — full game bundle (94 Pokémon,
+- [`src/data/patch-current.json`](src/data/patch-current.json) — full game bundle (95 Pokémon,
   41 held items, 10 battle items, 258 emblems), community-sourced from UNITE-DB
 - [`src/data/attackSpeedBoosts.json`](src/data/attackSpeedBoosts.json) — AS boost catalog
   (10 global items + 61 per-Pokémon move buffs with level gating)
@@ -87,7 +88,7 @@ npm run dev                     # vite dev server — the app
 npm run build                   # production static site → dist/ (portable: base "./")
 npm run build:pages             # static build with the GitHub Pages base path
 npm run preview                 # serve the built dist/ locally
-npm test                        # engine + bundle + attack-speed + share tests (vitest, 90)
+npm test                        # engine + bundle + attack-speed + state + UI suites (vitest)
 npm run validate                # known-values gate from docs/03-Calculation-Engine.md
 npx tsx src/data/verifyPatch.ts # validate the live UNITE-DB bundle end-to-end
 npm run typecheck               # tsc --noEmit
@@ -107,7 +108,7 @@ Everything numeric lives in versioned JSON, refreshed by scripts (never hand-edi
 ```bash
 cd tools/community && source ../extract/.venv/bin/activate
 python3 fetch.py                # re-scrape UNITE-DB (pokemon/items/emblems/stats)
-python3 normalize.py            # → src/data/patch-<patch>.json (zod-validated)
+python3 normalize.py            # → src/data/patch-current.json (zod-validated)
 python3 fetch_art.py            # refresh public/assets/ icons & portraits
 python3 normalize_as_boosts.py  # → src/data/attackSpeedBoosts.json from the xlsx
 ```
@@ -170,4 +171,4 @@ and recompute pick it up automatically.
   security/ToS line not worth crossing. The local owned-emblem inventory delivers the same UX safely.
 
 ### Open refinements
-- Per-move AS level-availability is best-effort; emblem-set quick presets; code-splitting the 1 MB bundle
+- Per-move AS level-availability is best-effort; emblem-set quick presets

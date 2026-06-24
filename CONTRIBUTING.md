@@ -12,7 +12,7 @@ Set these up once before your first contribution.
 
 1. **Install Node.js 24+.** The exact major is pinned in [`.node-version`](.node-version) and matched by CI; anything older may pass locally and fail in CI.
 2. **Have `git` and a GitHub account.** Contributions land through pull requests against [`AeroKita/FoxForge-GG`](https://github.com/AeroKita/FoxForge-GG).
-3. **(Game-data work only) Install Python 3.** You only need it if you intend to refresh game data via `tools/community/`. App and engine changes do not require Python.
+3. **(Game-data work only) Install Python 3.** You only need it if you intend to refresh game data via `tools/community/`. App and engine changes do not require Python. For step-by-step content updates (new Pokémon, items, builds, or clips), follow [`docs/11-adding-content.md`](docs/11-adding-content.md).
 4. **Clone and install.** This also installs the Husky pre-commit hook (via the `prepare` script), which auto-formats your staged TypeScript on commit.
 
 ```bash

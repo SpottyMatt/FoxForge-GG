@@ -50,8 +50,10 @@ Run this when a new patch drops (or when UNITE-DB publishes patch changes).
      python3 fetch_art.py             # mirror new/changed art
      python3 validate_art.py          # fail loudly on broken images
      ```
-3. **Bump the bundle version.** New `patchVersion` + `lastUpdated` in
-   `src/data/patch-x.y.z.json` (see `docs/04-data-sourcing.md`).
+3. **Bump the bundle version.** Set `patchVersion` via the `PATCH_VERSION` env on
+   `normalize.py` (or the `patch_version` input on the **Refresh game data**
+   workflow); `lastUpdated` is written automatically by `normalize.py` into
+   `src/data/patch-current.json` (see `docs/04-data-sourcing.md`).
 4. **Validate.** `npm run typecheck && npm test && npm run build`. The bundle is
    Zod-validated on load and guarded by `src/data/__tests__/patchBundle.test.ts`
    (skill icons present, build moves resolve, etc.).
